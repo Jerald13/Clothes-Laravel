@@ -1,0 +1,7 @@
+Laravel 10 upgrade:
+https://laravel.com/docs/10.x/upgrade
+Follow High impact changes
+After changing all remember to do command : composer update
+
+Laravel 10 new featrure:
+
