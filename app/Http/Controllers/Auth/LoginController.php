@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+
 class LoginController extends Controller
 {
     /*
@@ -38,8 +41,29 @@ class LoginController extends Controller
         $this->middleware("guest")->except("logout");
     }
 
+    public function loginSession(Request $req)
+    {
+        $user = User::where(["email" => $req->email])->first();
+        if (!$user || !Hash::check($req->password, $user->password)) {
+            return "Username or password is not matched";
+        } else {
+            $req->session()->put("user", $user);
+        }
+        $req->session()->put("user", $user);
+    }
+
     public function login(Request $request)
     {
+        $user = User::where(["email" => $request->email])->first();
+
+        // if (!$user || !Hash::check($request->password, $user->password)) {
+        //     // return "Username or password is not matched";
+        //     return redirect()->route("error");
+        // } else {
+        //     dd($user);
+        //     $request->session()->put("user", $user);
+        // }
+
         $input = $request->all();
         $this->validate($request, [
             "email" => "required|email",
@@ -51,17 +75,18 @@ class LoginController extends Controller
                 "password" => $input["password"],
             ])
         ) {
+            $request->session()->put("user", $user);
             if (auth()->user()->role == "admin") {
-                return redirect()->route("home.admin");
+                return redirect()->route("product");
             } elseif (auth()->user()->role == "editor") {
-                return redirect()->route("home.editor");
+                return redirect()->route("product");
             } else {
-                return redirect()->route("home");
+                return redirect()->route("product");
             }
         } else {
-            return redirect()
-                ->route("login")
-                ->with("error", "Incorrect email or password");
+            // dd($user);
+            return redirect()->route("error");
+            // ->with("error", "Incorrect email or password");
         }
     }
 }

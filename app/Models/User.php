@@ -46,4 +46,10 @@ class User extends Authenticatable
             get: fn($value) => ["user", "editor", "admin"][$value]
         );
     }
+
+    public function myOrder()
+    {
+        return $this->hasMany(Order::class);
+        return $this->hasMany(Product::class);
+    }
 }

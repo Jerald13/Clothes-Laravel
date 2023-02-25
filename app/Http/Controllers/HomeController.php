@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Http\Controllers\ProductController;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -20,18 +20,29 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
+
+    public function createProduct()
+    {
+        return view("editor.createProduct");
+    }
+
+    public function editProduct()
+    {
+        return view("editProduct");
+    }
+
     public function userHome()
     {
-        return view("home", ["msg" => "I am user role"]);
+        return view("product");
     }
 
     public function editorHome()
     {
-        return view("home", ["msg" => "I am Editor editor"]);
+        return view("product");
     }
 
     public function adminHome()
     {
-        return view("home", ["msg" => "I am Admin admin"]);
+        return view("product");
     }
 }
