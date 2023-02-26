@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\CategoryController;
 use App\Models\Product_images;
 use App\Models\User;
 /*
@@ -52,29 +53,47 @@ Route::get("/", function () {
 // Auth::routes();
 
 //Admin Route
-Route::middleware(["auth", "user-role:admin"])->group(function () {});
-
-//Editor Route
-Route::middleware(["auth", "user-role:editor"])->group(function () {
-    Route::post("editor/createProduct", [
-        ImageController::class,
-        "upload",
-    ])->name("editor.createProduct");
-
-    Route::get("editor/createProduct", [
-        HomeController::class,
-        "createProduct",
-    ])->name("editor.createProduct");
-    Route::view("editor/index", "editor/index")->name("editor.index");
-    Route::view("editor/displayProduct", "editor/displayProduct")->name(
-        "editor.displayProduct"
+Route::middleware(["auth", "user-role:admin"])->group(function () {
+    Route::view("admin/setUserRole", "admin/setUserRole")->name(
+        "admin.setUserRole"
     );
 });
 
-//User Route
-Route::middleware(["auth", "user-role:user"])->group(function () {
-    // Route::get("/home", [HomeController::class, "userHome"])->name("home");
+//Editor Route
+Route::middleware(["auth", "user-role:editor"])->group(function () {
+    //Product
+    Route::post("editor/productCreate", [
+        ImageController::class,
+        "upload",
+    ])->name("editor.productCreate");
+
+    Route::get("editor/productCreate", [
+        HomeController::class,
+        "createProduct",
+    ])->name("editor.productCreate");
+    Route::view("editor/index", "editor/index")->name("editor.index");
+
+    //Category
+    // Route::view("editor/categoryCreate", "editor/categoryCreate")->name(
+    //     "editor.categoryCreate"
+    // );
+    // Route::view("editor/categoryDisplay", "editor/categoryDisplay")->name(
+    //     "editor.categoryDisplay"
+    // );
+    Route::post("editor/categoryCreate", [
+        CategoryController::class,
+        "categoryCreate",
+    ])->name("editor.categoryCreate");
+    Route::get("editor/categoryCreate", [
+        CategoryController::class,
+        "categoryCreateForm",
+    ])->name("editor.categoryCreate");
 });
+
+// //User Route
+// Route::middleware(["auth", "user-role:user"])->group(function () {
+//     // Route::get("/home", [HomeController::class, "userHome"])->name("home");
+// });
 
 //Product
 Route::view("/register", "register")->name("register");

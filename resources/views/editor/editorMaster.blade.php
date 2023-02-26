@@ -11,7 +11,7 @@
 <body>
     {{View::make('editor.sidebar')}}
     @yield('content')
-    {{View::make('editor.editorFooter')}}
+    {{-- {{View::make('editor.editorFooter')}} --}}
 {{-- </div> <!-- .wrapper --> --}}
 </body>
 

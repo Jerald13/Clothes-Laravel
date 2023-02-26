@@ -23,12 +23,12 @@ class HomeController extends Controller
 
     public function createProduct()
     {
-        return view("editor.createProduct");
+        return view("editor.productCreate");
     }
 
     public function editProduct()
     {
-        return view("editProduct");
+        return view("editor.productEdit");
     }
 
     public function userHome()

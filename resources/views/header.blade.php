@@ -68,13 +68,17 @@ if (Session::has("user")) {
 							Account
 							@elseif(Session::get('user')['name'] == "Editor")
     						Editor
+							<a href="editor/index" class="flex-c-m p-lr-10 trans-04">
+								Editor Site
+							</a>
 							@else
 							Admin
+							<a href="editor/index" class="flex-c-m p-lr-10 trans-04">
+								Editor Site
+							</a>
 							@endif
 						</a>
-						<a href="editor/index" class="flex-c-m p-lr-10 trans-04">
-							Editor Site
-						</a>
+						
 						@else
 						<a href="/login" class="flex-c-m p-lr-10 trans-04">
 							Login

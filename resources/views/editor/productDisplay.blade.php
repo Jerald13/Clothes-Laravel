@@ -1795,6 +1795,7 @@
       gtag('js', new Date());
       gtag('config', 'UA-56159088-1');
     </script>
+    
   </body>
 </html>
 @endsection 
