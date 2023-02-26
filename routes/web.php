@@ -35,6 +35,8 @@ Route::get("/login", function () {
     return view("login");
 });
 
+// Route::view("/login", "login")->name("login");
+
 Route::get("/logout", function () {
     Session::forget("user");
     return view("login");
@@ -54,11 +56,6 @@ Route::middleware(["auth", "user-role:admin"])->group(function () {});
 
 //Editor Route
 Route::middleware(["auth", "user-role:editor"])->group(function () {
-    //User Route
-    // Route::get("editor/editProduct", [
-    //     HomeController::class,
-    //     "editProduct",
-    // ])->name("editProduct");
     Route::post("editor/createProduct", [
         ImageController::class,
         "upload",
@@ -68,10 +65,10 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
         HomeController::class,
         "createProduct",
     ])->name("editor.createProduct");
-    // Route::get("editor/createProduct", [
-    //     HomeController::class,
-    //     "createProduct",
-    // ])->name("admin.createProduct");
+    Route::view("editor/index", "editor/index")->name("editor.index");
+    Route::view("editor/displayProduct", "editor/displayProduct")->name(
+        "editor.displayProduct"
+    );
 });
 
 //User Route
