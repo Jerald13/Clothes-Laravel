@@ -13,22 +13,27 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table("category")->insert([
+        DB::table("categories")->insert([
             [
                 "name" => "Women",
                 "status" => "active",
+                "product_count" => 0,
                 "created_at" => Carbon::now()->format("Y-m-d H:i:s"),
                 "updated_at" => Carbon::now()->format("Y-m-d H:i:s"),
             ],
             [
                 "name" => "Men",
                 "status" => "active",
+                "product_count" => 0,
+
                 "created_at" => Carbon::now()->format("Y-m-d H:i:s"),
                 "updated_at" => Carbon::now()->format("Y-m-d H:i:s"),
             ],
             [
                 "name" => "Bag",
                 "status" => "active",
+                "product_count" => 0,
+
                 "created_at" => Carbon::now()->format("Y-m-d H:i:s"),
                 "updated_at" => Carbon::now()->format("Y-m-d H:i:s"),
             ],

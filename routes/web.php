@@ -86,6 +86,7 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
         CategoryController::class,
         "categoryDisplay",
     ])->name("editor.categoryDisplay");
+    Route::resource("editor/categories", CategoryController::class);
 });
 
 // //User Route

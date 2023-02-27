@@ -10,14 +10,14 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create("category", function (Blueprint $table) {
-            $table->id();
-            $table->string("name");
-            $table->enum("status", ["active", "inactive"])->default("active"); // Set default value to 'active'
-            $table->unsignedInteger("product_count")->default(0);
+        // Schema::create("category", function (Blueprint $table) {
+        //     $table->id();
+        //     $table->string("name");
+        //     $table->enum("status", ["active", "inactive"])->default("active"); // Set default value to 'active'
+        //     $table->unsignedInteger("product_count")->default(0);
 
-            $table->timestamps();
-        });
+        //     $table->timestamps();
+        // });
     }
 
     /**
