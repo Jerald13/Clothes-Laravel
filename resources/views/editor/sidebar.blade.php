@@ -74,7 +74,7 @@
         <nav class="vertnav navbar navbar-light">
           <!-- nav bar -->
           <div class="w-100 mb-4 d-flex">
-            <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="./index.html">
+            <a class="navbar-brand mx-auto mt-2 flex-fill text-center" href="/">
               <svg version="1.1" id="logo" class="navbar-brand-img brand-sm" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 120 120" xml:space="preserve">
                 <g>
                   <polygon class="st0" points="78,105 15,105 24,87 87,87 	" />
@@ -139,9 +139,9 @@
                   </a>
                   <ul class="collapse list-unstyled pl-4 w-100" id="support">
                     <li class="nav-item">
-                      <a class="nav-link pl-3" href="categoryDisplay"><span class="ml-1 item-text">Display Category</span>
+                      <a class="nav-link pl-3" href="{{ route('editor.categoryDisplay') }}"><span class="ml-1 item-text">Display Category</span>
                       </a>
-                      <a class="nav-link pl-3" href="categoryCreate"><span class="ml-1 item-text">Add Category</span>
+                      <a class="nav-link pl-3" href="{{ route('editor.categoryCreate') }}"><span class="ml-1 item-text">Add Category</span>
                       </a>
                     </li>
                   </ul>

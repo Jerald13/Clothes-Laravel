@@ -16,11 +16,17 @@ class CategoryController extends Controller
         if ($req->session()->has("user")) {
             $cart = new Category();
             $cart->name = $req->name;
-            $cart->status = $req->has('status') ? $req->status : 'active';
+            $cart->status = $req->has("status") ? $req->status : "active";
             $cart->save();
             return redirect("/");
         } else {
             return redirect("/login");
         }
+    }
+
+    public function categoryDisplay()
+    {
+        $data = Category::all();
+        return view("editor.categoryDisplay", ["catogories" => $data]);
     }
 }

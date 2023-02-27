@@ -74,12 +74,6 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
     Route::view("editor/index", "editor/index")->name("editor.index");
 
     //Category
-    // Route::view("editor/categoryCreate", "editor/categoryCreate")->name(
-    //     "editor.categoryCreate"
-    // );
-    // Route::view("editor/categoryDisplay", "editor/categoryDisplay")->name(
-    //     "editor.categoryDisplay"
-    // );
     Route::post("editor/categoryCreate", [
         CategoryController::class,
         "categoryCreate",
@@ -88,6 +82,10 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
         CategoryController::class,
         "categoryCreateForm",
     ])->name("editor.categoryCreate");
+    Route::get("editor.categoryDisplay", [
+        CategoryController::class,
+        "categoryDisplay",
+    ])->name("editor.categoryDisplay");
 });
 
 // //User Route
