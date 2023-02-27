@@ -98,8 +98,8 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
         $category->save();
         return response()->json(["status" => $category->status]);
     });
-    Route::view("editor/page-404", "editor/page-404")->name("editor/page-404");
 });
+Route::view("/page-404", "/page-404")->name("/page-404");
 
 // //User Route
 // Route::middleware(["auth", "user-role:user"])->group(function () {
