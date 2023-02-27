@@ -12,6 +12,9 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CategoryController;
 use App\Models\Product_images;
 use App\Models\User;
+use App\Models\Category;
+use Illuminate\Http\Request;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -74,19 +77,28 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
     Route::view("editor/index", "editor/index")->name("editor.index");
 
     //Category
-    Route::post("editor/categoryCreate", [
-        CategoryController::class,
-        "categoryCreate",
-    ])->name("editor.categoryCreate");
-    Route::get("editor/categoryCreate", [
-        CategoryController::class,
-        "categoryCreateForm",
-    ])->name("editor.categoryCreate");
-    Route::get("editor.categoryDisplay", [
-        CategoryController::class,
-        "categoryDisplay",
-    ])->name("editor.categoryDisplay");
+    // Route::post("editor/categoryCreate", [
+    //     CategoryController::class,
+    //     "categoryCreate",
+    // ])->name("editor.categoryCreate");
+    // Route::get("editor/categoryCreate", [
+    //     CategoryController::class,
+    //     "categoryCreateForm",
+    // ])->name("editor.categoryCreate");
+    // Route::get("editor.categoryDisplay", [
+    //     CategoryController::class,
+    //     "categoryDisplay",
+    // ])->name("editor.categoryDisplay");
     Route::resource("editor/categories", CategoryController::class);
+    Route::post("/categories/{category}/status", function (
+        Request $request,
+        Category $category
+    ) {
+        $category->status = $request->input("status");
+        $category->save();
+        return response()->json(["status" => $category->status]);
+    });
+    Route::view("editor/page-404", "editor/page-404")->name("editor/page-404");
 });
 
 // //User Route

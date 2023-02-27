@@ -92,7 +92,7 @@
               </a>
               <ul class="collapse list-unstyled pl-4 w-100" id="dashboard">
                 <li class="nav-item active">
-                  <a class="nav-link pl-3" href="./index.html"><span class="ml-1 item-text">Default</span></a>
+                  <a class="nav-link pl-3" href="index"><span class="ml-1 item-text">Default</span></a>
                 </li>
                 <li class="nav-item">
                   <a class="nav-link pl-3" href="./dashboard-analytics.html"><span class="ml-1 item-text">Analytics</span></a>
@@ -139,9 +139,9 @@
                   </a>
                   <ul class="collapse list-unstyled pl-4 w-100" id="support">
                     <li class="nav-item">
-                      <a class="nav-link pl-3" href="{{ route('editor.categoryDisplay') }}"><span class="ml-1 item-text">Display Category</span>
+                      <a class="nav-link pl-3" href="{{ route('categories.index') }}"><span class="ml-1 item-text">Display Category</span>
                       </a>
-                      <a class="nav-link pl-3" href="{{ route('editor.categoryCreate') }}"><span class="ml-1 item-text">Add Category</span>
+                      <a class="nav-link pl-3" href="{{ route('categories.create') }}"><span class="ml-1 item-text">Add Category</span>
                       </a>
                     </li>
                   </ul>
