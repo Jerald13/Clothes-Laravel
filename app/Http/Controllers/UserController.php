@@ -9,6 +9,12 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     //
+
+    function list()
+    {
+        return User::all();
+    }
+
     function login(Request $req)
     {
         $user = User::where(["email" => $req->email])->first();
