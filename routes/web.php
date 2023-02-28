@@ -87,7 +87,7 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
     // ])->name("editor.categoryCreate");
     // Route::get("editor.categoryDisplay", [
     //     CategoryController::class,
-    //     "categoryDisplay",
+    //     "categoryDisplay", asdf
     // ])->name("editor.categoryDisplay");
     Route::resource("editor/categories", CategoryController::class);
     Route::post("/categories/{category}/status", function (
@@ -102,11 +102,11 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
 Route::view("/page-404", "/page-404")->name("/page-404");
 
 // //User Route
-// Route::middleware(["auth", "user-role:user"])->group(function () {
+// Route::middleware(["auth", "user-role:user"])->group(function () { asdfasdf
 //     // Route::get("/home", [HomeController::class, "userHome"])->name("home");
 // });
 
-//Product
+//Product nice
 Route::view("/register", "register")->name("register");
 Route::get("/product", [ProductController::class, "index"])->name("product");
 Route::post("/register", [UserController::class, "register"]);

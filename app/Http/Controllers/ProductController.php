@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 class ProductController extends Controller
 {
     /**
-     * Display a listing of the resource.asdf
+     * Display a listing of the resource.
      *
      *
      * @return \Illuminate\Http\Response
