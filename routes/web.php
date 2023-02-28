@@ -89,7 +89,7 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
     // ])->name("editor.categoryCreate");
     // Route::get("editor.categoryDisplay", [
     //     CategoryController::class,
-    //     "categoryDisplay",
+    //     "categoryDisplay", asdf
     // ])->name("editor.categoryDisplay");
     Route::resource("editor/categories", CategoryController::class);
     Route::post("/categories/{category}/status", function (
