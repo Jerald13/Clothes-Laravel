@@ -108,7 +108,7 @@ Route::view("/page-404", "/page-404")->name("/page-404");
 //     // Route::get("/home", [HomeController::class, "userHome"])->name("home");
 // });
 
-//Product
+//Product nice
 Route::view("/register", "register")->name("register");
 Route::get("/product", [ProductController::class, "index"])->name("product");
 Route::post("/register", [UserController::class, "register"]);
