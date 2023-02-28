@@ -53,8 +53,6 @@ Route::get("/", function () {
     return view("master");
 });
 
-//Sohaiiiii
-
 // Auth::routes();
 
 //Admin Route

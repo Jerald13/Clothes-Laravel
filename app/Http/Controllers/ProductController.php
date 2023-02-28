@@ -19,6 +19,7 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index()
     {
         // $products = Product::all();
