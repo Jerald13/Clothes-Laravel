@@ -16,7 +16,7 @@ class CategoryController extends Controller
         $this->categoryRepository = $categoryRepository;
     }
     /**
-     * Display a listing of the resource.af
+     * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
