@@ -59,35 +59,35 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $exception)
     {
-        if ($exception instanceof ValidationException) {
-            return response()->json(
-                [
-                    "message" => "The given data was invalid.",
-                    "errors" => $exception->validator->getMessageBag(),
-                ],
-                Response::HTTP_UNPROCESSABLE_ENTITY
-            );
-        } elseif (
-            $exception instanceof NotFoundHttpException ||
-            $exception instanceof ModelNotFoundException
-        ) {
-            return response()->view(
-                "errors.page-404",
-                [],
-                Response::HTTP_NOT_FOUND
-            );
-        } elseif ($exception instanceof MethodNotAllowedHttpException) {
-            return response()->view(
-                "errors.page-405",
-                [],
-                Response::HTTP_METHOD_NOT_ALLOWED
-            );
-        } else {
-            return response()->view(
-                "errors.page-500",
-                [],
-                Response::HTTP_INTERNAL_SERVER_ERROR
-            );
-        }
+        // if ($exception instanceof ValidationException) {
+        //     return response()->json(
+        //         [
+        //             "message" => "The given data was invalid.",
+        //             "errors" => $exception->validator->getMessageBag(),
+        //         ],
+        //         Response::HTTP_UNPROCESSABLE_ENTITY
+        //     );
+        // } elseif (
+        //     $exception instanceof NotFoundHttpException ||
+        //     $exception instanceof ModelNotFoundException
+        // ) {
+        //     return response()->view(
+        //         "errors.page-404",
+        //         [],
+        //         Response::HTTP_NOT_FOUND
+        //     );
+        // } elseif ($exception instanceof MethodNotAllowedHttpException) {
+        //     return response()->view(
+        //         "errors.page-405",
+        //         [],
+        //         Response::HTTP_METHOD_NOT_ALLOWED
+        //     );
+        // } else {
+        //     return response()->view(
+        //         "errors.page-500",
+        //         [],
+        //         Response::HTTP_INTERNAL_SERVER_ERROR
+        //     );
+        // }
     }
 }
