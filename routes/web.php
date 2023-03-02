@@ -10,6 +10,8 @@ use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\FreeGiftController;
+
 use App\Models\Product_images;
 use App\Models\User;
 use App\Models\Category;
@@ -121,3 +123,6 @@ Route::post("orderplace", [ProductController::class, "orderPlace"]);
 Route::get("myorders", [ProductController::class, "myOrders"]);
 
 Route::view("/error", "error")->name("error");
+
+//Web service
+Route::get("/free-gifts", [FreeGiftController::class, "index"]);
