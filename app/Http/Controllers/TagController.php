@@ -68,6 +68,7 @@ class TagController extends Controller
     {
         $tagData = $request->validate([
             "name" => "required|max:255",
+            "status" => "required|max:255",
         ]);
 
         $tag = (new TagBuilder())->update($id, $tagData);
@@ -75,5 +76,12 @@ class TagController extends Controller
         return redirect()
             ->route("tags.index")
             ->with("message", "Tag Updated Successfully");
+    }
+    public function status(Request $request, Tag $tag)
+    {
+        $tag->status = $request->input("status");
+        $tag->save();
+
+        return response()->json(["status" => $tag->status]);
     }
 }

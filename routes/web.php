@@ -16,6 +16,8 @@ use App\Http\Controllers\TagController;
 use App\Models\Product_images;
 use App\Models\User;
 use App\Models\Category;
+use App\Models\Tag;
+
 use Illuminate\Http\Request;
 
 /*
@@ -29,7 +31,7 @@ use Illuminate\Http\Request;
 |
 */
 
-//Login & Logout
+/*   Login & Logout    */
 Route::get("/login", function () {
     return view("login");
 });
@@ -69,24 +71,16 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
     ])->name("editor.productCreate");
     Route::view("editor/index", "editor/index")->name("editor.index");
 
-    //Category
+    /*   Category    */
     Route::resource("editor/categories", CategoryController::class);
-    Route::post("/categories/{category}/status", function (
-        Request $request,
-        Category $category
-    ) {
-        $category->status = $request->input("status");
-        $category->save();
-        return response()->json(["status" => $category->status]);
-    });
+    Route::post("/categories/{category}/status", [
+        CategoryController::class,
+        "status",
+    ]);
 
-    //Tags
+    /*   TAgs    */
     Route::resource("editor/tags", TagController::class);
-
-    // Route::get("editor/tags/index", [TagController::class, "index"])->name(
-    //     "tags.index"
-    // );
-    // Route::view("editor/tags/index", "editor/tags/index")->name("tags.index");
+    Route::post("/tags/{tag}/status", [TagController::class, "status"]);
 });
 Route::view("/page-404", "/page-404")->name("/page-404");
 

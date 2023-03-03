@@ -55,14 +55,11 @@
                             <div class="invalid-feedback"> Badd address </div>
                           </div>
                      
+                          <input type="hidden" name="status" value="{{ old('name',$category->status) }}">
+
+                        
+
                           
-                          {{-- <div class="col-md-3  mb-3" style="    margin-left: unset;">
-                            <p class="mb-3">Active</p>
-                            <div class="custom-control custom-switch">
-                              <input type="checkbox" class="custom-control-input" name="status" value="inactive" id="customSwitch1">
-                              <label class="custom-control-label"  for="customSwitch1">Yes</label>
-                            </div>
-                          </div> --}}
 
                         <button class="btn btn-primary" type="submit">Edit</button>
                       </form>

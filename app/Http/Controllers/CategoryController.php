@@ -92,12 +92,11 @@ class CategoryController extends Controller
     {
         $request->validate([
             "name" => "required|string|max:255",
-            // "status" => "required|string|max:255",
+            "status" => "required|string|max:255",
             // "product_count" => "required|integer",
         ]);
 
         $this->categoryRepository->updateCategory($request->all(), $id);
-
         return redirect()
             ->route("categories.index")
             ->with("message", "Category Updated Successfully");
@@ -126,5 +125,13 @@ class CategoryController extends Controller
                 ->route("categories.index")
                 ->with("status", "Category Delete Successfully");
         }
+    }
+
+    public function status(Request $request, Category $category)
+    {
+        $category->status = $request->input("status");
+        $category->save();
+
+        return response()->json(["status" => $category->status]);
     }
 }
