@@ -1,0 +1,5 @@
+JS
+<script src="{{ asset('js/jquery.min.js') }}"></script>
+
+CSS
+<link rel="stylesheet" href="{{ asset('css/select2.css') }}">

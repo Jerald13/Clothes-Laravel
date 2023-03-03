@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FreeGiftController;
+use App\Http\Controllers\TagController;
 
 use App\Models\Product_images;
 use App\Models\User;
@@ -28,20 +29,10 @@ use Illuminate\Http\Request;
 |
 */
 
-// Route::resource("products", "App\Http\Controllers\ProductController");
-// Route::get("/products/{id}/edit", "ProductController@edit");
-// Route::put("products/{id}", "ProductController@update");
-// Route::delete("products/{id}", "ProductController@destroy");
-// Route::patch('products/{id}/update', 'ProductController@update')->name('products.update');
-// Route::delete('products/{id}/destroy', 'ProductController@destroy');
-// Route::patch('products/{id}/update', 'ProductController@update');
-
 //Login & Logout
 Route::get("/login", function () {
     return view("login");
 });
-
-// Route::view("/login", "login")->name("login");
 
 Route::get("/logout", function () {
     Session::forget("user");
@@ -79,18 +70,6 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
     Route::view("editor/index", "editor/index")->name("editor.index");
 
     //Category
-    // Route::post("editor/categoryCreate", [
-    //     CategoryController::class,
-    //     "categoryCreate",
-    // ])->name("editor.categoryCreate");
-    // Route::get("editor/categoryCreate", [
-    //     CategoryController::class,
-    //     "categoryCreateForm",
-    // ])->name("editor.categoryCreate");
-    // Route::get("editor.categoryDisplay", [
-    //     CategoryController::class,
-    //     "categoryDisplay", asdf
-    // ])->name("editor.categoryDisplay");
     Route::resource("editor/categories", CategoryController::class);
     Route::post("/categories/{category}/status", function (
         Request $request,
@@ -100,12 +79,19 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
         $category->save();
         return response()->json(["status" => $category->status]);
     });
+
+    //Tags
+    Route::resource("editor/tags", TagController::class);
+
+    // Route::get("editor/tags/index", [TagController::class, "index"])->name(
+    //     "tags.index"
+    // );
+    // Route::view("editor/tags/index", "editor/tags/index")->name("tags.index");
 });
 Route::view("/page-404", "/page-404")->name("/page-404");
 
 // //User Route
-// Route::middleware(["auth", "user-role:user"])->group(function () { asdfasdf
-//     // Route::get("/home", [HomeController::class, "userHome"])->name("home");
+// Route::middleware(["auth", "user-role:user"])->group(function () {
 // });
 
 //Product nice

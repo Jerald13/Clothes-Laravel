@@ -36,29 +36,30 @@
         <div class="container-fluid">
           <div class="row justify-content-center">
             <div class="col-12">
-              <h2 class="page-title">Form Add Category</h2>
-              <p class="text-muted">Add category such as Women, Men, Bag, Shoes, Watches.</p>
+              <h2 class="page-title">Form Add Tags</h2>
+              <p class="text-muted">Add Tags such as Fashion, Lifestyle, Denim, Streetstyle, Crafts.</p>
               <div class="row justify-content-center">
                 <div class="col-md-6" style="width: 1000px; max-width:100%;">
                   <div class="card shadow mb-4" style="width: 1000px;">
                     <div class="card-header">
-                      <strong class="card-title">Category</strong>
+                      <strong class="card-title">Tag</strong>
                     </div>
                     <div class="card-body">
-                      <form class="needs-validation" action="{{ route('editor.categoryCreate') }}" method="POST" novalidate>
+                      <form class="needs-validation" action="{{ route('tags.store') }}" method="POST" novalidate>
                         @csrf
                         <div class="form-group mb-3">
                             <label for="address-wpalaceholder">Name</label>
-                            <input type="text" id="address-wpalaceholder" class="form-control" name="name" placeholder="Enter your category name" required="">
+                            <input type="text" id="address-wpalaceholder" class="form-control" name="name" placeholder="Enter your tag name" required="">
                             <div class="valid-feedback"> Looks good! </div>
                             <div class="invalid-feedback"> Badd address </div>
                           </div>
-                       
-                          <div class="col-md-3  mb-3" style="    margin-left: unset;">
-                            <p class="mb-3">Hide?</p>
+
+                          <div class="col-md-3 mb-3" style="margin-left: unset;">
+                            <p class="mb-3" id="active-label">Inactive</p>
                             <div class="custom-control custom-switch">
-                              <input type="checkbox" class="custom-control-input" name="status" value="inactive" id="customSwitch1">
-                              <label class="custom-control-label"  for="customSwitch1">Yes</label>
+                              <input type="checkbox" class="custom-control-input" name="status" value="inactive" id="customSwitch1" onchange="updateStatusLabel()">
+                              <input type="hidden" name="status" value="inactive" id="valueField">
+                              <label class="custom-control-label" for="customSwitch1" id="checkbox-label"></label>
                             </div>
                           </div>
 
@@ -102,6 +103,22 @@
     <script src="{{ asset('js/dropzone.min.js') }}"></script>
     <script src="{{ asset('js/uppy.min.js') }}"></script>
     <script src="{{ asset('js/quill.min.js') }}"></script>
+    <script>
+        function updateStatusLabel() {
+          var checkbox = document.getElementById("customSwitch1");
+          var label = document.getElementById("checkbox-label");
+          var activeLabel = document.getElementById("active-label");
+          var valueField = document.getElementById("valueField");
+          
+          if (checkbox.checked) {
+            activeLabel.innerText = "Active";
+            valueField.value = "active";
+          } else {
+            activeLabel.innerText = "Inactive";
+            valueField.value = "inactive";
+          }
+        }
+      </script>
     <script>
       $('.select2').select2(
       {

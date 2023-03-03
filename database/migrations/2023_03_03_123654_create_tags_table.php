@@ -10,12 +10,11 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create("categories", function (Blueprint $table) {
+        Schema::create("tags", function (Blueprint $table) {
             $table->id();
             $table->string("name");
             $table->enum("status", ["active", "inactive"])->default("inactive"); // Set default value to 'active'
             $table->unsignedInteger("product_count")->default(0);
-
             $table->timestamps();
         });
     }
@@ -25,6 +24,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists("categories");
+        Schema::dropIfExists("tags");
     }
 };
