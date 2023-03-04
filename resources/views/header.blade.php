@@ -111,16 +111,16 @@ if (Session::has("user")) {
 					<div class="menu-desktop">
 						<ul class="main-menu">
 							<li class="active-menu">
-								<a href="index.html">Home</a>
+								<a href="index">Home</a>
 								<ul class="sub-menu">
-									<li><a href="index.html">Homepage 1</a></li>
-									<li><a href="home-02.html">Homepage 2</a></li>
-									<li><a href="home-03.html">Homepage 3</a></li>
+									<li><a href="index">Homepage 1</a></li>
+									<li><a href="index-02">Homepage 2</a></li>
+									<li><a href="home-03">Homepage 3</a></li>
 								</ul>
 							</li>
 
 							<li>
-								<a href="product.html">Shop</a>
+								<a href="shop">Shop</a>
 							</li>
 
 							<li class="label1" data-label1="hot">

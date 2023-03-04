@@ -30,6 +30,17 @@ class ProductController extends Controller
         return view("product", ["products" => $data]);
     }
 
+    
+    public function shop()
+    {
+        // $products = Product::all();
+        // return view ('index')->with(compact('products'));
+        // $products = Product::all();
+        // return view("index", compact("products"));
+        $data = Product::all();
+        return view("shop", ["products" => $data]);
+    }
+
     function detail($id)
     {
         $data = Product::find($id);

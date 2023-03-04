@@ -1,24 +1,26 @@
 <?php
-
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+
+/* Controller */
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImageController;
-
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
-use Illuminate\Support\Facades\Session;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FreeGiftController;
 use App\Http\Controllers\TagController;
 
+/* Model */ 
 use App\Models\Product_images;
 use App\Models\User;
 use App\Models\Category;
 use App\Models\Tag;
 
-use Illuminate\Http\Request;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +45,11 @@ Route::get("/logout", function () {
 
 Route::post("/login", [LoginController::class, "login"])->name("login");
 Route::post("/logout", [LoginController::class, "logout"])->name("logout");
+
+
+Route::get("/shop", function () {
+    return view("shop");
+});
 
 Route::get("/", function () {
     return view("master");
@@ -88,9 +95,10 @@ Route::view("/page-404", "/page-404")->name("/page-404");
 // Route::middleware(["auth", "user-role:user"])->group(function () {
 // });
 
-//Product nice
+//Product
 Route::view("/register", "register")->name("register");
-Route::get("/product", [ProductController::class, "index"])->name("product");
+Route::get("/index", [ProductController::class, "index"])->name("index");
+Route::get("/shop", [ProductController::class, "shop"])->name("shop");
 Route::post("/register", [UserController::class, "register"]);
 Route::get("/", [ProductController::class, "index"]);
 Route::get("detail/{id}", [ProductController::class, "detail"]);
