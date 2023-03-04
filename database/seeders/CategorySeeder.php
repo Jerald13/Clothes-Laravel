@@ -15,14 +15,14 @@ class CategorySeeder extends Seeder
     {
         DB::table("categories")->insert([
             [
-                "name" => "Women",
+                "name" => "women",
                 "status" => "active",
                 "product_count" => 0,
                 "created_at" => Carbon::now()->format("Y-m-d H:i:s"),
                 "updated_at" => Carbon::now()->format("Y-m-d H:i:s"),
             ],
             [
-                "name" => "Men",
+                "name" => "men",
                 "status" => "active",
                 "product_count" => 0,
 
@@ -30,21 +30,27 @@ class CategorySeeder extends Seeder
                 "updated_at" => Carbon::now()->format("Y-m-d H:i:s"),
             ],
             [
-                "name" => "Bag",
+                "name" => "bag",
                 "status" => "active",
                 "product_count" => 0,
 
                 "created_at" => Carbon::now()->format("Y-m-d H:i:s"),
                 "updated_at" => Carbon::now()->format("Y-m-d H:i:s"),
             ],
-            // [
-            //     "name" => "Shoes",
-            //     "status" => "active",
-            // ],
-            // [
-            //     "name" => "Watches",
-            //     "status" => "active",
-            // ],
+            [
+                "name" => "shoes",
+                "status" => "active",
+                "product_count" => 0,
+                "created_at" => Carbon::now()->format("Y-m-d H:i:s"),
+                "updated_at" => Carbon::now()->format("Y-m-d H:i:s"),
+            ],
+            [
+                "name" => "watches",
+                "status" => "active",
+                "product_count" => 0,
+                "created_at" => Carbon::now()->format("Y-m-d H:i:s"),
+                "updated_at" => Carbon::now()->format("Y-m-d H:i:s"),
+            ],
         ]);
     }
 }

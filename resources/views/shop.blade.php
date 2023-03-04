@@ -278,7 +278,14 @@
 				@foreach ($products as $product)
 					
 			
-				<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item men">
+				<div class="col-sm-6 col-md-4 col-lg-3 p-b-35 isotope-item 
+				@foreach($categorys as $category)						
+									
+				@if($product['category'] == $category['id'])
+					{{ $category['name'] }}
+				@endif
+			@endforeach
+				" >
 					<!-- Block2 -->
 					<div class="block2">
 						<div class="block2-pic hov-img0">
@@ -293,6 +300,7 @@
 							<div class="block2-txt-child1 flex-col-l ">
 								<a href="product-detail.html" class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
 									{{ $product['name']  }}
+									
 								</a>
 
 								<span class="stext-105 cl3">

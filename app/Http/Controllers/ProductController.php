@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Cart;
+use App\Models\Category;
 use App\Models\User;
 
 use App\Models\Order;
@@ -38,7 +39,8 @@ class ProductController extends Controller
         // $products = Product::all();
         // return view("index", compact("products"));
         $data = Product::all();
-        return view("shop", ["products" => $data]);
+        $category = Category::all();
+        return view("shop", ["products" => $data,"categorys" => $category]);
     }
 
     function detail($id)
