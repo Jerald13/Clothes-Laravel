@@ -6,16 +6,18 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Repositories\Interfaces\UserRepositoryInterface;
 
 class UserController extends Controller
 {
-    //
-    // => Route::get('/list/{name},'[UserController::class,'getListByName']);
-    // and then in the getListByName() function we do like this:
+    // private $userRepository;
 
-    // getListByName($name){
-    // return User::where('name',$name)->first();
+    // public function __construct(UserRepositoryInterface $userRepository)
+    // {
+    //     $this->userRepository = $userRepository;
     // }
+
+    //Havent use Repository method
 
     function index(Request $request)
     {

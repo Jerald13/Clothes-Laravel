@@ -116,7 +116,7 @@ class CategoryController extends Controller
             $errorMessage =
                 "Cannot delete category as it has products associated with it";
             return redirect()
-                ->route("editor/page-404")
+                ->route("errors/page-404")
                 ->with("errorMessage", $errorMessage);
         } else {
             $this->categoryRepository->destroyCategory($id);

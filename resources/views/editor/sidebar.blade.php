@@ -234,7 +234,7 @@
                           <li class="nav-item dropdown">
                             <a href="#User" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
                               <i class="fe-box fe-16"></i>
-                              <span class="ml-3 item-text">Order</span>
+                              <span class="ml-3 item-text">User</span>
                             </a>
                             <ul class="collapse list-unstyled pl-4 w-100" id="User">
                               <li class="nav-item">

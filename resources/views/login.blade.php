@@ -44,17 +44,33 @@
 										</label>
 										<input id="password" type="password" class="form-control" name="password" required="">
 										<div class="text-right">
-											<a href="password-reset.html" class="small">
+											<a href="password/email" class="small">
 												Forgot Your Password?
 											</a>
 										</div>
 									</div>
 
-									<div class="form-group">
+									{{-- <div class="form-group">
 										<div class="form-check position-relative mb-2">
 										  <input type="checkbox" class="form-check-input " id="remember" name="remember">
 										  <label class="checkbox checkbox-xxs form-check-label ml-1" for="remember"
 												 data-icon="&#xe936">Remember Me</label>
+												 <label class="form-check-label" for="remember">
+													{{ __('Remember Me') }}
+												</label>
+										</div>
+									</div> --}}
+
+
+									<div class="form-group row">
+										<div class="col-md-6 offset-md-4">
+											<div class="form-check">
+												<input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+								
+												<label class="form-check-label" for="remember">
+													{{ __('Remember Me') }}
+												</label>
+											</div>
 										</div>
 									</div>
 
