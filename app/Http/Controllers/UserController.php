@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Notifications\MyNotification;
+use App\Notifications\UserFollowNotification;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 
 class UserController extends Controller
@@ -68,16 +70,19 @@ class UserController extends Controller
         return ["Result" => "Data has been modified"];
     }
 
-    function add(Request $req)
-    {
-        $user = new User();
-        $user->name = "User";
-        $user->username = $req->username;
-        $user->email = $req->email;
-        $user->password = Hash::make($req->password);
-        $user->save();
-        return ["Result" => "Data has been saved"];
-    }
+    // function add(Request $req)
+    // {
+    //     $user = new User();
+    //     $user->name = "User";
+    //     $user->username = $req->username;
+    //     $user->email = $req->email;
+
+    //     $user->phone_number = $req->phone_code . $req->phone_number;
+    //     $user->password = Hash::make($req->password);
+    //     $user->save();
+
+    //     return ["Result" => "Data has been saved"];
+    // }
 
     function list($id = null)
     {
@@ -103,8 +108,18 @@ class UserController extends Controller
         $user->name = "User";
         $user->username = $req->username;
         $user->email = $req->email;
+        $user->phone_number = $req->phone_code . $req->phone_number;
+
         $user->password = Hash::make($req->password);
         $user->save();
+
+        //This line of Code is Send SMS Notification from Vonage to User Phone number exactly
+        // $user->notify(new MyNotification());
+
+        // User::route("vonage", "+60182055007")->notify(new MyNotification());
+        // $user->notify(new MyNotification(), ["vonage" => "+60182055007"]);
+        // $user->notify((new MyNotification())->toVonage($user));
+
         return redirect("/login");
     }
 
