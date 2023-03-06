@@ -31,7 +31,13 @@ class User extends Authenticatable implements AuthorizableContract
      *
      * @var array<int, string>
      */
-    protected $fillable = ["name", "email", "phone_number", "password"];
+    protected $fillable = [
+        "username",
+        "name",
+        "email",
+        "phone_number",
+        "password",
+    ];
 
     /**
      * The attributes that should be hidden for serialization.

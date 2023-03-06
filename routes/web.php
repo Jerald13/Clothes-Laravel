@@ -32,78 +32,8 @@ Route::post("/register", [UserController::class, "register"]);
 Route::get("/login", function () {
     return view("login");
 });
-Route::get("/logout", function () {
-    Auth::logout();
-    Session::forget("user");
-    return view("login");
-});
 
 /*   Forgot Password    */
-// Route::get(
-//     "password/reset",
-//     "Auth\ForgotPasswordController@showLinkRequestForm"
-// )->name("password.request");
-// Route::post(
-//     "password/email",
-//     "Auth\ForgotPasswordController@sendResetLinkEmail"
-// )->name("password.email");
-// Route::get(
-//     "password/reset/{token}",
-//     "Auth\ResetPasswordController@showResetForm"
-// )->name("password.reset");
-// Route::post("password/reset", "Auth\ResetPasswordController@reset")->name(
-//     "password.update"
-// );
-
-// Route::get("password/email", [
-//     ForgotPasswordController::class,
-//     "showLinkRequestForm",
-// ])->name("password.request");
-// Route::post("password/email", [
-//     ForgotPasswordController::class,
-//     "sendResetLinkEmail",
-// ])->name("password.email");
-// Route::get("password/reset/{token}", [
-//     ResetPasswordController::class,
-//     "showResetForm",
-// ])->name("password.reset");
-// Route::post("password/reset", [ResetPasswordController::class, "reset"])->name(
-//     "password.update"
-// );
-// Route::post("password/update", [ResetPasswordController::class, "reset"])->name(
-//     "password.update"
-// );
-
-// Route::get("password/email", [
-//     ForgotPasswordController::class,
-//     "showLinkRequestForm",
-// ])->name("password.request");
-
-// Route::post("password/email", [
-//     ForgotPasswordController::class,
-//     "sendResetLinkEmail",
-// ])->name("password.email");
-
-// Route::get("password/reset/{token}", [
-//     ResetPasswordController::class,
-//     "showResetForm",
-// ])->name("password.reset");
-
-// Route::post("password/reset", [ResetPasswordController::class, "reset"])->name(
-//     "password.reset"
-// );
-// Route::post("password/update", [
-//     ResetPasswordController::class,
-//     "update",
-// ])->name("password.update");
-
-// /*   Admin Route    */
-// Route::middleware(["auth", "user-role:admin"])->group(function () {
-//     Route::view("admin/setUserRole", "admin/setUserRole")->name(
-//         "admin.setUserRole"
-//     );
-// });
-
 Route::get("password/email", [
     ForgotPasswordController::class,
     "showLinkRequestForm",
@@ -123,10 +53,12 @@ Route::post("password/update", [ResetPasswordController::class, "reset"])->name(
     "password.update"
 );
 
-// Route::post("password/update", [
-//     ResetPasswordController::class,
-//     "update",
-// ])->name("password.update");
+// /*   Admin Route    */
+Route::middleware(["auth", "user-role:admin"])->group(function () {
+    Route::view("admin/setUserRole", "admin/setUserRole")->name(
+        "admin.setUserRole"
+    );
+});
 
 /*   Editor Route    */
 Route::middleware(["auth", "user-role:editor"])->group(function () {
@@ -156,7 +88,19 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
 Route::view("errors/page-404", "errors/page-404")->name("errors/page-404");
 
 /*   User Route    */
-Route::middleware(["auth", "user-role:user"])->group(function () {});
+Route::middleware(["auth", "user-role:user", "web"])->group(function () {
+    /*   Log Out    */
+    Route::get("/logout", function () {
+        Auth::logout();
+        Session::forget("user");
+        return view("login");
+    });
+    /*   User Profile    */
+    Route::put("/users/{user}", [UserController::class, "update"])->name(
+        "users.update"
+    );
+    Route::get("/profile", [UserController::class, "profile"])->name("profile");
+});
 
 Route::get("/shop", function () {
     return view("shop");

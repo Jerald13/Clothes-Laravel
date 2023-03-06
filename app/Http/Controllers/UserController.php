@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Validator;
 use App\Notifications\MyNotification;
 use App\Notifications\UserFollowNotification;
 use App\Repositories\Interfaces\UserRepositoryInterface;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Session;
 
 class UserController extends Controller
 {
@@ -60,15 +62,80 @@ class UserController extends Controller
         return User::where("username", "like", "%" . $name . "%")->get();
     }
 
-    function update(Request $req)
+    public function update(Request $request, User $user)
     {
-        $user = User::find($req->id);
-        $user->username = $req->username;
-        $user->email = $req->email;
-        $user->password = Hash::make($req->password);
-        $user->save();
-        return ["Result" => "Data has been modified"];
+        // try {
+        $validatedData = $request->validate([
+            "username" => ["required", "string", "max:255"],
+            "email" => [
+                "required",
+                "string",
+                "email",
+                "max:255",
+                Rule::unique("users")->ignore($user->id),
+            ],
+            "phone_number" => ["required", "string", "max:20"],
+        ]);
+
+        // session()->put("validatedData", $validatedData);
+
+        session()->flash("success", $user->username . " account updated.");
+        return redirect("profile");
+
+        // $user->update($validatedData);
+        // Session::put("user", $user->toArray());
+        // return redirect("profile");
+
+        // Update the user session data
+
+        // session()->put("success", $user->username . " account updated.");
+        // session(name) += data;
+        // session()->put("success", $user->username . " account updated.");
+
+        // return view("profile", ["validatedData" => $validatedData]);
+        // return view("profile", [
+        //     "user" => $user,
+        //     "validatedData" => $validatedData,
+        // ]);
+
+        // } catch (\Exception $e) {
+        //     session()->put(
+        //         "error",
+        //         $user->username . " account something went wrong."
+        //     );
+        //     return redirect()->back();
+        // }
     }
+
+    // public function update(Request $request, User $user)
+    // {
+    //     $validatedData = $request->validate([
+    //         "username" => ["required", "string", "max:255"],
+    //         "email" => [
+    //             "required",
+    //             "string",
+    //             "email",
+    //             "max:255",
+    //             Rule::unique("users")->ignore($user->id),
+    //         ],
+    //         "phone_number" => ["required", "string", "max:20"],
+    //     ]);
+
+    //     $user->update($validatedData);
+
+    //     session()->flash("success", $user->username . " account updated.");
+    //     return redirect()->back();
+    // }
+
+    // function update(Request $req)
+    // {
+    //     $user = User::find($req->id);
+    //     $user->username = $req->username;
+    //     $user->email = $req->email;
+    //     $user->password = Hash::make($req->password);
+    //     $user->save();
+    //     return ["Result" => "Data has been modified"];
+    // }
 
     // function add(Request $req)
     // {
@@ -143,5 +210,11 @@ class UserController extends Controller
                 return ["Result" => "failed"];
             }
         }
+    }
+
+    public function profile()
+    {
+        $user = auth()->user();
+        return view("profile", compact("user"));
     }
 }
