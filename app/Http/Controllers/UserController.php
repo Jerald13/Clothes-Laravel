@@ -64,7 +64,6 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
-        // try {
         $validatedData = $request->validate([
             "username" => ["required", "string", "max:255"],
             "email" => [
@@ -77,34 +76,25 @@ class UserController extends Controller
             "phone_number" => ["required", "string", "max:20"],
         ]);
 
-        // session()->put("validatedData", $validatedData);
+        $validator = Validator::make($request->all(), [
+            "username" => "required|unique:posts|max:255",
+            "phone_number" => "required",
+        ]);
 
-        session()->flash("success", $user->username . " account updated.");
-        return redirect("profile");
+        if ($validator->fails()) {
+            return redirect("profile")
+                ->withErrors($validator)
+                ->withInput();
+        }
 
         // $user->update($validatedData);
         // Session::put("user", $user->toArray());
+        // session()->put("success", $user->username . " account updated.");
         // return redirect("profile");
 
-        // Update the user session data
+        // session()->flash("success", $user->username . " account updated.");
 
-        // session()->put("success", $user->username . " account updated.");
-        // session(name) += data;
-        // session()->put("success", $user->username . " account updated.");
-
-        // return view("profile", ["validatedData" => $validatedData]);
-        // return view("profile", [
-        //     "user" => $user,
-        //     "validatedData" => $validatedData,
-        // ]);
-
-        // } catch (\Exception $e) {
-        //     session()->put(
-        //         "error",
-        //         $user->username . " account something went wrong."
-        //     );
-        //     return redirect()->back();
-        // }
+        // return $validator->errors();
     }
 
     // public function update(Request $request, User $user)

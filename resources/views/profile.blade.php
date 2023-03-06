@@ -10,6 +10,35 @@
                     <p>Phone: {{ $user->phone_number }}</p>
                 </div>
 
+                <form action="{{ route('users.update', $user) }}" method="POST">
+                    @csrf
+                    @method('PUT')
+                    <div class="form-group">
+                        <label for="username">Name:</label>
+                        <input type="text" name="username" value="{{ old('username', $user->username) }}" class="form-control @error('username', 'post') is-invalid @enderror">
+                        @error('username')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" name="email" value="{{ old('email', $user->email) }}" class="form-control @error('email', 'post') is-invalid @enderror">
+                        @error('email')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <label for="phone_number">Phone:</label>
+                        <input type="text" name="phone_number" value="{{ old('phone_number', $user->phone_number) }}" class="form-control @error('phone_number', 'post') is-invalid @enderror">
+                        @error('phone_number')
+                            <div class="alert alert-danger">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
+                        <button type="submit" class="btn btn-primary">Update Profile</button>
+                    </div>
+                </form>
+
                 {{-- <form action="{{ route('users.update', $user) }}" method="POST">
                     @csrf
                     @method('PUT')
@@ -30,7 +59,7 @@
                     </div>
                 </form> --}}
 
-                <form action="{{ route('users.update', $user) }}" method="POST">
+                {{-- <form action="{{ route('users.update', $user) }}" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="form-group">
@@ -60,24 +89,15 @@
                         <button type="submit" class="btn btn-primary">Update Profile</button>
                     </div>
                
-                </form>
+                </form> --}}
 
         </ul>
     </div>
-    @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
 
-@if(session('success'))
+{{-- @if(session('success'))
     <div class="alert alert-success">{{ session('success') }}AA</div>
 @endif
-<div class="alert alert-success">{{ session('success') }}AA</div>
+<div class="alert alert-success">{{ session('success') }}AA</div> --}}
             </div> 
         </div>
     </div>
