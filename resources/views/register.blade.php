@@ -36,57 +36,53 @@
 									@csrf
 									<div class="form-group">
 										<label for="username">Username</label>
-										<input type="text" class="form-control" id="username" name="username" required="" autofocus="">
+										<input type="text" class="form-control @error('username') is-invalid @enderror" id="username" name="username" value="{{ old('username') }}" required autofocus>
+										@error('username')
+											<div class="invalid-feedback">{{ $message }}</div>
+										@enderror
 									</div>
-
+								
 									<div class="form-group">
 										<label for="email">E-Mail Address</label>
-										<input id="email" type="email" class="form-control" name="email" required="">
-										<div id="result"> </div>
+										<input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required>
+										@error('email')
+											<div class="invalid-feedback">{{ $message }}</div>
+										@enderror
 									</div>
-
-
+								
 									<div class="form-group">
 										<label for="phone_number">Phone Number</label>
 										<select name="phone_code">
 											<option value="+60">+60</option>
 										</select>
-										<input class="form-control" id="phone_number" type="text" name="phone_number" required="" autofocus="">
+										<input class="form-control @error('phone_number') is-invalid @enderror" id="phone_number" type="text" name="phone_number" value="{{ old('phone_number') }}" required autofocus>
 										<span class="error-message" style="color: red;"></span>
+										@error('phone_number')
+											<div class="invalid-feedback">{{ $message }}</div>
+										@enderror
 									</div>
-
-									{{-- <div class="form-group">
-										<label for="phone_number">Phone Number</label>
-										<select name="phone_code">
-											<option value="+60">+60</option>
-										</select>
-										<input class="form-control" id="phone_number" type="text" name="phone_number" required="" autofocus="">
-									</div> --}}
-
-
-									 <div class="form-row">
+								
+									<div class="form-row">
 										<div class="form-group col-md-6">
-											<label for="password">Password
-											</label>
-											<input id="password" type="password" class="form-control" name="password" required="">
+											<label for="password">Password</label>
+											<input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required>
+											@error('password')
+												<div class="invalid-feedback">{{ $message }}</div>
+											@enderror
 										</div>
 										<div class="form-group col-md-6">
-											<label for="password-confirm">Confirm Password
-											</label>
-											<input id="password-confirm" type="password" class="form-control" name="password_confirmation" required="">
+											<label for="password-confirm">Confirm Password</label>
+											<input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
 											<span id='message'></span>
 										</div>
-									
 									</div>
-
-
+								
 									<div class="form-group no-margin">
-										<input type="submit" value="Sign Up" class="btn btn-primary btn-block" name="submitBtn" id="submitBtn" >
+										<input type="submit" value="Sign Up" class="btn btn-primary btn-block" name="submitBtn" id="submitBtn">
 									</div>
+								
 									<div class="text-center mt-3 small">
-										Already have an account? <a href="login.html">Sign In</a>
-									</div>
-								</form>
+								
 							</div>
 						</div>
 						<footer class="footer mt-3">
