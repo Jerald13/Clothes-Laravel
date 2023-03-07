@@ -1,4 +1,7 @@
 <?php
+
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
@@ -14,59 +17,52 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FreeGiftController;
 use App\Http\Controllers\TagController;
 
-/* Model */ 
+/* Model */
 use App\Models\Product_images;
 use App\Models\User;
 use App\Models\Category;
 use App\Models\Tag;
 
+// Auth::routes();
 
-
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
-/*   Login & Logout    */
+/*   User Login Page Module    */
+Route::post("/login", [LoginController::class, "login"])->name("login");
+Route::view("/register", "register")->name("register");
+Route::post("/register", [UserController::class, "register"]);
 Route::get("/login", function () {
     return view("login");
 });
 
-Route::get("/logout", function () {
-    Session::forget("user");
-    return view("login");
-});
+/*   Forgot Password    */
+Route::get("password/email", [
+    ForgotPasswordController::class,
+    "showLinkRequestForm",
+])->name("password.request");
 
-Route::post("/login", [LoginController::class, "login"])->name("login");
-Route::post("/logout", [LoginController::class, "logout"])->name("logout");
+Route::post("password/email", [
+    ForgotPasswordController::class,
+    "sendResetLinkEmail",
+])->name("password.email");
 
+Route::get("password/reset/{token}", [
+    ResetPasswordController::class,
+    "showResetForm",
+])->name("password.reset");
 
-Route::get("/shop", function () {
-    return view("shop");
-});
+Route::post("password/update", [ResetPasswordController::class, "reset"])->name(
+    "password.update"
+);
 
-Route::get("/", function () {
-    return view("master");
-});
-
-// Auth::routes();
-
-//Admin Route
+// /*   Admin Route    */
 Route::middleware(["auth", "user-role:admin"])->group(function () {
     Route::view("admin/setUserRole", "admin/setUserRole")->name(
         "admin.setUserRole"
     );
 });
 
-//Editor Route
+/*   Editor Route    */
 Route::middleware(["auth", "user-role:editor"])->group(function () {
-    //Product
+    /*   Product    */
     Route::post("editor/productCreate", [
         ImageController::class,
         "upload",
@@ -85,21 +81,38 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
         "status",
     ]);
 
-    /*   TAgs    */
+    /*   Tags    */
     Route::resource("editor/tags", TagController::class);
     Route::post("/tags/{tag}/status", [TagController::class, "status"]);
 });
-Route::view("/page-404", "/page-404")->name("/page-404");
+Route::view("errors/page-404", "errors/page-404")->name("errors/page-404");
 
-// //User Route
-// Route::middleware(["auth", "user-role:user"])->group(function () {
-// });
+/*   User Route    */
+Route::middleware(["auth", "user-role:user", "web"])->group(function () {
+    /*   Log Out    */
+    Route::get("/logout", function () {
+        Auth::logout();
+        Session::forget("user");
+        return view("login");
+    });
+    /*   User Profile    */
+    Route::put("/users/{user}", [UserController::class, "update"])->name(
+        "users.update"
+    );
+    Route::get("/profile", [UserController::class, "profile"])->name("profile");
+});
+
+Route::get("/shop", function () {
+    return view("shop");
+});
+
+Route::get("/", function () {
+    return view("master");
+});
 
 //Product
-Route::view("/register", "register")->name("register");
 Route::get("/index", [ProductController::class, "index"])->name("index");
 Route::get("/shop", [ProductController::class, "shop"])->name("shop");
-Route::post("/register", [UserController::class, "register"]);
 Route::get("/", [ProductController::class, "index"]);
 Route::get("detail/{id}", [ProductController::class, "detail"]);
 Route::get("search", [ProductController::class, "search"]);
@@ -109,7 +122,6 @@ Route::get("removecart/{id}", [ProductController::class, "removeCart"]);
 Route::get("ordernow", [ProductController::class, "orderNow"]);
 Route::post("orderplace", [ProductController::class, "orderPlace"]);
 Route::get("myorders", [ProductController::class, "myOrders"]);
-
 Route::view("/error", "error")->name("error");
 
 //Web service

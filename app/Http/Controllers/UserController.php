@@ -6,16 +6,22 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use App\Notifications\MyNotification;
+use App\Notifications\UserFollowNotification;
+use App\Repositories\Interfaces\UserRepositoryInterface;
+use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Session;
 
 class UserController extends Controller
 {
-    //
-    // => Route::get('/list/{name},'[UserController::class,'getListByName']);
-    // and then in the getListByName() function we do like this:
+    // private $userRepository;
 
-    // getListByName($name){
-    // return User::where('name',$name)->first();
+    // public function __construct(UserRepositoryInterface $userRepository)
+    // {
+    //     $this->userRepository = $userRepository;
     // }
+
+    //Havent use Repository method
 
     function index(Request $request)
     {
@@ -56,26 +62,84 @@ class UserController extends Controller
         return User::where("username", "like", "%" . $name . "%")->get();
     }
 
-    function update(Request $req)
+    public function update(Request $request, User $user)
     {
-        $user = User::find($req->id);
-        $user->username = $req->username;
-        $user->email = $req->email;
-        $user->password = Hash::make($req->password);
-        $user->save();
-        return ["Result" => "Data has been modified"];
+        $validatedData = $request->validate([
+            "username" => ["required", "string", "max:255"],
+            "email" => [
+                "required",
+                "string",
+                "email",
+                "max:255",
+                Rule::unique("users")->ignore($user->id),
+            ],
+            "phone_number" => ["required", "string", "max:20"],
+        ]);
+
+        $validator = Validator::make($request->all(), [
+            "username" => "required|unique:posts|max:255",
+            "phone_number" => "required",
+        ]);
+
+        if ($validator->fails()) {
+            return redirect("profile")
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        // $user->update($validatedData);
+        // Session::put("user", $user->toArray());
+        // session()->put("success", $user->username . " account updated.");
+        // return redirect("profile");
+
+        // session()->flash("success", $user->username . " account updated.");
+
+        // return $validator->errors();
     }
 
-    function add(Request $req)
-    {
-        $user = new User();
-        $user->name = "User";
-        $user->username = $req->username;
-        $user->email = $req->email;
-        $user->password = Hash::make($req->password);
-        $user->save();
-        return ["Result" => "Data has been saved"];
-    }
+    // public function update(Request $request, User $user)
+    // {
+    //     $validatedData = $request->validate([
+    //         "username" => ["required", "string", "max:255"],
+    //         "email" => [
+    //             "required",
+    //             "string",
+    //             "email",
+    //             "max:255",
+    //             Rule::unique("users")->ignore($user->id),
+    //         ],
+    //         "phone_number" => ["required", "string", "max:20"],
+    //     ]);
+
+    //     $user->update($validatedData);
+
+    //     session()->flash("success", $user->username . " account updated.");
+    //     return redirect()->back();
+    // }
+
+    // function update(Request $req)
+    // {
+    //     $user = User::find($req->id);
+    //     $user->username = $req->username;
+    //     $user->email = $req->email;
+    //     $user->password = Hash::make($req->password);
+    //     $user->save();
+    //     return ["Result" => "Data has been modified"];
+    // }
+
+    // function add(Request $req)
+    // {
+    //     $user = new User();
+    //     $user->name = "User";
+    //     $user->username = $req->username;
+    //     $user->email = $req->email;
+
+    //     $user->phone_number = $req->phone_code . $req->phone_number;
+    //     $user->password = Hash::make($req->password);
+    //     $user->save();
+
+    //     return ["Result" => "Data has been saved"];
+    // }
 
     function list($id = null)
     {
@@ -101,8 +165,18 @@ class UserController extends Controller
         $user->name = "User";
         $user->username = $req->username;
         $user->email = $req->email;
+        $user->phone_number = $req->phone_code . $req->phone_number;
+
         $user->password = Hash::make($req->password);
         $user->save();
+
+        //This line of Code is Send SMS Notification from Vonage to User Phone number exactly
+        // $user->notify(new MyNotification());
+
+        // User::route("vonage", "+60182055007")->notify(new MyNotification());
+        // $user->notify(new MyNotification(), ["vonage" => "+60182055007"]);
+        // $user->notify((new MyNotification())->toVonage($user));
+
         return redirect("/login");
     }
 
@@ -126,5 +200,11 @@ class UserController extends Controller
                 return ["Result" => "failed"];
             }
         }
+    }
+
+    public function profile()
+    {
+        $user = auth()->user();
+        return view("profile", compact("user"));
     }
 }

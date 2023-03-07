@@ -45,6 +45,25 @@
 										<div id="result"> </div>
 									</div>
 
+
+									<div class="form-group">
+										<label for="phone_number">Phone Number</label>
+										<select name="phone_code">
+											<option value="+60">+60</option>
+										</select>
+										<input class="form-control" id="phone_number" type="text" name="phone_number" required="" autofocus="">
+										<span class="error-message" style="color: red;"></span>
+									</div>
+
+									{{-- <div class="form-group">
+										<label for="phone_number">Phone Number</label>
+										<select name="phone_code">
+											<option value="+60">+60</option>
+										</select>
+										<input class="form-control" id="phone_number" type="text" name="phone_number" required="" autofocus="">
+									</div> --}}
+
+
 									 <div class="form-row">
 										<div class="form-group col-md-6">
 											<label for="password">Password
@@ -94,6 +113,7 @@
 	<script src="public/graindashboard/js/graindashboard.js"></script>
     <script src="public/graindashboard/js/graindashboard.vendor.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 	<script>
 $('#password, #password-confirm').on('keyup', function () {
@@ -104,6 +124,21 @@ $('#password, #password-confirm').on('keyup', function () {
     $('#message').html('Matching').css('color', 'green');
   }else 
     $('#message').html('Not Matching').css('color', 'red');
+});
+
+
+$(document).ready(function() {
+    $('#phone_number').on('input', function() {
+        var phone_number = $(this).val().replace(/[^0-9]/g, ''); // remove any non-digit characters
+        var phone_code = $('[name="phone_code"]').val();
+        var phone_regex = new RegExp("^" + phone_code + "[0-9]{9}$"); // regex pattern for valid phone number
+
+        if (phone_regex.test(phone_number)) {
+            $('.error-message').text('');
+        } else {
+            $('.error-message').text('Invalid phone number format');
+        }
+    });
 });
 
 

@@ -62,7 +62,7 @@ if (Session::has("user")) {
 							Logout
 						</a>
 
-						<a href="#" class="flex-c-m p-lr-10 trans-04">
+						<a href="/profile" class="flex-c-m p-lr-10 trans-04">
 							{{Session::get('user')['username']}}
 							@if(Session::get('user')['name']=="User")
 							Account

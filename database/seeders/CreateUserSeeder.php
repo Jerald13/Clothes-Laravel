@@ -19,21 +19,26 @@ class CreateUserSeeder extends Seeder
             [
                 "name" => "User",
                 "username" => "JR",
-                "email" => "use2@gmail.com",
+                "email" => "clotheslaravel@gmail.com",
+                "phone_number" => "+60182055007",
                 "password" => bcrypt("123456"),
                 "role" => 0,
             ],
             [
                 "name" => "Editor",
                 "username" => "Lit",
-                "email" => "use3@gmail.com",
+                "email" => "jeraldlee2002@gmail.com",
+                "phone_number" => "+60182055007",
+
                 "password" => bcrypt("123456"),
                 "role" => 1,
             ],
             [
                 "name" => "Admin",
                 "username" => "PowerGuy",
-                "email" => "use4@gmail.com",
+                "email" => "leeszeyen13@gmail.com",
+                "phone_number" => "+60182055007",
+
                 "password" => bcrypt("123456"),
                 "role" => 2,
             ],

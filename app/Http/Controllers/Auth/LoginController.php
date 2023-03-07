@@ -52,39 +52,66 @@ class LoginController extends Controller
         $req->session()->put("user", $user);
     }
 
+    // public function login(Request $request)
+    // {
+    //     $user = User::where(["email" => $request->email])->first();
+
+    //     $input = $request->all();
+    //     $this->validate($request, [
+    //         "email" => "required|email",
+    //         "password" => "required",
+    //     ]);
+    //     if (
+    //         auth()->attempt([
+    //             "email" => $input["email"],
+    //             "password" => $input["password"],
+    //         ])
+    //     ) {
+    //         $request->session()->put("user", $user);
+    //         if (auth()->user()->role == "admin") {
+    //             return redirect()->route("index");
+    //         } elseif (auth()->user()->role == "editor") {
+    //             return redirect()->route("index");
+    //         } else {
+    //             return redirect()->route("index");
+    //         }
+    //     } else {
+    //         // dd($user);
+    //         return redirect()->route("error");
+    //         // ->with("error", "Incorrect email or password");
+    //     }
+    // }
+
     public function login(Request $request)
     {
         $user = User::where(["email" => $request->email])->first();
-
-        // if (!$user || !Hash::check($request->password, $user->password)) {
-        //     // return "Username or password is not matched";
-        //     return redirect()->route("error");
-        // } else {
-        //     dd($user);
-        //     $request->session()->put("user", $user);
-        // }
 
         $input = $request->all();
         $this->validate($request, [
             "email" => "required|email", // the field is required and must be email format
             "password" => "required",    
         ]);
+
+        $remember = $request->has("remember");
+
         if (
-            auth()->attempt([
-                "email" => $input["email"],
-                "password" => $input["password"],
-            ])
+            auth()->attempt(
+                [
+                    "email" => $input["email"],
+                    "password" => $input["password"],
+                ],
+                $remember
+            )
         ) {
             $request->session()->put("user", $user);
             if (auth()->user()->role == "admin") {
-                return redirect()->route("product");
+                return redirect()->route("index");
             } elseif (auth()->user()->role == "editor") {
-                return redirect()->route("product");
+                return redirect()->route("index");
             } else {
-                return redirect()->route("product");
+                return redirect()->route("index");
             }
         } else {
-            // dd($user);
             return redirect()->route("error");
             // ->with("error", "Incorrect email or password");
         }
