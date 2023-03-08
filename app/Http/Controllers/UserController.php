@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
 use App\Notifications\MyNotification;
-use App\Notifications\UserFollowNotification;
-use App\Repositories\Interfaces\UserRepositoryInterface;
-use Illuminate\Validation\Rule;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -23,7 +21,7 @@ class UserController extends Controller
 
     //Havent use Repository method
 
-    function index(Request $request)
+    public function index(Request $request)
     {
         $user = User::where("email", $request->email)->first();
         // print_r($data);
@@ -48,7 +46,7 @@ class UserController extends Controller
         return response($response, 201);
     }
 
-    function delete($id)
+    public function delete($id)
     {
         $user = User::find($id);
         $result = $user->delete();
@@ -57,7 +55,7 @@ class UserController extends Controller
         }
     }
 
-    function search($name)
+    public function search($name)
     {
         return User::where("username", "like", "%" . $name . "%")->get();
     }
@@ -144,12 +142,11 @@ class UserController extends Controller
     //     return ["Result" => "Data has been saved"];
     // }
 
-    function list($id = null)
-    {
+    function list($id = null) {
         return $id ? User::find($id) : User::all();
     }
 
-    function login(Request $req)
+    public function login(Request $req)
     {
         $user = User::where(["email" => $req->email])->first();
         if (!$user || !Hash::check($req->password, $user->password)) {
@@ -161,43 +158,47 @@ class UserController extends Controller
         $req->session()->put("user", $user);
     }
 
-    function register(Request $req)
+    public function register(Request $req)
     {
         $req->validate([
             'username' => 'required',
-
-            'phone_code' => 'required',
+            "email" => [
+                "required",
+                "string",
+                "email",
+                "max:255",
+                Rule::unique("users"),
+            ],
             'phone_number' => 'required',
-            'password' => 'required|min:6'
+            'password' => 'required', // |min:6
             // "username" => ["required", "string", "max:255"],
             // "email" => [
             //     "required",
             //     "string",
-            //     "email",
-            //     "max:255",
-            //     Rule::unique("users"),
+            // "email",
+            // "max:255",
+            // Rule::unique("users"),
             // ],
             // "phone_number" => ["required", "string", "max:20"],
             // 'password' => 'required|min:6'
-            
+
         ]);
-    
+
         $user = new User();
         $user->name = "User";
         $user->username = $req->username;
         $user->email = $req->email;
         $user->phone_number = $req->phone_code . $req->phone_number;
-    
+
         $user->password = Hash::make($req->password);
         $user->save();
-    
+        $user->notify(new MyNotification());
         return redirect("/login");
     }
 
-
-    // function register(Request $req)
+    // public function register(Request $req)
     // {
-    //     // return $req->input();
+    //     // return $req->input();.
     //     $user = new User();
     //     $user->name = "User";
     //     $user->username = $req->username;
@@ -217,7 +218,7 @@ class UserController extends Controller
     //     return redirect("/login");
     // }
 
-    function testData(Request $req)
+    public function testData(Request $req)
     {
         $rules = [
             "id" => "required|min:2|max:4",

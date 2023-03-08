@@ -44,7 +44,7 @@
 								
 									<div class="form-group">
 										<label for="email">E-Mail Address</label>
-										<input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required>
+										<input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" required>
 										@error('email')
 											<div class="invalid-feedback">{{ $message }}</div>
 										@enderror
@@ -65,21 +65,26 @@
 									<div class="form-row">
 										<div class="form-group col-md-6">
 											<label for="password">Password</label>
-											<input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required>
+											<input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" required>
 											@error('password')
 												<div class="invalid-feedback">{{ $message }}</div>
 											@enderror
 										</div>
 										<div class="form-group col-md-6">
 											<label for="password-confirm">Confirm Password</label>
-											<input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+											<input type="password" class="form-control" id="password-confirm" name="password_confirmation" required>
 											<span id='message'></span>
 										</div>
 									</div>
 								
 									<div class="form-group no-margin">
-										<input type="submit" value="Sign Up" class="btn btn-primary btn-block" name="submitBtn" id="submitBtn">
+										<input type="submit" class="btn btn-primary btn-block" name="submitBtn" id="submitBtn" value="Sign Up">
 									</div>
+								
+									<div class="text-center mt-3 small">
+									</div>
+								</form>
+								
 								
 									<div class="text-center mt-3 small">
 								

@@ -1,31 +1,28 @@
 <?php
 
 use App\Http\Controllers\Auth\ForgotPasswordController;
-use App\Http\Controllers\Auth\ResetPasswordController;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
-
-/* Controller */
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ImageController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FreeGiftController;
+use App\Http\Controllers\HomeController;
+
+/* Controller */
+use App\Http\Controllers\ImageController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\UserController;
+use App\Models\User;
 
 /* Model */
-use App\Models\Product_images;
-use App\Models\User;
-use App\Models\Category;
-use App\Models\Tag;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 
 // Auth::routes();
 
 /*   User Login Page Module    */
+
 Route::post("/login", [LoginController::class, "login"])->name("login");
 Route::view("/register", "register")->name("register");
 Route::post("/register", [UserController::class, "register"]);
