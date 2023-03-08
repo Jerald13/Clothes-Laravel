@@ -14,10 +14,13 @@ return new class extends Migration {
             $table->id();
             //    $table->unsignedBigInteger('category_id');
             $table->string("name")->unique();
+            $table->string("category_id");
             $table->string("price");
-            $table->string("category");
+            $table->string("size");
+            $table->string("color");
+            $table->string("quantity");
+            $table->string("gender");
             $table->string("description");
-            $table->string("gallery");
             $table->timestamps();
         });
     }
