@@ -76,16 +76,19 @@ class UserController extends Controller
             "phone_number" => ["required", "string", "max:20"],
         ]);
 
-        $validator = Validator::make($request->all(), [
-            "username" => "required|unique:posts|max:255",
-            "phone_number" => "required",
-        ]);
+        $user->update($validatedData);
+        session()->flash("success", $user->username . " account updated.");
+        return redirect("/profile");
+        // $validator = Validator::make($request->all(), [
+        //     "username" => "required|unique:posts|max:255",
+        //     "phone_number" => "required",
+        // ]);
 
-        if ($validator->fails()) {
-            return redirect("profile")
-                ->withErrors($validator)
-                ->withInput();
-        }
+        // if ($validator->fails()) {
+        //     return redirect("profile")
+        //         ->withErrors($validator)
+        //         ->withInput();
+        // }
 
         // $user->update($validatedData);
         // Session::put("user", $user->toArray());
@@ -160,25 +163,59 @@ class UserController extends Controller
 
     function register(Request $req)
     {
-        // return $req->input();
+        $req->validate([
+            'username' => 'required',
+
+            'phone_code' => 'required',
+            'phone_number' => 'required',
+            'password' => 'required|min:6'
+            // "username" => ["required", "string", "max:255"],
+            // "email" => [
+            //     "required",
+            //     "string",
+            //     "email",
+            //     "max:255",
+            //     Rule::unique("users"),
+            // ],
+            // "phone_number" => ["required", "string", "max:20"],
+            // 'password' => 'required|min:6'
+            
+        ]);
+    
         $user = new User();
         $user->name = "User";
         $user->username = $req->username;
         $user->email = $req->email;
         $user->phone_number = $req->phone_code . $req->phone_number;
-
+    
         $user->password = Hash::make($req->password);
         $user->save();
-
-        //This line of Code is Send SMS Notification from Vonage to User Phone number exactly
-        // $user->notify(new MyNotification());
-
-        // User::route("vonage", "+60182055007")->notify(new MyNotification());
-        // $user->notify(new MyNotification(), ["vonage" => "+60182055007"]);
-        // $user->notify((new MyNotification())->toVonage($user));
-
+    
         return redirect("/login");
     }
+
+
+    // function register(Request $req)
+    // {
+    //     // return $req->input();
+    //     $user = new User();
+    //     $user->name = "User";
+    //     $user->username = $req->username;
+    //     $user->email = $req->email;
+    //     $user->phone_number = $req->phone_code . $req->phone_number;
+
+    //     $user->password = Hash::make($req->password);
+    //     $user->save();
+
+    //     //This line of Code is Send SMS Notification from Vonage to User Phone number exactly
+    //     // $user->notify(new MyNotification());
+
+    //     // User::route("vonage", "+60182055007")->notify(new MyNotification());
+    //     // $user->notify(new MyNotification(), ["vonage" => "+60182055007"]);
+    //     // $user->notify((new MyNotification())->toVonage($user));
+
+    //     return redirect("/login");
+    // }
 
     function testData(Request $req)
     {
