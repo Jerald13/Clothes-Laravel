@@ -19,7 +19,6 @@ return new class extends Migration {
             $table->string("size");
             $table->string("color");
             $table->string("quantity");
-            $table->string("gender");
             $table->string("description");
             $table->timestamps();
         });
