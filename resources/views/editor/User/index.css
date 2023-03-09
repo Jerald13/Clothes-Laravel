@@ -1,0 +1,37 @@
+menu {
+    display: block;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 12pt;
+}
+
+message {
+    display: block;
+    width: 400px;
+    color: purple;
+    text-align: center;
+    font-size: 10pt;
+    border: 3px solid blue;
+    background-color: ivory;
+    margin: 10px;
+    padding: 15px;
+}
+
+item {
+    display: block;
+    color: black;
+    margin: 16px;
+}
+
+code {
+    display: block;
+    font-size: 16pt;
+    color: blue;
+    font-weight: bold;
+}
+
+name {
+    display: block;
+    font-size: 20pt;
+    color: red;
+    font-weight: bold;
+}

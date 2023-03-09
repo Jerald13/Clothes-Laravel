@@ -41,7 +41,7 @@ if (Session::has("user")) {
 	<link rel="stylesheet" type="text/css" href="css/util.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 <!--===============================================================================================-->
-<script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+{{-- <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script> --}}
 </head>
 <body class="animsition">
 	

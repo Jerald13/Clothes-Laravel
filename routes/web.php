@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\DB;
 /* Controller */
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImageController;
@@ -16,6 +16,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FreeGiftController;
 use App\Http\Controllers\TagController;
+use App\Http\Controllers\Metamask\MetamaskController;
 
 /* Model */
 use App\Models\Product_images;
@@ -53,7 +54,7 @@ Route::post("password/update", [ResetPasswordController::class, "reset"])->name(
     "password.update"
 );
 
-// /*   Admin Route    */
+/*   Admin Route    */
 Route::middleware(["auth", "user-role:admin"])->group(function () {
     Route::view("admin/setUserRole", "admin/setUserRole")->name(
         "admin.setUserRole"
@@ -84,8 +85,17 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
     /*   Tags    */
     Route::resource("editor/tags", TagController::class);
     Route::post("/tags/{tag}/status", [TagController::class, "status"]);
+
+    /*   User    */
+    Route::get("editor/User/users-xsl", [
+        UserController::class,
+        "displayInXSL",
+    ]);
+    Route::get("editor/User/users-xml", [
+        UserController::class,
+        "displayInXML",
+    ]);
 });
-Route::view("errors/page-404", "errors/page-404")->name("errors/page-404");
 
 /*   User Route    */
 Route::middleware(["auth", "user-role:user", "web"])->group(function () {
@@ -95,6 +105,7 @@ Route::middleware(["auth", "user-role:user", "web"])->group(function () {
         Session::forget("user");
         return view("login");
     });
+
     /*   User Profile    */
     Route::put("/users/{user}", [UserController::class, "update"])->name(
         "users.update"
@@ -102,6 +113,18 @@ Route::middleware(["auth", "user-role:user", "web"])->group(function () {
     Route::get("/profile", [UserController::class, "profile"])->name("profile");
 });
 
+Route::prefix("metamask")->group(function () {
+    Route::get("/", [MetamaskController::class, "index"])->name("metamask");
+    Route::post("/transaction/create", [
+        MetamaskController::class,
+        "create",
+    ])->name("metamask.transaction.create");
+});
+
+/*   Error Page   */
+Route::view("errors/page-404", "errors/page-404")->name("errors/page-404");
+
+/*   Visitor Page   */
 Route::get("/shop", function () {
     return view("shop");
 });
@@ -110,7 +133,6 @@ Route::get("/", function () {
     return view("master");
 });
 
-//Product
 Route::get("/index", [ProductController::class, "index"])->name("index");
 Route::get("/shop", [ProductController::class, "shop"])->name("shop");
 Route::get("/", [ProductController::class, "index"]);
