@@ -7,9 +7,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 // use Illuminate\Notifications\Messages\NexmoMessage;
 
-use Illuminate\Notifications\Notification;
-// use Notification;
 use Illuminate\Notifications\Messages\VonageMessage;
+// use Notification;
+use Illuminate\Notifications\Notification;
 
 // class MyNotification extends Notification
 class MyNotification extends Notification implements ShouldQueue
@@ -59,8 +59,8 @@ class MyNotification extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         return [
-                //
-            ];
+            //
+        ];
     }
 
     // public function toNextmo($notifiable)
