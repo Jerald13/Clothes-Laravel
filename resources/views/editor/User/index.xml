@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/css" href="index.css" ?>
+<menu>
+  <message>
+    <![CDATA[
+    User Info
+    ]]>
+  </message>
+  <item>
+    <code>1</code>
+    <name>Pikachu</name>
+    <email>jeraldlee2002@gmail.com</email>
+    <phone_number>+60182055007</phone_number>
+  </item>
+  <item>
+    <code>2</code>
+    <name>PowerGuy</name>
+    <email>leeszeyen13@gmail.com</email>
+    <phone_number>+60182055007</phone_number>
+  </item>
+</menu>

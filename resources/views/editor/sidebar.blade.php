@@ -238,7 +238,15 @@
                             </a>
                             <ul class="collapse list-unstyled pl-4 w-100" id="User">
                               <li class="nav-item">
-                                <a class="nav-link pl-3" href="productDisplay"><span class="ml-1 item-text">Display User</span>
+                                <a class="nav-link pl-3" href="User/"><span class="ml-1 item-text">Display User</span>
+                                </a>
+                              </li>
+                              <li class="nav-item">
+                                <a class="nav-link pl-3" href="User/users-xsl"><span class="ml-1 item-text">Display User In XSL</span>
+                                </a>
+                              </li>
+                              <li class="nav-item">
+                                <a class="nav-link pl-3" href="User/users-xml"><span class="ml-1 item-text">Display User In XML</span>
                                 </a>
                               </li>
                             </ul>

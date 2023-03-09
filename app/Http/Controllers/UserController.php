@@ -11,6 +11,7 @@ use App\Notifications\UserFollowNotification;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
@@ -164,11 +165,11 @@ class UserController extends Controller
     function register(Request $req)
     {
         $req->validate([
-            'username' => 'required',
+            "username" => "required",
 
-            'phone_code' => 'required',
-            'phone_number' => 'required',
-            'password' => 'required|min:6'
+            "phone_code" => "required",
+            "phone_number" => "required",
+            "password" => "required|min:6",
             // "username" => ["required", "string", "max:255"],
             // "email" => [
             //     "required",
@@ -179,21 +180,19 @@ class UserController extends Controller
             // ],
             // "phone_number" => ["required", "string", "max:20"],
             // 'password' => 'required|min:6'
-            
         ]);
-    
+
         $user = new User();
         $user->name = "User";
         $user->username = $req->username;
         $user->email = $req->email;
         $user->phone_number = $req->phone_code . $req->phone_number;
-    
+
         $user->password = Hash::make($req->password);
         $user->save();
-    
+
         return redirect("/login");
     }
-
 
     // function register(Request $req)
     // {
@@ -243,5 +242,65 @@ class UserController extends Controller
     {
         $user = auth()->user();
         return view("profile", compact("user"));
+    }
+
+    public function displayInXSL()
+    {
+        $users = User::latest()->paginate(10);
+
+        $xml = new \SimpleXMLElement("<users/>");
+
+        foreach ($users as $user) {
+            $userXml = $xml->addChild("user");
+            $userXml->addChild("id", $user->id);
+            $userXml->addChild("name", $user->name);
+            $userXml->addChild("username", $user->username);
+            $userXml->addChild("email", $user->email);
+            $userXml->addChild("phone_number", $user->phone_number);
+        }
+
+        $xmlString = $xml->asXML();
+
+        // Load the XSL stylesheet
+        $xsl = new \DOMDocument();
+        $xsl->load(base_path("resources/views/editor/User/index.xsl"));
+
+        // Load the XML data
+        $xmlData = new \DOMDocument();
+        $xmlData->loadXML($xmlString);
+
+        // Apply the XSL transformation
+        $xsltProcessor = new \XSLTProcessor();
+        $xsltProcessor->importStylesheet($xsl);
+        $htmlString = $xsltProcessor->transformToXML($xmlData);
+
+        // Create and return the response
+        $response = new Response($htmlString);
+        $response->header("Content-Type", "text/html");
+
+        return $response;
+    }
+
+    public function displayInXML()
+    {
+        $users = User::latest()->paginate(10);
+
+        $xml = new \SimpleXMLElement("<users/>");
+
+        foreach ($users as $user) {
+            $userXml = $xml->addChild("user");
+            $userXml->addChild("id", $user->id);
+            $userXml->addChild("name", $user->name);
+            $userXml->addChild("username", $user->username);
+            $userXml->addChild("email", $user->email);
+            $userXml->addChild("phone_number", $user->phone_number);
+        }
+
+        $xmlString = $xml->asXML();
+
+        $response = new Response($xmlString);
+        $response->header("Content-Type", "application/xml");
+
+        return $response;
     }
 }
