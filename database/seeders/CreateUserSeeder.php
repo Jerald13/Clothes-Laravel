@@ -21,6 +21,7 @@ class CreateUserSeeder extends Seeder
                 "username" => "JR",
                 "email" => "clotheslaravel@gmail.com",
                 "phone_number" => "+60182055007",
+                "status" => "Active",
                 "password" => bcrypt("123456"),
                 "role" => 0,
             ],
@@ -29,7 +30,7 @@ class CreateUserSeeder extends Seeder
                 "username" => "Lit",
                 "email" => "jeraldlee2002@gmail.com",
                 "phone_number" => "+60182055007",
-
+                "status" => "Active",
                 "password" => bcrypt("123456"),
                 "role" => 1,
             ],
@@ -38,7 +39,7 @@ class CreateUserSeeder extends Seeder
                 "username" => "PowerGuy",
                 "email" => "leeszeyen13@gmail.com",
                 "phone_number" => "+60182055007",
-
+                "status" => "Active",
                 "password" => bcrypt("123456"),
                 "role" => 2,
             ],

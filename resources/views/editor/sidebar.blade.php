@@ -238,20 +238,23 @@
                             </a>
                             <ul class="collapse list-unstyled pl-4 w-100" id="User">
                               <li class="nav-item">
-                                <a class="nav-link pl-3" href="User/"><span class="ml-1 item-text">Display User</span>
+                                <a class="nav-link pl-3" href="{{ route('users.display') }}"><span class="ml-1 item-text">Display User</span>
                                 </a>
                               </li>
                               <li class="nav-item">
-                                <a class="nav-link pl-3" href="User/users-xsl"><span class="ml-1 item-text">Display User In XSL</span>
+                                <a class="nav-link pl-3" href="{{ route('users.displayBannedUser') }}"><span class="ml-1 item-text">Display Banned User</span>
                                 </a>
                               </li>
                               <li class="nav-item">
-                                <a class="nav-link pl-3" href="User/users-xml"><span class="ml-1 item-text">Display User In XML</span>
+                                <a class="nav-link pl-3" href="{{ route('users.display.xsl') }}"><span class="ml-1 item-text">Display User In XSL</span>
+                                </a>
+                              </li>
+                              <li class="nav-item">
+                                <a class="nav-link pl-3" href="{{ route('users.display.xml') }}"><span class="ml-1 item-text">Display User In XML</span>
                                 </a>
                               </li>
                             </ul>
                           </li>
-
 
                         <p class="text-muted nav-heading mt-4 mb-1">
                           <span>Role Site</span>
@@ -264,7 +267,7 @@
                             </a>
                             <ul class="collapse list-unstyled pl-4 w-100" id="Role">
                               <li class="nav-item">
-                                <a class="nav-link pl-3" href="productDisplay"><span class="ml-1 item-text">Display Role</span>
+                                <a class="nav-link pl-3" href="{{ route('role.displayRole') }}"><span class="ml-1 item-text">Display Role</span>
                                 </a>
                                 <a class="nav-link pl-3" href="productCreate"><span class="ml-1 item-text">Add Editor (Admin)</span>
                                 </a>

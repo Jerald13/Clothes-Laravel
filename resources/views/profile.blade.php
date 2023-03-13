@@ -8,6 +8,15 @@
                     <h1>{{ $user->username }}</h1>
                     <p>Email: {{ $user->email }}</p>
                     <p>Phone: {{ $user->phone_number }}</p>
+                    @if ($user->email_verified_at == null)
+                    <a href="{{ route('auth.sendVerificationEmail', ['id' => $user->id, 'hash' => sha1($user->email)]) }}">Verify Email</a>
+
+
+
+                  
+                        
+                    @endif
+
                 </div>
 
                 <form action="{{ route('users.update', $user) }}" method="POST">

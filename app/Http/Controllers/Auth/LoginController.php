@@ -84,22 +84,29 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        $user = User::where(["email" => $request->email])->first();
+        $user = User::where("email", $request->email)->first();
+
+        // Check if user is banned
+        if ($user && $user->status === "Banned") {
+            return redirect()
+                ->route("errors/page-error")
+                ->with([
+                    "error" => "Your account has been banned.",
+                    "No" => "403",
+                ]);
+        }
 
         $input = $request->all();
         $this->validate($request, [
-            "email" => "required|email", // the field is required and must be email format
-            "password" => "required",    
+            "email" => "required|email",
+            "password" => "required",
         ]);
 
         $remember = $request->has("remember");
 
         if (
             auth()->attempt(
-                [
-                    "email" => $input["email"],
-                    "password" => $input["password"],
-                ],
+                ["email" => $input["email"], "password" => $input["password"]],
                 $remember
             )
         ) {
@@ -112,8 +119,9 @@ class LoginController extends Controller
                 return redirect()->route("index");
             }
         } else {
-            return redirect()->route("error");
-            // ->with("error", "Incorrect email or password");
+            return redirect()
+                ->route("errors/page-404")
+                ->with("message", "Incorrect email or password");
         }
     }
 }
