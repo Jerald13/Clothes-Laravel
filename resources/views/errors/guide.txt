@@ -1,0 +1,15 @@
+
+
+
+Error 404: Not Found - This error occurs when the requested resource or page is not available on the server. For example, if a user tries to 
+access a page that doesn't exist, the server will return a 404 error.
+
+Error 403 : Not Authorized - If a banned user is trying to log in, the error code returned by the server would typically be a 403 Forbidden error, 
+as the user is not authorized to access the resource (in this case, the login page or authentication endpoint).
+
+Error 405: Method Not Allowed - This error occurs when a user tries to perform an HTTP method that is not allowed on the requested resource. 
+For example, if a user tries to send a POST request to a URL that only accepts GET requests, the server will return a 405 error.
+
+Error 500: Internal Server Error - This error occurs when the server encounters an unexpected error while processing a request. 
+It could be due to a variety of reasons, such as a server configuration issue, programming error, or database connection problem. 
+The server will return a 500 error when it is unable to handle the request and needs to be fixed by the website developer or administrator.

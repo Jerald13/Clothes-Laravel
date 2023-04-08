@@ -17,6 +17,9 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FreeGiftController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\Metamask\MetamaskController;
+use Illuminate\Support\Facades\Mail;
+use App\Notifications\VerifyEmail;
+use Illuminate\Support\Facades\URL;
 
 /* Model */
 use App\Models\Product_images;
@@ -34,6 +37,34 @@ Route::post("/register", [UserController::class, "register"]);
 Route::get("/login", function () {
     return view("login");
 });
+Route::get("/verify-email/{id}/{hash}", [
+    UserController::class,
+    "sendVerificationEmail",
+])->name("auth.sendVerificationEmail");
+
+Route::get("/verify-email/{id}/{hash}/verify", [
+    UserController::class,
+    "verify",
+])->name("auth.verify");
+
+// Route::post("/register", function (Request $request) {
+//     // ... validate and create user ...
+
+//     // Send verification email
+//     $verificationUrl = URL::temporarySignedRoute(
+//         "verification.verify",
+//         now()->addMinutes(60),
+//         ["id" => $request->id]
+//     );
+//     Mail::to($request->email)->send(new VerifyEmail($verificationUrl));
+
+//     return redirect()
+//         ->route("login")
+//         ->with(
+//             "success",
+//             "Registration successful. Please check your email to verify your account."
+//         );
+// })->name("register");
 
 /*   Forgot Password    */
 Route::get("password/email", [
@@ -73,7 +104,7 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
     Route::get("editor/productCreate", [
         HomeController::class,
         "createProduct",
-    ])->name("editor.productCreate");
+    ])->name("editor.productEdit");
     Route::view("editor/index", "editor/index")->name("editor.index");
 
     /*   Category    */
@@ -91,11 +122,39 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
     Route::get("editor/User/users-xsl", [
         UserController::class,
         "displayInXSL",
-    ]);
+    ])->name("users.display.xsl");
     Route::get("editor/User/users-xml", [
         UserController::class,
         "displayInXML",
-    ]);
+    ])->name("users.display.xml");
+    Route::get("editor/User/index", [UserController::class, "display"])->name(
+        "users.display"
+    );
+    Route::get("editor/users/export/xml", [
+        UserController::class,
+        "exportUsersToXml",
+    ])->name("users.export.xml");
+    Route::post("editor/users/import/xml", [
+        UserController::class,
+        "importUsersToXml",
+    ])->name("users.import.xml");
+    Route::post("/users/{user}/ban", [UserController::class, "banUser"])->name(
+        "users.ban"
+    );
+    Route::get("editor/users/userDisplayBanned", [
+        UserController::class,
+        "displayBannedUser",
+    ])->name("users.displayBannedUser");
+    Route::post("/users/{user}/unban", [
+        UserController::class,
+        "unbanUser",
+    ])->name("users.unban");
+
+    /*   Role    */
+    Route::get("editor/role/index", [
+        UserController::class,
+        "displayRole",
+    ])->name("role.displayRole");
 });
 
 /*   User Route    */
@@ -124,6 +183,9 @@ Route::prefix("metamask")->group(function () {
 
 /*   Error Page   */
 Route::view("errors/page-404", "errors/page-404")->name("errors/page-404");
+Route::view("errors/page-error", "errors/page-error")->name(
+    "errors/page-error"
+);
 
 /*   Visitor Page   */
 Route::get("/shop", function () {

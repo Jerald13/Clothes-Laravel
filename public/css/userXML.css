@@ -1,4 +1,4 @@
-menu {
+users {
     display: block;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 12pt;
@@ -16,22 +16,22 @@ message {
     padding: 15px;
 }
 
-item {
+user {
     display: block;
     color: black;
     margin: 16px;
 }
 
-code {
+email {
     display: block;
     font-size: 16pt;
     color: blue;
     font-weight: bold;
 }
 
-name {
+username {
     display: block;
     font-size: 20pt;
-    color: red;
+    color: Green;
     font-weight: bold;
 }

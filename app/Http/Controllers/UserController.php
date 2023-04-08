@@ -12,18 +12,14 @@ use App\Repositories\Interfaces\UserRepositoryInterface;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Response;
+use Spatie\ResponseXml\ResponseFactory;
+use Illuminate\Auth\Events\Verified;
+use Illuminate\Support\Facades\URL;
 
+use Illuminate\Support\Facades\Mail;
+use App\Notifications\VerifyEmail;
 class UserController extends Controller
 {
-    // private $userRepository;
-
-    // public function __construct(UserRepositoryInterface $userRepository)
-    // {
-    //     $this->userRepository = $userRepository;
-    // }
-
-    //Havent use Repository method
-
     function index(Request $request)
     {
         $user = User::where("email", $request->email)->first();
@@ -49,13 +45,30 @@ class UserController extends Controller
         return response($response, 201);
     }
 
-    function delete($id)
+    public function display()
     {
-        $user = User::find($id);
-        $result = $user->delete();
-        if ($result) {
-            return ["result" => "record has been deleted"];
-        }
+        $users = User::where("role", 0)
+            ->where("status", "active")
+            ->get();
+
+        return view("editor.user.index", compact("users"));
+    }
+
+    public function displayBannedUser()
+    {
+        $users = User::where("status", "Banned")->get();
+
+        return view("editor.user.userDisplayBanned", compact("users"));
+    }
+
+    public function displayRole()
+    {
+        $users = User::whereIn("role", [1, 2])
+            ->where("status", "Active")
+            ->orderByRaw("IF(role = 2, 0, IF(role = 1, 1, 2))")
+            ->get();
+
+        return view("editor.role.index", compact("users"));
     }
 
     function search($name)
@@ -80,106 +93,39 @@ class UserController extends Controller
         $user->update($validatedData);
         session()->flash("success", $user->username . " account updated.");
         return redirect("/profile");
-        // $validator = Validator::make($request->all(), [
-        //     "username" => "required|unique:posts|max:255",
-        //     "phone_number" => "required",
-        // ]);
-
-        // if ($validator->fails()) {
-        //     return redirect("profile")
-        //         ->withErrors($validator)
-        //         ->withInput();
-        // }
-
-        // $user->update($validatedData);
-        // Session::put("user", $user->toArray());
-        // session()->put("success", $user->username . " account updated.");
-        // return redirect("profile");
-
-        // session()->flash("success", $user->username . " account updated.");
-
-        // return $validator->errors();
     }
-
-    // public function update(Request $request, User $user)
-    // {
-    //     $validatedData = $request->validate([
-    //         "username" => ["required", "string", "max:255"],
-    //         "email" => [
-    //             "required",
-    //             "string",
-    //             "email",
-    //             "max:255",
-    //             Rule::unique("users")->ignore($user->id),
-    //         ],
-    //         "phone_number" => ["required", "string", "max:20"],
-    //     ]);
-
-    //     $user->update($validatedData);
-
-    //     session()->flash("success", $user->username . " account updated.");
-    //     return redirect()->back();
-    // }
-
-    // function update(Request $req)
-    // {
-    //     $user = User::find($req->id);
-    //     $user->username = $req->username;
-    //     $user->email = $req->email;
-    //     $user->password = Hash::make($req->password);
-    //     $user->save();
-    //     return ["Result" => "Data has been modified"];
-    // }
-
-    // function add(Request $req)
-    // {
-    //     $user = new User();
-    //     $user->name = "User";
-    //     $user->username = $req->username;
-    //     $user->email = $req->email;
-
-    //     $user->phone_number = $req->phone_code . $req->phone_number;
-    //     $user->password = Hash::make($req->password);
-    //     $user->save();
-
-    //     return ["Result" => "Data has been saved"];
-    // }
 
     function list($id = null)
     {
         return $id ? User::find($id) : User::all();
     }
 
-    function login(Request $req)
-    {
-        $user = User::where(["email" => $req->email])->first();
-        if (!$user || !Hash::check($req->password, $user->password)) {
-            return "Username or password is not matched";
-        } else {
-            $req->session()->put("user", $user);
-            return redirect("/");
-        }
-        $req->session()->put("user", $user);
-    }
+    // function login(Request $req)
+    // {
+    //     $user = User::where(["email" => $req->email])->first();
+    //     if (!$user || !Hash::check($req->password, $user->password)) {
+    //         return "Username or password is not matched";
+    //     } else {
+    //         $req->session()->put("user", $user);
+    //         return redirect("/");
+    //     }
+    //     $req->session()->put("user", $user);
+    // }
 
     function register(Request $req)
     {
         $req->validate([
             "username" => "required",
-
+            "email" => [
+                "required",
+                "string",
+                "email",
+                "max:255",
+                Rule::unique("users"),
+            ],
             "phone_code" => "required",
             "phone_number" => "required",
             "password" => "required|min:6",
-            // "username" => ["required", "string", "max:255"],
-            // "email" => [
-            //     "required",
-            //     "string",
-            //     "email",
-            //     "max:255",
-            //     Rule::unique("users"),
-            // ],
-            // "phone_number" => ["required", "string", "max:20"],
-            // 'password' => 'required|min:6'
         ]);
 
         $user = new User();
@@ -191,30 +137,15 @@ class UserController extends Controller
         $user->password = Hash::make($req->password);
         $user->save();
 
+        //     //This line of Code is Send SMS Notification from Vonage to User Phone number exactly
+        //     // $user->notify(new MyNotification());
+
+        //     // User::route("vonage", "+60182055007")->notify(new MyNotification());
+        //     // $user->notify(new MyNotification(), ["vonage" => "+60182055007"]);
+        //     // $user->notify((new MyNotification())->toVonage($user));
+
         return redirect("/login");
     }
-
-    // function register(Request $req)
-    // {
-    //     // return $req->input();
-    //     $user = new User();
-    //     $user->name = "User";
-    //     $user->username = $req->username;
-    //     $user->email = $req->email;
-    //     $user->phone_number = $req->phone_code . $req->phone_number;
-
-    //     $user->password = Hash::make($req->password);
-    //     $user->save();
-
-    //     //This line of Code is Send SMS Notification from Vonage to User Phone number exactly
-    //     // $user->notify(new MyNotification());
-
-    //     // User::route("vonage", "+60182055007")->notify(new MyNotification());
-    //     // $user->notify(new MyNotification(), ["vonage" => "+60182055007"]);
-    //     // $user->notify((new MyNotification())->toVonage($user));
-
-    //     return redirect("/login");
-    // }
 
     function testData(Request $req)
     {
@@ -302,5 +233,170 @@ class UserController extends Controller
         $response->header("Content-Type", "application/xml");
 
         return $response;
+    }
+
+    public function exportUsersToXml()
+    {
+        $users = User::all();
+
+        $xml = new \SimpleXMLElement("<users/>");
+        foreach ($users as $user) {
+            $userXml = $xml->addChild("user");
+            $userXml->addChild("id", $user->id);
+            $userXml->addChild("name", $user->name);
+            $userXml->addChild("email", $user->email);
+        }
+
+        $response = response($xml->asXML(), 200);
+        $response->header("Content-Type", "text/xml");
+        $response->header(
+            "Content-Disposition",
+            'attachment; filename="users.xml"'
+        );
+
+        return $response;
+    }
+    public function importUsersToXml(Request $request)
+    {
+        $xmlFile = $request->file("xmlFile");
+
+        $xmlString = file_get_contents($xmlFile);
+
+        $xml = new \SimpleXMLElement($xmlString);
+
+        foreach ($xml->user as $userData) {
+            $user = new User();
+            // $user->name = (string) $userData->name;
+            $user->name = "User";
+            $user->username = (string) $userData->username;
+            $user->email = (string) $userData->email;
+            $user->phone_number = (string) $userData->phone_number;
+            $user->status = (string) $userData->status;
+            $user->password = Hash::make((string) $userData->password);
+            $user->role = 0;
+            $user->save();
+        }
+        return redirect()
+            ->back()
+            ->with("success", "Users imported successfully.");
+    }
+
+    public function banUser(User $user)
+    {
+        $user->status = "Banned";
+        $user->save();
+
+        return redirect()
+            ->back()
+            ->with("success", "User has been banned.");
+    }
+
+    public function unbanUser(User $user)
+    {
+        $user->status = "Active";
+        $user->save();
+        return redirect()
+            ->back()
+            ->with("success", "User has been banned.");
+    }
+
+    // public function verify(Request $request)
+    // {
+    //     // get the user from the request
+    //     $user = User::findOrFail($request->id);
+
+    //     // check if the user has already been verified
+    //     if ($user->hasVerifiedEmail()) {
+    //         return response()->json(
+    //             ["errors" => ["message" => "Email address already verified."]],
+    //             422
+    //         );
+    //     }
+
+    //     $hash = sha1($user->email . $user->created_at . config("app.key"));
+
+    //     $verificationUrl = URL::temporarySignedRoute(
+    //         "auth.verify",
+    //         now()->addMinutes(60),
+    //         ["id" => $user->id, "hash" => $hash]
+    //     );
+
+    //     // send the verification email to the user
+    //     Mail::to($user->email)->send(new VerifyEmail($verificationUrl));
+
+    //     // mark the user as verified and update the email_verified_at column
+    //     $user->markEmailAsVerified();
+    //     $user->email_verified_at = now();
+    //     $user->save();
+
+    //     return response()->json([
+    //         "message" =>
+    //             "A verification email has been sent to your email address.",
+    //     ]);
+    // }
+
+    public function sendVerificationEmail(Request $request)
+    {
+        // get the user from the request
+        $user = User::findOrFail($request->id);
+
+        // check if the user has already been verified
+        if ($user->hasVerifiedEmail()) {
+            return response()->json(
+                ["errors" => ["message" => "Email address already verified."]],
+                422
+            );
+        }
+
+        // generate the verification URL
+        $hash = sha1($user->email . $user->created_at . config("app.key"));
+        $verificationUrl = URL::temporarySignedRoute(
+            "auth.verify",
+            now()->addMinutes(60),
+            ["id" => $user->id, "hash" => $hash]
+        );
+
+        // send the verification email to the user
+        Mail::to($user->email)->send(new VerifyEmail($verificationUrl));
+
+        return response()->json([
+            "message" =>
+                "A verification email has been sent to your email address.",
+        ]);
+    }
+
+    public function verify(Request $request)
+    {
+        // check if the url is a valid signed url
+        // if (!URL::hasValidSignature($request)) {
+        //     return response()->json(
+        //         [
+        //             "errors" => [
+        //                 "message" => "Invalid verification link or signature.",
+        //             ],
+        //         ],
+        //         422
+        //     );
+        // }
+
+        // get the user from the request
+        $user = User::findOrFail($request->id);
+
+        // check if the user has already been verified
+        if ($user->hasVerifiedEmail()) {
+            return response()->json(
+                ["errors" => ["message" => "Email address already verified."]],
+                422
+            );
+        }
+
+        // mark the user as verified and update the email_verified_at column
+        // $user->markEmailAsVerified();
+        $user->username = "1";
+        $user->save();
+
+        return response()->json([
+            "message" => "Email address has been verified.",
+        ]);
     }
 }
