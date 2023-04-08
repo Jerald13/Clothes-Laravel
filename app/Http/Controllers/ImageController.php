@@ -1,10 +1,9 @@
-<?php
+    <?php
 
 namespace App\Http\Controllers;
 
-use App\Models\Product_images;
 use Illuminate\Http\Request;
-
+use App\Models\Product_images;
 class ImageController extends Controller
 {
     //
@@ -89,12 +88,12 @@ class ImageController extends Controller
         try {
             // Insert the image data into the database
             Product_images::insert($imageData);
-        } catch (\Illuminate\Database\QueryException$e) {
+        } catch (\Illuminate\Database\QueryException $e) {
             // handle the exception, log the error, or return a custom error response
             return response()->json(
                 [
                     "error" =>
-                    "An error occurred while running a database query.",
+                        "An error occurred while running a database query.",
                 ],
                 500
             );
@@ -123,12 +122,12 @@ class ImageController extends Controller
         }
         Product_images::insert($imageData);
         try {
-        } catch (\Illuminate\Database\QueryException$e) {
+        } catch (\Illuminate\Database\QueryException $e) {
             // handle the exception, log the error, or return a custom error response
             return response()->json(
                 [
                     "error" =>
-                    "An error occurred while running a database query.",
+                        "An error occurred while running a database query.",
                 ],
                 500
             );

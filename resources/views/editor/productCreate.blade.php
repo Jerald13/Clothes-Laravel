@@ -16,7 +16,7 @@
         rel="stylesheet">
     <!-- Icons CSS -->
     {{-- {{ asset('{{ asset('css/feather.css') }}') }} --}}
-    <link rel="stylesheet" href="{{ asset('css/feather.css') }}') }}">
+    <link rel="stylesheet" href="{{ asset('css/feather.css') }}">
     <link rel="stylesheet" href="{{ asset('css/select2.css') }}">
     <link rel="stylesheet" href="{{ asset('css/dropzone.css') }}">
     <link rel="stylesheet" href="{{ asset('css/uppy.min.css') }}">
@@ -50,6 +50,56 @@
                                     <div class="card-body">
                                         <div class="row">
                                             <div class="col-md-12">
+                                                <div class="card shadow mb-4">
+                                                    <div class="card-header">
+                                                        <strong>Dropzone</strong>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <form action="/file-upload" class="dropzone bg-light rounded-lg"
+                                                            id="tinydash-dropzone">
+                                                            <div class="dz-message needsclick">
+                                                                <div class="circle circle-lg bg-primary">
+                                                                    <i class="fe fe-upload fe-24 text-white"></i>
+                                                                </div>
+                                                                <h5 class="text-muted mt-4">Drop files here or click to
+                                                                    upload
+                                                                </h5>
+                                                            </div>
+                                                        </form>
+                                                        <!-- Preview -->
+                                                        <!-- <div class="dropzone-previews mt-3" id="file-previews"></div> -->
+                                                        <!-- file preview template -->
+                                                        <div class="d-none" id="uploadPreviewTemplate">
+                                                            <div class="card mt-1 mb-0 shadow-none border">
+                                                                <div class="p-2">
+                                                                    <div class="row align-items-center">
+                                                                        <div class="col-auto">
+                                                                            <img data-dz-thumbnail src="#"
+                                                                                class="avatar-sm rounded bg-light"
+                                                                                alt="">
+                                                                        </div>
+                                                                        <div class="col pl-0">
+                                                                            <a href="javascript:void(0);"
+                                                                                class="text-muted font-weight-bold"
+                                                                                data-dz-name></a>
+                                                                            <p class="mb-0" data-dz-size></p>
+                                                                        </div>
+                                                                        <div class="col-auto">
+                                                                            <!-- Button -->
+                                                                            <a href=""
+                                                                                class="btn btn-link btn-lg text-muted"
+                                                                                data-dz-remove>
+                                                                                <i class="dripicons-cross"></i>
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div> <!-- .card-body -->
+                                                </div> <!-- .card -->
+                                            </div>
+                                            <div class="col-md-12">
                                                 <div class="form-group mb-3">
                                                     <label for="simpleinput">Product Name</label>
                                                     <input type="text" id="simpleinput" class="form-control">
@@ -67,7 +117,7 @@
                                                         <option value="3">Three</option>
                                                     </select>
                                                 </div>
-                                                
+
                                                 <label>Price</label>
                                                 <div class="input-group mb-3" style='width:150px;'>
                                                     <div class="input-group-prepend">
@@ -75,38 +125,158 @@
                                                     </div>
                                                     <input type="text" class="form-control"
                                                         aria-label="Amount (to the nearest dollar)">
-                                                   
+
+                                                </div>
+                                                <div id="input-container">
+                                                    <label for="size">Variable</label>
+                                                    <button type="button" class="btn btn-primary add-row" id="add-row"
+                                                        onclick="add()">Add</button>
+                                                    <div class="row" id="new_1">
+                                                        <div class="col-md-2">
+                                                            <div class="form-group mb-3">
+                                                                <label for="size">Size</label>
+                                                                <select class="custom-select" name="size[]">
+                                                                    <option selected>--Select Category--</option>
+                                                                    <option value="1">maleg</option>
+                                                                    <option value="2">Two</option>
+                                                                    <option value="3">Three</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2" width="150px">
+                                                            <div class="form-group mb-3">
+                                                                <label for="color">Color</label>
+                                                                <select class="custom-select" name="color[]">
+                                                                    <option selected>--Select Category--</option>
+                                                                    <option value="1">maleg</option>
+                                                                    <option value="2">Two</option>
+                                                                    <option value="3">Three</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-2">
+                                                            <div class="form-group mb-3 " style="width:100px;">
+                                                                <label for="quantity">Quantity</label>
+                                                                <input type="number" class="form-control" id="quantity"
+                                                                    name="quantity[]" min="0">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-1">
+                                                            <div class="form-group mb-3">
+                                                                <label>&nbsp;</label>
+                                                                <div class="form-group mb-2">
+                                                                    <button type="button" style="visibility: hidden"
+                                                                        class="btn btn-danger remove-row"
+                                                                        onclick="remove(1)">Remove</button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <input type="hidden" value="1" id="total_input">
+                                                    <div id="new_input"></div>
+
+                                                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+                                                    <script>
+                                                        function add() {
+                                                            var new_input_no = parseInt($('#total_input').val()) + 1;
+                                                            var new_input_field = '<div class="row" id="new_' + new_input_no + '">' +
+                                                                '<div class="col-md-2">' +
+                                                                '<div class="form-group mb-3">' +
+                                                                '<label for="size">Size</label>' +
+                                                                '<select class="custom-select" name="size[]">' +
+                                                                '<option selected>--Select Category--</option>' +
+                                                                '<option value="1">maleg</option>' +
+                                                                '<option value="2">Two</option>' +
+                                                                '<option value="3">Three</option>' +
+                                                                '</select>' +
+                                                                '</div>' +
+                                                                '</div>' +
+                                                                '<div class="col-md-2">' +
+                                                                '<div class="form-group mb-3">' +
+                                                                '<label for="color">Color</label>' +
+                                                                '<select class="custom-select" name="color[]">' +
+                                                                '<option selected>--Select Category--</option>' +
+                                                                '<option value="1">maleg</option>' +
+                                                                '<option value="2">Two</option>' +
+                                                                '<option value="3">Three</option>' +
+                                                                '</select>' +
+                                                                '</div>' +
+                                                                '</div>' +
+                                                                '<div class="col-md-2">' +
+                                                                '<div class="form-group mb-3" style="width:100px;">' +
+                                                                '<label for="quantity">Quantity</label>' +
+                                                                '<input type="number" class="form-control" id="quantity" min="0" name="quantity[]">' +
+                                                                '</div>' +
+                                                                '</div>' +
+                                                                '<div class="col-md-1">' +
+                                                                '<div class="form-group mb-3">' +
+                                                                '<label>&nbsp;</label>' +
+                                                                '<div class="form-group mb-2">' +
+                                                                '<button type="button" class="btn btn-danger remove-row"' +
+                                                                '  onclick="remove(' + new_input_no + ')">Remove</button>' +
+                                                                '</div>' +
+                                                                '</div>' +
+                                                                '</div>' +
+                                                                '</div>';
+
+                                                            $('#new_input').append(new_input_field);
+                                                            $('#total_input').val(new_input_no);
+                                                            $('#new_1').find('.remove-row').css('visibility', 'visible');
+                                                        }
+
+                                                        function remove(id) {
+                                                            var last_input_no = $('#total_input').val();
+
+                                                            if (last_input_no > 1) {
+
+                                                                $('#new_' + id).remove();
+                                                                $('#total_input').val(last_input_no - 1);
+
+
+                                                            }
+                                                        }
+                                                    </script>
+
                                                 </div>
                                             </div>
-                                        </div>
-                                        <!-- /.col -->
-
-                                    </div>
-                                </div>
-                            </div> <!-- / .card -->
-                        </div> <!-- /.col -->
+                                            <div align="right">
+                                                <button class="btn btn-primary">Submit</button>
+                                            </div>
+                                        </div> <!-- / .card -->
+                                    </div> <!-- /.col -->
 
         </main> <!-- main -->
 
 
+
+
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+
+        </form>
+        </div> <!-- / .card -->
+        </div> <!-- /.col -->
+
         </div> <!-- .wrapper -->
-        <script src="js/jquery.min.js"></script>
-        <script src="js/popper.min.js"></script>
-        <script src="js/moment.min.js"></script>
-        <script src="js/bootstrap.min.js"></script>
-        <script src="js/simplebar.min.js"></script>
-        <script src='js/daterangepicker.js'></script>
-        <script src='js/jquery.stickOnScroll.js'></script>
-        <script src="js/tinycolor-min.js"></script>
-        <script src="js/config.js"></script>
-        <script src='js/jquery.mask.min.js'></script>
-        <script src='js/select2.min.js'></script>
-        <script src='js/jquery.steps.min.js'></script>
-        <script src='js/jquery.validate.min.js'></script>
-        <script src='js/jquery.timepicker.js'></script>
-        <script src='js/dropzone.min.js'></script>
-        <script src='js/uppy.min.js'></script>
-        <script src='js/quill.min.js'></script>
+
+        <script src=" {{ asset('js/jquery.min.js') }}"></script>
+        <script src="{{ asset('js/popper.min.js') }}"></script>
+        <script src="{{ asset('js/moment.min.js') }}"></script>
+        <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+        <script src="{{ asset('js/simplebar.min.js') }}"></script>
+        <script src='{{ asset('js/daterangepicker.js') }}'></script>
+        <script src='{{ asset('js/jquery.stickOnScroll.js') }}'></script>
+        <script src="{{ asset('js/tinycolor-min.js') }}"></script>
+        <script src="{{ asset('js/config.js') }}"></script>
+        <script src='{{ asset('js/jquery.mask.min.js') }}'></script>
+        <script src='{{ asset('js/select2.min.js') }}'></script>
+        <script src='{{ asset('js/jquery.steps.min.js') }}'></script>
+        <script src='{{ asset('js/jquery.validate.min.js') }}'></script>
+        <script src='{{ asset('js/jquery.timepicker.js') }}'></script>
+        <script src='{{ asset('js/dropzone.min.js') }}'></script>
+        <script src='{{ asset('js/uppy.min.js') }}'></script>
+        <script src='{{ asset('js/quill.min.js') }}'></script>
         <script>
             $('.select2').select2({
                 theme: 'bootstrap4',

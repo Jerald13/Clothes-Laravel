@@ -17,7 +17,10 @@ class ProductSeeder extends Seeder
         DB::table("products")->insert([
             [
                 "name" => "Esprit Ruffle Shirt",
+                "category" => "1",
                 "price" => "16.64",
+                "size_id" => "16.64",
+
                 "description" =>
                    "Nulla eget sem vitae eros pharetra viverra. Nam vitae luctus ligula. Mauris consequat ornare feugiat.",
                 "category" => "1",

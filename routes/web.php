@@ -27,6 +27,7 @@ use App\Models\Tag;
 // Auth::routes();
 
 /*   User Login Page Module    */
+
 Route::post("/login", [LoginController::class, "login"])->name("login");
 Route::view("/register", "register")->name("register");
 Route::post("/register", [UserController::class, "register"]);
@@ -70,7 +71,7 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
     ])->name("editor.productCreate");
 
     Route::get("editor/productCreate", [
-          HomeController::class,
+        HomeController::class,
         "createProduct",
     ])->name("editor.productCreate");
     Route::view("editor/index", "editor/index")->name("editor.index");
