@@ -101,12 +101,20 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
         "upload",
     ])->name("editor.productCreate");
 
-    Route::get("editor/productCreate", [
-        HomeController::class,
+    Route::post("editor/productCreate", [
+        ProductController::class,
         "createProduct",
+    ])->name("editor.productCreate");
+
+    Route::get("editor/productCreate", [
+        ProductController::class,
+        "displayCreateForm",
     ])->name("editor.productEdit");
+
+       
     Route::view("editor/index", "editor/index")->name("editor.index");
 
+   
     /*   Category    */
     Route::resource("editor/categories", CategoryController::class);
     Route::post("/categories/{category}/status", [
@@ -196,6 +204,11 @@ Route::get("/", function () {
     return view("master");
 });
 
+//testing site
+Route::get("/testing", function () {
+    return view("testing");
+});
+
 Route::get("/index", [ProductController::class, "index"])->name("index");
 Route::get("/shop", [ProductController::class, "shop"])->name("shop");
 Route::get("/", [ProductController::class, "index"]);
@@ -211,3 +224,4 @@ Route::view("/error", "error")->name("error");
 
 //Web service
 Route::get("/free-gifts", [FreeGiftController::class, "index"]);
+

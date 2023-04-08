@@ -2,18 +2,137 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateProductRequest;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Cart;
 use App\Models\Category;
 use App\Models\User;
+use App\Models\Product_images;
+
+
 
 use App\Models\Order;
+use App\Repositories\ProductRepository;
+use App\Repositories\CategoryRepository;
+use App\Repositories\SizeRepository;
+use App\Repositories\ColorRepository;
+use App\Repositories\UserRepository;
+use App\Repositories\StockRepository;
+
+
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
+
+    protected $prodRespository;
+    protected $sizeRepository;
+    protected $colorRepository;
+    protected $cateRepository;
+    protected $stockRepository;
+
+
+
+
+    public function __construct(ProductRepository $prodRespository, CategoryRepository $cateRepository, SizeRepository $sizeRepository, ColorRepository $colorRepository, StockRepository $stockRepository)
+    {
+
+        $this->prodRespository = $prodRespository;
+        $this->cateRepository = $cateRepository;
+        $this->sizeRepository = $sizeRepository;
+        $this->colorRepository = $colorRepository;
+        $this->stockRepository = $stockRepository;
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function createProduct(Request $request)
+    {
+
+        $data = $request;
+
+        $sizes = $data->input('size');
+        $colors = $data->input('color');
+        $quantity = $data->input('quantity');
+
+        //table product insert
+        $product = $this->prodRespository->create([
+            'category_id' => $data['category_id'],
+            'name' => $data['prodName'],
+            'description' => $data['prodDesc'],
+            'price' => $data['prodPrice'],
+        ]);
+
+
+        $latestProdId = $this->prodRespository->getLatestId();
+        $this->stockRepository->create([
+            'color_id' => sizeof($sizes),
+            'size_id' => $sizes[0],
+            'product_id' => $latestProdId,
+            'quantity' => $quantity[0],
+
+        ]);
+
+        $this->upload($data, $latestProdId);
+
+        return view("testing");
+    }
+
+    public function upload(Request $request, $latestProdId)
+    {
+        $validatedData = $request->validate([
+            "images.*" => "required|image|mimes:jpeg,png,jpg,gif|max:20000",
+        ]);
+
+        $images = $request->file('image');
+        $imageData = [];
+
+        foreach ($images as $image) {
+            $imageData[] = [
+                "name" => $image->getClientOriginalName(),
+                "data" => file_get_contents($image),
+                "mime" => $image->getClientMimeType(),
+                "product_id" => $latestProdId,
+            ];
+        }
+        Product_images::insert($imageData);
+        try {
+        } catch (\Illuminate\Database\QueryException $e) {
+            // handle the exception, log the error, or return a custom error response
+            return response()->json(
+                [
+                    "error" =>
+                    "An error occurred while running a database query.",
+                ],
+                500
+            );
+        }
+
+        return redirect()
+            ->back()
+            ->with("success", "Images uploaded successfully.");
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function displayCreateForm()
+    {
+        $categories = $this->cateRepository->allCategories();
+        $sizes = $this->sizeRepository->getAll();
+        $colors = $this->colorRepository->getAll();
+
+
+        return view("editor.productCreate", compact('categories', 'sizes', 'colors'));
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -31,16 +150,12 @@ class ProductController extends Controller
         return view("product", ["products" => $data]);
     }
 
-    
+
     public function shop()
     {
-        // $products = Product::all();
-        // return view ('index')->with(compact('products'));
-        // $products = Product::all();
-        // return view("index", compact("products"));
-        $data = Product::all();
-        $category = Category::all();
-        return view("shop", ["products" => $data,"categorys" => $category]);
+        $products = $this->prodRespository->getAll();
+        $categories =  $this->cateRepository->allCategories();
+        return view('shop', compact('products', 'categories'));
     }
 
     function detail($id)
@@ -139,17 +254,7 @@ class ProductController extends Controller
         //     ->get();
         // return view("myorders", ["orders" => $orders]);
     }
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        // return view("create");
 
-        return view("createProduct");
-    }
 
     /**
      * Store a newly created resource in storage.

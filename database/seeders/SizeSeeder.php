@@ -4,43 +4,39 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-class CategorySeeder extends Seeder
+use Illuminate\Support\Facades\DB;
+
+class SizeSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        DB::table("categories")->insert([
+        DB::table("size")->insert([
             [
-                "name" => "women",
-                "status" => "active",
+                "size" => "XS",            
                 "created_at" => Carbon::now()->format("Y-m-d H:i:s"),
                 "updated_at" => Carbon::now()->format("Y-m-d H:i:s"),
             ],
             [
-                "name" => "men",
-                "status" => "active",
+                "name" => "S",                
                 "created_at" => Carbon::now()->format("Y-m-d H:i:s"),
                 "updated_at" => Carbon::now()->format("Y-m-d H:i:s"),
             ],
             [
-                "name" => "bag",
-                "status" => "active",
+                "name" => "M",                
                 "created_at" => Carbon::now()->format("Y-m-d H:i:s"),
                 "updated_at" => Carbon::now()->format("Y-m-d H:i:s"),
             ],
             [
-                "name" => "shoes",
-                "status" => "active",
+                "name" => "L",                
                 "created_at" => Carbon::now()->format("Y-m-d H:i:s"),
                 "updated_at" => Carbon::now()->format("Y-m-d H:i:s"),
             ],
             [
-                "name" => "watches",
-                "status" => "active",
+                "name" => "XL",                
                 "created_at" => Carbon::now()->format("Y-m-d H:i:s"),
                 "updated_at" => Carbon::now()->format("Y-m-d H:i:s"),
             ],
