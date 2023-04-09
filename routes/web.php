@@ -200,6 +200,7 @@ Route::get("/shop", function () {
     return view("shop");
 });
 
+
 Route::get("/", function () {
     return view("master");
 });
@@ -211,6 +212,8 @@ Route::get("/testing", function () {
 
 Route::get("/index", [ProductController::class, "index"])->name("index");
 Route::get("/shop", [ProductController::class, "shop"])->name("shop");
+Route::get("/get-quantity", [ProductController::class, "getQuantity"])->name("shop.quantity");
+Route::get("/productDetails", [ProductController::class, "getProdDetails"])->name("shop.getId");
 Route::get("/", [ProductController::class, "index"]);
 Route::get("detail/{id}", [ProductController::class, "detail"]);
 Route::get("search", [ProductController::class, "search"]);

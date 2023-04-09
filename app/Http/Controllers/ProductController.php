@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Cart;
 use App\Models\Category;
 use App\Models\User;
+use App\Models\Stock;
 use App\Models\Product_images;
 
 
@@ -27,7 +28,7 @@ use Illuminate\Support\Facades\DB;
 class ProductController extends Controller
 {
 
-    protected $prodRespository;
+    protected $prodRepository;
     protected $sizeRepository;
     protected $colorRepository;
     protected $cateRepository;
@@ -36,15 +37,32 @@ class ProductController extends Controller
 
 
 
-    public function __construct(ProductRepository $prodRespository, CategoryRepository $cateRepository, SizeRepository $sizeRepository, ColorRepository $colorRepository, StockRepository $stockRepository)
+    public function __construct(ProductRepository $prodRepository, CategoryRepository $cateRepository, SizeRepository $sizeRepository, ColorRepository $colorRepository, StockRepository $stockRepository)
     {
 
-        $this->prodRespository = $prodRespository;
+        $this->prodRepository = $prodRepository;
         $this->cateRepository = $cateRepository;
         $this->sizeRepository = $sizeRepository;
         $this->colorRepository = $colorRepository;
         $this->stockRepository = $stockRepository;
     }
+
+    public function getQuantity(Request $request)
+    {
+        $color = $request->input('color');
+        $size = $request->input('size');
+        $prodId = $request->input('productId');
+
+        $stock = Stock::where('color_id', $color)->where('size_id', $size)->where('product_id', $prodId)->first();
+        if ($stock) {
+            $quantity = $stock->quantity;
+        } else{
+            $quantity =null;
+        }
+
+        return response()->json(['quantity' => $quantity]);
+    }
+
 
     /**
      * Show the form for creating a new resource.
@@ -61,7 +79,7 @@ class ProductController extends Controller
         $quantity = $data->input('quantity');
 
         //table product insert
-        $product = $this->prodRespository->create([
+        $product = $this->prodRepository->create([
             'category_id' => $data['category_id'],
             'name' => $data['prodName'],
             'description' => $data['prodDesc'],
@@ -69,7 +87,7 @@ class ProductController extends Controller
         ]);
 
 
-        $latestProdId = $this->prodRespository->getLatestId();
+        $latestProdId = $this->prodRepository->getLatestId();
         $this->stockRepository->create([
             'color_id' => sizeof($sizes),
             'size_id' => $sizes[0],
@@ -78,12 +96,12 @@ class ProductController extends Controller
 
         ]);
 
-        $this->upload($data, $latestProdId);
+        $this->uploadImage($data, $latestProdId);
 
         return view("testing");
     }
 
-    public function upload(Request $request, $latestProdId)
+    public function uploadImage(Request $request, $latestProdId)
     {
         $validatedData = $request->validate([
             "images.*" => "required|image|mimes:jpeg,png,jpg,gif|max:20000",
@@ -117,6 +135,21 @@ class ProductController extends Controller
             ->back()
             ->with("success", "Images uploaded successfully.");
     }
+
+    public function getProdDetails()
+    {
+        $product = $this->prodRepository->getById(request('id'));
+        // $stocks = Stock::where('product_id', $product->id)->get();
+        $stocks = $product->stocks;
+        $stockVariableSize = $product->stocks()->distinct()->get(['size_id']);  // to get the stock has what izes
+        $stockVariableColor = $product->stocks()->distinct()->get(['color_id']);  // to get the stock has what colors 
+        $sizes = $this->sizeRepository->getAll();
+        $colors = $this->colorRepository->getAll();
+
+        return view('productDetails', compact('product', 'stocks', 'stockVariableSize', 'stockVariableColor', 'sizes', 'colors'));
+    }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -153,7 +186,7 @@ class ProductController extends Controller
 
     public function shop()
     {
-        $products = $this->prodRespository->getAll();
+        $products = $this->prodRepository->getAll();
         $categories =  $this->cateRepository->allCategories();
         return view('shop', compact('products', 'categories'));
     }

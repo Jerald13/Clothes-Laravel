@@ -246,13 +246,43 @@
                                                             }
                                                         }
 
+                                                        function collectData() {
+                                                            var data = {};
+                                                            $('select[name^="size"]').each(function(index, element) {
+                                                                var key = $(element).val();
+                                                                if (data[key] === undefined) {
+                                                                    data[key] = {};
+                                                                }
+                                                                data[key]['size'] = $(element).val();
+                                                            });
+
+                                                            $('select[name^="color"]').each(function(index, element) {
+                                                                var key = $(element).val();
+                                                                if (data[key] === undefined) {
+                                                                    data[key] = {};
+                                                                }
+                                                                data[key]['color'] = $(element).val();
+                                                            });
+
+                                                            $('input[name^="quantity"]').each(function(index, element) {
+                                                                var key = $(element).siblings('select[name^="color"]').val() + '_' + $(element).siblings(
+                                                                    'select[name^="size"]').val();
+                                                                if (data[key] === undefined) {
+                                                                    data[key] = {};
+                                                                }
+                                                                data[key]['quantity'] = $(element).val();
+                                                            });
+
+                                                            console.log(data); // or do something else with the collected data
+                                                        }
+                                                   
                                                     </script>
 
-                                                   
+
                                                 </div>
                                             </div>
                                             <div align="right">
-                                                <input class="btn btn-primary" type='submit' value="Submit">
+                                                <input class="btn btn-primary" type='submit' value="Submit" onclick="submitData()">
                                             </div>
                                             </form>
                                         </div> <!-- / .card -->

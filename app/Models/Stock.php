@@ -18,17 +18,17 @@ class stock extends Model
 
     public function product()
     {
-        return $this->belongsToMany(Product::class);
+        return $this->belongsTo(Product::class);
     }
 
     public function color()
     {
-        return $this->belongsTo(Color::class);
+        return $this->hasMany(Color::class);
     }
 
     public function size()
     {
-        return $this->belongsTo(Size::class);
+        return $this->hasMany(Size::class);
     }
 
       
