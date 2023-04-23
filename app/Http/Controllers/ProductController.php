@@ -11,8 +11,6 @@ use App\Models\User;
 use App\Models\Stock;
 use App\Models\Product_images;
 
-
-
 use App\Models\Order;
 use App\Repositories\ProductRepository;
 use App\Repositories\CategoryRepository;
@@ -21,25 +19,24 @@ use App\Repositories\ColorRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\StockRepository;
 
-
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
-
     protected $prodRepository;
     protected $sizeRepository;
     protected $colorRepository;
     protected $cateRepository;
     protected $stockRepository;
 
-
-
-
-    public function __construct(ProductRepository $prodRepository, CategoryRepository $cateRepository, SizeRepository $sizeRepository, ColorRepository $colorRepository, StockRepository $stockRepository)
-    {
-
+    public function __construct(
+        ProductRepository $prodRepository,
+        CategoryRepository $cateRepository,
+        SizeRepository $sizeRepository,
+        ColorRepository $colorRepository,
+        StockRepository $stockRepository
+    ) {
         $this->prodRepository = $prodRepository;
         $this->cateRepository = $cateRepository;
         $this->sizeRepository = $sizeRepository;
@@ -49,20 +46,22 @@ class ProductController extends Controller
 
     public function getQuantity(Request $request)
     {
-        $color = $request->input('color');
-        $size = $request->input('size');
-        $prodId = $request->input('productId');
+        $color = $request->input("color");
+        $size = $request->input("size");
+        $prodId = $request->input("productId");
 
-        $stock = Stock::where('color_id', $color)->where('size_id', $size)->where('product_id', $prodId)->first();
+        $stock = Stock::where("color_id", $color)
+            ->where("size_id", $size)
+            ->where("product_id", $prodId)
+            ->first();
         if ($stock) {
             $quantity = $stock->quantity;
-        } else{
-            $quantity =null;
+        } else {
+            $quantity = null;
         }
 
-        return response()->json(['quantity' => $quantity]);
+        return response()->json(["quantity" => $quantity]);
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -71,29 +70,26 @@ class ProductController extends Controller
      */
     public function createProduct(Request $request)
     {
-
         $data = $request;
 
-        $sizes = $data->input('size');
-        $colors = $data->input('color');
-        $quantity = $data->input('quantity');
+        $sizes = $data->input("size");
+        $colors = $data->input("color");
+        $quantity = $data->input("quantity");
 
         //table product insert
         $product = $this->prodRepository->create([
-            'category_id' => $data['category_id'],
-            'name' => $data['prodName'],
-            'description' => $data['prodDesc'],
-            'price' => $data['prodPrice'],
+            "category_id" => $data["category_id"],
+            "name" => $data["prodName"],
+            "description" => $data["prodDesc"],
+            "price" => $data["prodPrice"],
         ]);
-
 
         $latestProdId = $this->prodRepository->getLatestId();
         $this->stockRepository->create([
-            'color_id' => sizeof($sizes),
-            'size_id' => $sizes[0],
-            'product_id' => $latestProdId,
-            'quantity' => $quantity[0],
-
+            "color_id" => sizeof($sizes),
+            "size_id" => $sizes[0],
+            "product_id" => $latestProdId,
+            "quantity" => $quantity[0],
         ]);
 
         $this->uploadImage($data, $latestProdId);
@@ -107,7 +103,7 @@ class ProductController extends Controller
             "images.*" => "required|image|mimes:jpeg,png,jpg,gif|max:20000",
         ]);
 
-        $images = $request->file('image');
+        $images = $request->file("image");
         $imageData = [];
 
         foreach ($images as $image) {
@@ -125,7 +121,7 @@ class ProductController extends Controller
             return response()->json(
                 [
                     "error" =>
-                    "An error occurred while running a database query.",
+                        "An error occurred while running a database query.",
                 ],
                 500
             );
@@ -138,18 +134,38 @@ class ProductController extends Controller
 
     public function getProdDetails()
     {
-        $product = $this->prodRepository->getById(request('id'));
+        $product = $this->prodRepository->getById(request("id"));
         // $stocks = Stock::where('product_id', $product->id)->get();
+
         $stocks = $product->stocks;
-        $stockVariableSize = $product->stocks()->distinct()->get(['size_id']);  // to get the stock has what izes
-        $stockVariableColor = $product->stocks()->distinct()->get(['color_id']);  // to get the stock has what colors 
+        $stockVariableSize = $product
+            ->stocks()
+            ->distinct()
+            ->get(["size_id"]); // to get the stock has what izes
+        $stockVariableColor = $product
+            ->stocks()
+            ->distinct()
+            ->get(["color_id"]); // to get the stock has what colors
         $sizes = $this->sizeRepository->getAll();
         $colors = $this->colorRepository->getAll();
 
-        return view('productDetails', compact('product', 'stocks', 'stockVariableSize', 'stockVariableColor', 'sizes', 'colors'));
+        return view(
+            "productDetails",
+            compact(
+                "product",
+                "stocks",
+                "stockVariableSize",
+                "stockVariableColor",
+                "sizes",
+                "colors"
+            )
+        );
     }
 
-
+    public function getProDs()
+    {
+        return view("proDetail");
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -162,8 +178,10 @@ class ProductController extends Controller
         $sizes = $this->sizeRepository->getAll();
         $colors = $this->colorRepository->getAll();
 
-
-        return view("editor.productCreate", compact('categories', 'sizes', 'colors'));
+        return view(
+            "editor.productCreate",
+            compact("categories", "sizes", "colors")
+        );
     }
 
     /**
@@ -175,20 +193,15 @@ class ProductController extends Controller
 
     public function index()
     {
-        // $products = Product::all();
-        // return view ('index')->with(compact('products'));
-        // $products = Product::all();
-        // return view("index", compact("products"));
         $data = Product::all();
         return view("product", ["products" => $data]);
     }
 
-
     public function shop()
     {
         $products = $this->prodRepository->getAll();
-        $categories =  $this->cateRepository->allCategories();
-        return view('shop', compact('products', 'categories'));
+        $categories = $this->cateRepository->allCategories();
+        return view("shop", compact("products", "categories"));
     }
 
     function detail($id)
@@ -287,7 +300,6 @@ class ProductController extends Controller
         //     ->get();
         // return view("myorders", ["orders" => $orders]);
     }
-
 
     /**
      * Store a newly created resource in storage.

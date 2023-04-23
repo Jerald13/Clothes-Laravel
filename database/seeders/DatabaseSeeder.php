@@ -22,8 +22,12 @@ class DatabaseSeeder extends Seeder
             ProductImangesSeeder::class,
             TagsSeeder::class,
             CategorySeeder::class,
+            ColorSeeder::class,
+            SizeSeeder::class,
+            TagsSeeder::class,
             ProductSeeder::class,
-
+            StockSeeder::class,
+            CartSeeder::class,
             // add any other seeders you have here
         ]);
     }

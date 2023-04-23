@@ -7,14 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    protected $table = 'products';
+    protected $table = "products";
 
-    protected $fillable = [
-        'name',
-        'category_id',
-        'price',
-        'description'
-    ];
+    protected $fillable = ["name", "category_id", "price", "description"];
 
     public function category()
     {
@@ -33,9 +28,11 @@ class Product extends Model
 
     public function scopePriceLessThan($query, $price)
     {
-        return $query->where('price', '<', $price);
+        return $query->where("price", "<", $price);
     }
- 
 
-
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+    }
 }

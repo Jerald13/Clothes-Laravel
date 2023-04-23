@@ -7,6 +7,8 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use App\Models\User;
+
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
@@ -52,51 +54,8 @@ class LoginController extends Controller
         $req->session()->put("user", $user);
     }
 
-    // public function login(Request $request)
-    // {
-    //     $user = User::where(["email" => $request->email])->first();
-
-    //     $input = $request->all();
-    //     $this->validate($request, [
-    //         "email" => "required|email",
-    //         "password" => "required",
-    //     ]);
-    //     if (
-    //         auth()->attempt([
-    //             "email" => $input["email"],
-    //             "password" => $input["password"],
-    //         ])
-    //     ) {
-    //         $request->session()->put("user", $user);
-    //         if (auth()->user()->role == "admin") {
-    //             return redirect()->route("index");
-    //         } elseif (auth()->user()->role == "editor") {
-    //             return redirect()->route("index");
-    //         } else {
-    //             return redirect()->route("index");
-    //         }
-    //     } else {
-    //         // dd($user);
-    //         return redirect()->route("error");
-    //         // ->with("error", "Incorrect email or password");
-    //     }
-    // }
-
     public function login(Request $request)
     {
-        $user = User::where("email", $request->email)->first();
-
-        // Check if user is banned
-        if ($user && $user->status === "Banned") {
-            return redirect()
-                ->route("errors/page-error")
-                ->with([
-                    "error" => "Your account has been banned.",
-                    "No" => "403",
-                ]);
-        }
-
-        $input = $request->all();
         $this->validate($request, [
             "email" => "required|email",
             "password" => "required",
@@ -106,14 +65,30 @@ class LoginController extends Controller
 
         if (
             auth()->attempt(
-                ["email" => $input["email"], "password" => $input["password"]],
+                ["email" => $request->email, "password" => $request->password],
                 $remember
             )
         ) {
+            $user = $request->user();
+            if ($user->status === "Banned") {
+                auth()->logout();
+                return redirect()
+                    ->route("errors/page-error")
+                    ->with([
+                        "error" => "Your account has been banned.",
+                        "No" => "403",
+                    ]);
+            }
+            // $cart = $user
+            //     ->carts()
+            //     ->with("product")
+            //     ->first();
+
+            // Session::put("cart", $cart);
+            // Session::save();
             $request->session()->put("user", $user);
-            if (auth()->user()->role == "admin") {
-                return redirect()->route("index");
-            } elseif (auth()->user()->role == "editor") {
+
+            if ($user->role == "admin" || $user->role == "editor") {
                 return redirect()->route("index");
             } else {
                 return redirect()->route("index");
@@ -124,4 +99,52 @@ class LoginController extends Controller
                 ->with("message", "Incorrect email or password");
         }
     }
+
+    // public function login(Request $request)
+    // {
+    //     $user = User::where("email", $request->email)->first();
+
+    //     // Check if user is banned
+    //     if ($user && $user->status === "Banned") {
+    //         return redirect()
+    //             ->route("errors/page-error")
+    //             ->with([
+    //                 "error" => "Your account has been banned.",
+    //                 "No" => "403",
+    //             ]);
+    //     }
+
+    //     $input = $request->all();
+    //     $this->validate($request, [
+    //         "email" => "required|email",
+    //         "password" => "required",
+    //     ]);
+
+    //     $remember = $request->has("remember");
+
+    //     if (
+    //         auth()->attempt(
+    //             ["email" => $input["email"], "password" => $input["password"]],
+    //             $remember
+    //         )
+    //     ) {
+    //         $cart = Cart::with("products")
+    //             ->where("user_id", $user->id)
+    //             ->first();
+    //         Session::put("cart", $cart);
+    //         $request->session()->put("user", $user);
+
+    //         if (auth()->user()->role == "admin") {
+    //             return redirect()->route("index");
+    //         } elseif (auth()->user()->role == "editor") {
+    //             return redirect()->route("index");
+    //         } else {
+    //             return redirect()->route("index");
+    //         }
+    //     } else {
+    //         return redirect()
+    //             ->route("errors/page-404")
+    //             ->with("message", "Incorrect email or password");
+    //     }
+    // }
 }

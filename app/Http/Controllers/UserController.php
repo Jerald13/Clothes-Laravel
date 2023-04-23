@@ -138,7 +138,7 @@ class UserController extends Controller
         $user->save();
 
         //     //This line of Code is Send SMS Notification from Vonage to User Phone number exactly
-        //     // $user->notify(new MyNotification());
+            // $user->notify(new MyNotification());
 
         //     // User::route("vonage", "+60182055007")->notify(new MyNotification());
         //     // $user->notify(new MyNotification(), ["vonage" => "+60182055007"]);

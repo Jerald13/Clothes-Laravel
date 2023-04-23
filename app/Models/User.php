@@ -17,7 +17,7 @@ use Illuminate\Auth\Authenticatable as AuthenticatableTrait;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 // use Illuminate\Database\Eloquent\Casts\Attribute;
-
+use App\Models\Cart;
 class User extends Authenticatable implements AuthorizableContract
 {
     use HasApiTokens,
@@ -75,5 +75,10 @@ class User extends Authenticatable implements AuthorizableContract
     {
         return $this->hasMany(Order::class);
         return $this->hasMany(Product::class);
+    }
+
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
     }
 }

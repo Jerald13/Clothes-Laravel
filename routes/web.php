@@ -16,10 +16,12 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FreeGiftController;
 use App\Http\Controllers\TagController;
-use App\Http\Controllers\Metamask\MetamaskController;
+use App\Http\Controllers\CartController;
+
 use Illuminate\Support\Facades\Mail;
 use App\Notifications\VerifyEmail;
 use Illuminate\Support\Facades\URL;
+use App\Http\Controllers\Metamask\MetamaskController;
 
 /* Model */
 use App\Models\Product_images;
@@ -111,10 +113,8 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
         "displayCreateForm",
     ])->name("editor.productEdit");
 
-       
     Route::view("editor/index", "editor/index")->name("editor.index");
 
-   
     /*   Category    */
     Route::resource("editor/categories", CategoryController::class);
     Route::post("/categories/{category}/status", [
@@ -171,6 +171,7 @@ Route::middleware(["auth", "user-role:user", "web"])->group(function () {
     Route::get("/logout", function () {
         Auth::logout();
         Session::forget("user");
+        Session::forget("carts");
         return view("login");
     });
 
@@ -179,6 +180,13 @@ Route::middleware(["auth", "user-role:user", "web"])->group(function () {
         "users.update"
     );
     Route::get("/profile", [UserController::class, "profile"])->name("profile");
+
+    /*   Cart    */
+    Route::post("/cart/add", [CartController::class, "add"])->name("cart.add");
+
+    Route::delete("/carts/{cart}", [CartController::class, "destroy"])->name(
+        "cart.destroy"
+    );
 });
 
 Route::prefix("metamask")->group(function () {
@@ -200,7 +208,6 @@ Route::get("/shop", function () {
     return view("shop");
 });
 
-
 Route::get("/", function () {
     return view("master");
 });
@@ -210,10 +217,25 @@ Route::get("/testing", function () {
     return view("testing");
 });
 
-Route::get("/index", [ProductController::class, "index"])->name("index");
+// Route::get("/index", [ProductController::class, "index"])->name("index");
+Route::get("/index", [HomeController::class, "index"])->name("index");
+
 Route::get("/shop", [ProductController::class, "shop"])->name("shop");
-Route::get("/get-quantity", [ProductController::class, "getQuantity"])->name("shop.quantity");
-Route::get("/productDetails", [ProductController::class, "getProdDetails"])->name("shop.getId");
+Route::get("/get-quantity", [ProductController::class, "getQuantity"])->name(
+    "shop.quantity"
+);
+Route::get("/productDetails/{id}", [
+    ProductController::class,
+    "getProdDetails",
+])->name("shop.getId");
+// Route::get("/productDetails/{id}", [
+//     return view("master");
+// ])->name("shop.getId");
+
+// Route::get("/proDetail/{id}", [
+//     ProductController::class,
+//     "getProdDetails",
+// ])->name("proDetail");
 Route::get("/", [ProductController::class, "index"]);
 Route::get("detail/{id}", [ProductController::class, "detail"]);
 Route::get("search", [ProductController::class, "search"]);
@@ -227,4 +249,3 @@ Route::view("/error", "error")->name("error");
 
 //Web service
 Route::get("/free-gifts", [FreeGiftController::class, "index"]);
-
