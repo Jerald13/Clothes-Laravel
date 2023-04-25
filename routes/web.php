@@ -93,6 +93,10 @@ Route::middleware(["auth", "user-role:admin"])->group(function () {
     Route::view("admin/setUserRole", "admin/setUserRole")->name(
         "admin.setUserRole"
     );
+
+    Route::view("admin/AddEditor", "admin/createUserWithRole")->name(
+        "role.AddEditor"
+    );
 });
 
 /*   Editor Route    */
@@ -172,7 +176,7 @@ Route::middleware(["auth", "user-role:user", "web"])->group(function () {
         Auth::logout();
         Session::forget("user");
         Session::forget("carts");
-        return view("login");
+        return redirect()->route("login");
     });
 
     /*   User Profile    */

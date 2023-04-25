@@ -35,8 +35,8 @@
 								<form action="login" method="POST">
 									<div class="form-group">
 										@csrf
-										<label for="email">E-Mail Address</label>
-										<input id="email" type="email" class="form-control" name="email" required="" autofocus="">
+										<label for="email">Name / E-Mail</label>
+										<input id="email" type="text" class="form-control" name="email" required="" autofocus="">
 									</div>
 
 									<div class="form-group">
@@ -49,6 +49,7 @@
 											</a>
 										</div>
 									</div>
+
 
 									{{-- <div class="form-group">
 										<div class="form-check position-relative mb-2">

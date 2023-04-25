@@ -114,20 +114,17 @@ class UserController extends Controller
 
     function register(Request $req)
     {
-        $req->validate([
-            "username" => "required",
-            "email" => [
-                "required",
-                "string",
-                "email",
-                "max:255",
-                Rule::unique("users"),
-            ],
+        $validator = Validator::make($req->all(), [
+            "username" => "required|unique:users",
+            "email" => "required|unique:users|email|max:255",
             "phone_code" => "required",
             "phone_number" => "required",
             "password" => "required|min:6",
         ]);
 
+        if ($validator->fails()) {
+            return back()->withErrors($validator);
+        }
         $user = new User();
         $user->name = "User";
         $user->username = $req->username;
@@ -138,11 +135,7 @@ class UserController extends Controller
         $user->save();
 
         //     //This line of Code is Send SMS Notification from Vonage to User Phone number exactly
-            // $user->notify(new MyNotification());
-
-        //     // User::route("vonage", "+60182055007")->notify(new MyNotification());
-        //     // $user->notify(new MyNotification(), ["vonage" => "+60182055007"]);
-        //     // $user->notify((new MyNotification())->toVonage($user));
+        // $user->notify(new MyNotification());
 
         return redirect("/login");
     }

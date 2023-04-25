@@ -81,6 +81,9 @@
 										<input type="submit" class="btn btn-primary btn-block" name="submitBtn" id="submitBtn" value="Sign Up">
 									</div>
 								
+									<input type="hidden" name="name" value="User">
+
+
 									<div class="text-center mt-3 small">
 									</div>
 								</form>

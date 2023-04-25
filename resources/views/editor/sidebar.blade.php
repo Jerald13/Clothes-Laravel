@@ -269,7 +269,7 @@
                               <li class="nav-item">
                                 <a class="nav-link pl-3" href="{{ route('role.displayRole') }}"><span class="ml-1 item-text">Display Role</span>
                                 </a>
-                                <a class="nav-link pl-3" href="productCreate"><span class="ml-1 item-text">Add Editor (Admin)</span>
+                                <a class="nav-link pl-3" href="{{ route('role.AddEditor') }}"><span class="ml-1 item-text">Add Editor (Admin)</span>
                                 </a>
                               </li>
                             </ul>

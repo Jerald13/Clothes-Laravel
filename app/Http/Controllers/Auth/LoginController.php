@@ -7,6 +7,9 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Strategy\UsernameAuth;
+use App\Strategy\EmailAuth;
+use App\Strategy\UserAuthContext;
 
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Hash;
@@ -57,19 +60,26 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         $this->validate($request, [
-            "email" => "required|email",
+            "email" => "required",
             "password" => "required",
         ]);
 
         $remember = $request->has("remember");
+        $emailOrUsername = $request->input("email");
 
-        if (
-            auth()->attempt(
-                ["email" => $request->email, "password" => $request->password],
-                $remember
-            )
-        ) {
-            $user = $request->user();
+        if (filter_var($emailOrUsername, FILTER_VALIDATE_EMAIL)) {
+            $strategy = new EmailAuth();
+        } else {
+            $strategy = new UsernameAuth();
+        }
+
+        $authContext = new UserAuthContext($strategy);
+        $user = $authContext->authenticateUser(
+            $request->input("email"),
+            $request->input("password"),
+            $remember
+        );
+        if ($user != null) {
             if ($user->status === "Banned") {
                 auth()->logout();
                 return redirect()
@@ -79,26 +89,56 @@ class LoginController extends Controller
                         "No" => "403",
                     ]);
             }
-            // $cart = $user
-            //     ->carts()
-            //     ->with("product")
-            //     ->first();
 
-            // Session::put("cart", $cart);
-            // Session::save();
             $request->session()->put("user", $user);
 
-            if ($user->role == "admin" || $user->role == "editor") {
-                return redirect()->route("index");
-            } else {
-                return redirect()->route("index");
-            }
+            return redirect()->route("index");
         } else {
             return redirect()
                 ->route("errors/page-404")
                 ->with("message", "Incorrect email or password");
         }
     }
+
+    // public function login(Request $request)
+    // {
+    //     $this->validate($request, [
+    //         "email" => "required|email",
+    //         "password" => "required",
+    //     ]);
+
+    //     $remember = $request->has("remember");
+
+    //     if (
+    //         auth()->attempt(
+    //             ["email" => $request->email, "password" => $request->password],
+    //             $remember
+    //         )
+    //     ) {
+    //         $user = $request->user();
+    //         if ($user->status === "Banned") {
+    //             auth()->logout();
+    //             return redirect()
+    //                 ->route("errors/page-error")
+    //                 ->with([
+    //                     "error" => "Your account has been banned.",
+    //                     "No" => "403",
+    //                 ]);
+    //         }
+
+    //         $request->session()->put("user", $user);
+
+    //         if ($user->role == "admin" || $user->role == "editor") {
+    //             return redirect()->route("index");
+    //         } else {
+    //             return redirect()->route("index");
+    //         }
+    //     } else {
+    //         return redirect()
+    //             ->route("errors/page-404")
+    //             ->with("message", "Incorrect email or password");
+    //     }
+    // }
 
     // public function login(Request $request)
     // {
