@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<orders>
+    <order>
+        <username>ZhongLiang</username>
+        <email>ZhongLiang@gmail.com</email>
+        <phone_number>+60182055007</phone_number>
+        <shipping_address>123 Main St</shipping_address>
+        <state>Selangor</state>
+        <post_code>88000</post_code>
+        <order_total>100.00</order_total>
+        <order_status>new</order_status>
+    </order>
+    <order>
+        <username>HooiSeng</username>
+        <email>HooiSeng@gmail.com</email>
+        <phone_number>+60182055007</phone_number>
+        <shipping_address>456 Elm St</shipping_address>
+        <state>NY</state>
+        <post_code>52100</post_code>
+        <order_total>200.00</order_total>
+        <order_status>new</order_status>
+    </order>
+    <order>
+        <username>Chye</username>
+        <email>Chye@gmail.com</email>
+        <phone_number>+60182055007</phone_number>
+        <shipping_address>456 Elm St</shipping_address>
+        <state>NY</state>
+        <post_code>52100</post_code>
+        <order_total>200.00</order_total>
+        <order_status>new</order_status>
+    </order>
+    <!-- more orders... -->
+</orders>

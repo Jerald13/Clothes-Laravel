@@ -11,14 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('orders', function (Blueprint $table) {
+        Schema::create('payments', function (Blueprint $table) {
             $table->id();
+            $table->integer('order_id');
             $table->integer('product_id');
             $table->integer('user_id');
-            $table->string('status');
             $table->string('payment_method');
-            $table->string('payment_status');
-            $table->string('address');
+            $table->dateTime('payment_date');
+            $table->decimal('payment_amount', 8, 2);
+            $table->enum('payment_status', ['new', 'pending', 'completed', 'cancelled'])->default('pending');
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('orders');
+        Schema::dropIfExists('payments');
     }
 };

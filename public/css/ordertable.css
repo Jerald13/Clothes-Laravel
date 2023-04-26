@@ -1,0 +1,16 @@
+@import url('https://fonts.googleapis.com/css?family=Assistant');
+
+.cell-1 {
+  border-collapse: separate;
+  border-spacing: 0 4em;
+  background: #fff;
+  border-bottom: 5px solid transparent;
+  /*background-color: gold;*/
+  background-clip: padding-box;
+}
+
+thead {
+  background: #dddcdc;
+  color:black;
+  padding:5px;
+}

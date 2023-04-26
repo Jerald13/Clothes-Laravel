@@ -206,7 +206,7 @@
                       </li>
 
 
-                    <p class="text-muted nav-heading mt-4 mb-1">
+                      <p class="text-muted nav-heading mt-4 mb-1">
                         <span>Order Site</span>
                       </p>
                       <ul class="navbar-nav flex-fill w-100 mb-2">
@@ -217,9 +217,15 @@
                           </a>
                           <ul class="collapse list-unstyled pl-4 w-100" id="Order">
                             <li class="nav-item">
-                              <a class="nav-link pl-3" href="productDisplay"><span class="ml-1 item-text">Display Order</span>
+                              <a class="nav-link pl-3" href="{{ route('orders.index') }}"><span class="ml-1 item-text">Display Order</span>
                               </a>
-                              <a class="nav-link pl-3" href="productCreate"><span class="ml-1 item-text">Add Order</span>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link pl-3" href="{{ route('orders.display.xsl') }}"><span class="ml-1 item-text">Display Order In XSL</span>
+                              </a>
+                            </li>
+                            <li class="nav-item">
+                              <a class="nav-link pl-3" href="{{ route('orders.display.xml') }}"><span class="ml-1 item-text">Display Order In XML</span>
                               </a>
                             </li>
                           </ul>

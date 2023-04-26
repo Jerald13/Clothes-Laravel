@@ -261,7 +261,7 @@ class ProductController extends Controller
             $order = new Order();
             $order->product_id = $cart["product_id"];
             $order->user_id = $cart["user_id"];
-            $order->status = "pending";
+            $order->status = "new";
             $order->payment_method = $req->payment;
             $order->payment_status = "pending";
             $order->address = $req->address;
