@@ -68,6 +68,11 @@ if (Session::has("user")) {
                                     </a>
                                 @endif
                             </a>
+
+                            <a href="/myorders" class="flex-c-m p-lr-10 trans-04">
+                                My Orders
+                            </a>
+                            
                         @else
                             <a href="{{ asset('/login') }}" class="flex-c-m p-lr-10 trans-04">
                                 Login
@@ -414,10 +419,12 @@ if (Session::has("user")) {
                     View Cart
                 </a> --}}
 
-                <a href="shoping-cart.html"
-                    class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-b-10">
-                    Check Out
-                </a>
+                <form action="{{ route('orders.store') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="flex-c-m stext-101 cl0 size-107 bg3 bor2 hov-btn3 p-lr-15 trans-04 m-b-10">
+                        CheckOut
+                    </button>
+                </form>
             </div>
         </div>
     </div>

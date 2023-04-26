@@ -6,6 +6,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
 use App\Repositories\CategoryRepository;
+use App\State\Interfaces\OrderStateInterface;
+use App\State\OrderState;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -19,6 +21,7 @@ class AppServiceProvider extends ServiceProvider
             CategoryRepositoryInterface::class,
             CategoryRepository::class
         );
+        $this->app->bind(OrderStateInterface::class, OrderState::class);
     }
 
     /**

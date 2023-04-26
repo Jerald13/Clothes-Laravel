@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\DB;
 /* Controller */
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Auth\LoginController;
@@ -167,6 +169,31 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
         UserController::class,
         "displayRole",
     ])->name("role.displayRole");
+
+    /*-----------------------*/
+    /* Orders */
+    Route::get("editor/Order/orders-xsl", [
+        OrderController::class,
+        "displayInXSL",
+    ])->name("orders.display.xsl");
+    Route::get("editor/Order/orders-xml", [
+        OrderController::class,
+        "displayInXML",
+    ])->name("orders.display.xml");
+    
+    Route::get('editor/Order/index', [OrderController::class, 'index'])->name('orders.index');
+
+    Route::patch('/orders/{order}/update-status', 'OrderController@updateOrderStatus')
+    ->name('orders.updateorderStatus');
+
+    Route::get("editor/orders/export/xml", [
+        OrderController::class,
+        "exportOrdersToXml",
+    ])->name("orders.export.xml");
+    Route::post("editor/orders/import/xml", [
+        OrderController::class,
+        "importOrdersToXml",
+    ])->name("orders.import.xml");
 });
 
 /*   User Route    */
@@ -191,6 +218,15 @@ Route::middleware(["auth", "user-role:user", "web"])->group(function () {
     Route::delete("/carts/{cart}", [CartController::class, "destroy"])->name(
         "cart.destroy"
     );
+
+        /* Orders */
+    Route::get("/order", [OrderController::class, "order"])->name("order");
+Route::post("/order", [OrderController::class, "store"])->name("orders.store");
+Route::get('/order/cancel/{id}', [OrderController::class, "cancel"])->name('order.cancel');
+Route::get("/order", [OrderController::class, "show"])->name("order");
+Route::get('/myorders', [OrderController::class, 'showOrders'])->name('orders.showOrders');
+Route::get("orderdetail", [OrderController::class, "showOrderDetail"])->name('orders.showOrderDetail');
+
 });
 
 Route::prefix("metamask")->group(function () {
@@ -219,6 +255,10 @@ Route::get("/", function () {
 //testing site
 Route::get("/testing", function () {
     return view("testing");
+});
+
+Route::get("/order", function () {
+    return view("order");
 });
 
 // Route::get("/index", [ProductController::class, "index"])->name("index");
