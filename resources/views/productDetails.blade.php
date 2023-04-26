@@ -76,7 +76,7 @@
 
                             <!--  -->
                             <div class="p-t-33">
-                                <div>Quantity: <span id="quantity"></span></div>
+                                <div>Quantity: <span id="quantity">0</span></div>
                                 <div class="flex-w flex-r-m p-b-10">
                                     <div class="size-203 flex-c-m respon6">
                                         Size
@@ -128,10 +128,6 @@
                                     </div>
                                 </div>
                                 <input type="hidden" value="{{ $product->id }}" id="productId">
-
-
-                                <input type="number" id="inputQuantityNew" value="1" min="1">
-
 
                                 <button id="add-to-cart"
                                     class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">

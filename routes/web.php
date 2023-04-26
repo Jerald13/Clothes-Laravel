@@ -36,6 +36,11 @@ use App\Models\Tag;
 Route::post("/login", [LoginController::class, "login"])->name("login");
 Route::view("/register", "register")->name("register");
 Route::post("/register", [UserController::class, "register"]);
+
+Route::get("editor/productEdit", function () {
+    return view("editor/productEdit");
+});
+
 Route::get("/login", function () {
     return view("login");
 });
@@ -102,6 +107,7 @@ Route::middleware(["auth", "user-role:admin"])->group(function () {
 /*   Editor Route    */
 Route::middleware(["auth", "user-role:editor"])->group(function () {
     /*   Product    */
+    // product create
     Route::post("editor/productCreate", [
         ImageController::class,
         "upload",
@@ -115,7 +121,33 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
     Route::get("editor/productCreate", [
         ProductController::class,
         "displayCreateForm",
+    ])->name("editor.productCreate");
+
+
+    //product editing
+    Route::get("editor/productEdit/{product}", [
+        ProductController::class,
+        "getSingleProd",
     ])->name("editor.productEdit");
+
+    Route::post("editor/productEdit/{product}", [
+        ProductController::class,
+        "update",
+    ])->name("editor.productUpdate");
+
+    //product display (admin)
+    Route::get("editor/productDisplay", [
+        ProductController::class,
+        "getAllProds",
+    ])->name("editor.productDisplay");
+
+    //product deleting 
+    Route::get("editor/productDisplay/{product}", [
+        ProductController::class,
+        "destroy",
+    ])->name("editor.productDestory");
+
+
 
     Route::view("editor/index", "editor/index")->name("editor.index");
 
@@ -221,6 +253,7 @@ Route::get("/testing", function () {
     return view("testing");
 });
 
+
 // Route::get("/index", [ProductController::class, "index"])->name("index");
 Route::get("/index", [HomeController::class, "index"])->name("index");
 
@@ -228,18 +261,14 @@ Route::get("/shop", [ProductController::class, "shop"])->name("shop");
 Route::get("/get-quantity", [ProductController::class, "getQuantity"])->name(
     "shop.quantity"
 );
+
+// Product Client
+// Product Display 
 Route::get("/productDetails/{id}", [
     ProductController::class,
-    "getProdDetails",
-])->name("shop.getId");
-// Route::get("/productDetails/{id}", [
-//     return view("master");
-// ])->name("shop.getId");
+    "getSingleProd",
+])->name("productDetails");
 
-// Route::get("/proDetail/{id}", [
-//     ProductController::class,
-//     "getProdDetails",
-// ])->name("proDetail");
 Route::get("/", [ProductController::class, "index"]);
 Route::get("detail/{id}", [ProductController::class, "detail"]);
 Route::get("search", [ProductController::class, "search"]);

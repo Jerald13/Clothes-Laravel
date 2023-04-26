@@ -7,6 +7,9 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>haha</h1>
+    <h1> @foreach($stocks  as $stock) 
+        {{ $stock->id}}
+        @endforeach
+     </h1>
 </body>
 </html>

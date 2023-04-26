@@ -18,6 +18,8 @@ use App\Repositories\SizeRepository;
 use App\Repositories\ColorRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\StockRepository;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\URL;
 
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\DB;
@@ -42,25 +44,6 @@ class ProductController extends Controller
         $this->sizeRepository = $sizeRepository;
         $this->colorRepository = $colorRepository;
         $this->stockRepository = $stockRepository;
-    }
-
-    public function getQuantity(Request $request)
-    {
-        $color = $request->input("color");
-        $size = $request->input("size");
-        $prodId = $request->input("productId");
-
-        $stock = Stock::where("color_id", $color)
-            ->where("size_id", $size)
-            ->where("product_id", $prodId)
-            ->first();
-        if ($stock) {
-            $quantity = $stock->quantity;
-        } else {
-            $quantity = null;
-        }
-
-        return response()->json(["quantity" => $quantity]);
     }
 
     /**
@@ -121,7 +104,7 @@ class ProductController extends Controller
             return response()->json(
                 [
                     "error" =>
-                        "An error occurred while running a database query.",
+                    "An error occurred while running a database query.",
                 ],
                 500
             );
@@ -132,39 +115,31 @@ class ProductController extends Controller
             ->with("success", "Images uploaded successfully.");
     }
 
-    public function getProdDetails()
+    public function getQuantity(Request $request)
     {
-        $product = $this->prodRepository->getById(request("id"));
-        // $stocks = Stock::where('product_id', $product->id)->get();
+        $color = $request->input("color");
+        $size = $request->input("size");
+        $prodId = $request->input("productId");
 
-        $stocks = $product->stocks;
-        $stockVariableSize = $product
-            ->stocks()
-            ->distinct()
-            ->get(["size_id"]); // to get the stock has what izes
-        $stockVariableColor = $product
-            ->stocks()
-            ->distinct()
-            ->get(["color_id"]); // to get the stock has what colors
-        $sizes = $this->sizeRepository->getAll();
-        $colors = $this->colorRepository->getAll();
+        $stock = Stock::where("color_id", $color)
+            ->where("size_id", $size)
+            ->where("product_id", $prodId)
+            ->first();
+        if ($stock) {
+            $quantity = $stock->quantity;
+        } else {
+            $quantity = 0;
+        }
 
-        return view(
-            "productDetails",
-            compact(
-                "product",
-                "stocks",
-                "stockVariableSize",
-                "stockVariableColor",
-                "sizes",
-                "colors"
-            )
-        );
+        return response()->json(["quantity" => $quantity]);
     }
 
-    public function getProDs()
+    public function getAllProds()
     {
-        return view("proDetail");
+        $route = Route::getCurrentRoute()->getName();
+        $products =  $this->prodRepository->getAll();
+
+        return view($route, compact("products"));
     }
 
     /**
@@ -182,6 +157,17 @@ class ProductController extends Controller
             "editor.productCreate",
             compact("categories", "sizes", "colors")
         );
+    }
+
+    /**
+     * Get All the project
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getAllProduct()
+    {
+        $products = $this->prodRepository->getAll();
+        return view("editor.productDisplay", compact("products"));
     }
 
     /**
@@ -340,8 +326,7 @@ class ProductController extends Controller
     public function edit($id)
     {
         $product = Product::find($id);
-        return view("edit", ["product" => $product]);
-        // return view('products.edit', ['product' => $product]);
+        return view("editor.ProductCreate", ["product" => $product]);
     }
 
     /**
@@ -353,11 +338,75 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $product = Product::find($id);
-        $product->code = $request->get("code");
-        $product->name = $request->get("name");
-        $product->save();
-        return redirect("products");
+        $data = $request;
+
+        $sizes = $data->input("size");
+        $colors = $data->input("color");
+        $quantity = $data->input("quantity");
+
+        //table product insert
+        $product = $this->prodRepository->update($id, [
+            "category_id" => $data["category_id"],
+            "name" => $data["prodName"],
+            "description" => $data["prodDesc"],
+            "price" => $data["prodPrice"],
+        ]);
+
+        $product = $this->prodRepository->getById($id);
+        $stocks = $product->stocks;
+
+
+        $count = 0;
+        foreach ($stocks as $stock) {
+
+
+            $this->stockRepository->update($stock->id, [
+                "color_id" => $colors[$count],
+                "size_id" => $sizes[$count],
+                "product_id" => $id,
+                "quantity" => $quantity[$count],
+            ]);
+            $count++;
+        }
+
+        return redirect()->route('editor.productEdit', ['id' => $id]);
+    }
+
+    public function getSingleProd($id)
+    {
+        $route = Route::getCurrentRoute()->getName();
+
+        $product = $this->prodRepository->getById($id);
+        // $stocks = Stock::where('product_id', $product->id)->get();
+
+        $stocks = $product->stocks;
+        $stockVariableSize = $product
+            ->stocks()
+            ->distinct()
+            ->get(["size_id"]); // to get the stock has what izes
+        $stockVariableColor = $product
+            ->stocks()
+            ->distinct()
+            ->get(["color_id"]); // to get the stock has what colors
+        $sizes = $this->sizeRepository->getAll();
+        $colors = $this->colorRepository->getAll();
+
+        $categories = $this->cateRepository->allCategories();
+        $sizes = $this->sizeRepository->getAll();
+        $colors = $this->colorRepository->getAll();
+
+        return view(
+            $route,
+            compact(
+                "product",
+                "stocks",
+                "stockVariableSize",
+                "stockVariableColor",
+                "sizes",
+                "colors",
+                "categories"
+            )
+        );
     }
 
     /**
@@ -368,11 +417,16 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        $product = Product::find($id);
-        $product->delete();
-        return redirect("products")->with(
-            "success",
-            "Information has been deleted"
-        );
+        $product = $this->prodRepository->getById($id);
+        if (!empty($product->stocks)) {
+            $stocks = $product->stocks;
+
+            foreach ($stocks as $stock) {
+                $this->stockRepository->delete($stock->id);
+            }
+        }
+
+        $this->prodRepository->delete($id);
+        return redirect("editor/productDisplay")->with('msg_deleted', 'Product has been successfully deleted.');
     }
 }
