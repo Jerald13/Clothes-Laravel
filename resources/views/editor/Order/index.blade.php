@@ -159,11 +159,11 @@ button.dropdown-item.btn.btn-danger:hover {
                           <th>UserName</th>
                           <th>Email</th>
                           <th>Phone Number</th>
-                          <th>Shipping Address</th>
+                          <th>Address</th>
                           <th>State</th>
-                          <th>City</th>
                           <th>Post Code</th>
-                          <th>Order Total (RM)</th>
+                          <th>Total (RM)</th>
+                          <th>Status</th>
                           <th>Created At</th>
                           <th>Updated At</th>
                           <th>Action</th>
@@ -185,9 +185,9 @@ button.dropdown-item.btn.btn-danger:hover {
                           <td>{{$order->user->phone_number}}</td>
                           <td>{{ $order->shipping_address ?? '-' }}</td>
                           <td>{{ $order->state ?? '-' }}</td>
-                          <td>{{ $order->city ?? '-' }}</td>
                           <td>{{ $order->postcode ?? '-' }}</td>
                           <td>{{$order->order_total}}</td>
+                          <td>{{$order->order_status}}</td>           
                           <td>{{$order->created_at}}</td>
                           <td>{{$order->updated_at}}</td>
                   
@@ -197,24 +197,19 @@ button.dropdown-item.btn.btn-danger:hover {
                                 <span class="text-muted sr-only">Action</span>
                               </button>
                               <div class="dropdown-menu dropdown-menu-right" style="padding: 10px;">
-                                <form action="{{ route('orders.updateorderStatus', $order) }}" method="POST">
+                                <form action="{{ route('orders.updateOrderStatus', $order) }}" method="POST">
                                   @csrf
                                   @method('PATCH')
                                   <select name="status">
                                     <option value="pending"{{ $order->status == 'pending' ? ' selected' : '' }}>Pending</option>
                                     <option value="successful"{{ $order->status == 'successful' ? ' selected' : '' }}>Successful</option>
+                                    <option value="cancelled"{{ $order->status == 'cancelled' ? ' selected' : '' }}>Cancelled</option>
                                   </select>
                                   <button type="submit" class="dropdown-item btn btn-sm btn-dark">Update Status</button>
                                 </form>
-                                <form action="{{ route('orders.updateorderStatus', $order) }}" method="POST">
-                                  @csrf
-                                  @method('PATCH')
-                                  <input type="hidden" name="status" value="cancelled">
-                                  <button type="submit" class="dropdown-item btn btn-sm btn-danger">Cancel Order</button>
-                                </form>
                               </div>
                             </div>
-                          </td>                          
+                          </td>                                                 
                         </tr>
                         @endforeach
                        
@@ -294,9 +289,6 @@ button.dropdown-item.btn.btn-danger:hover {
       guser('config', 'UA-56159088-1');
 
 
-
-
-
 // Get the modal
 var modal = document.getElementById("uploadModal");
 
@@ -344,7 +336,7 @@ form.addEventListener("submit", function(event) {
         } else {
             Swal.fire({
                 title: 'Error!',
-            text: 'Failed to added User XML Files to database.',
+            text: 'Failed to added Order XML Files to database.',
             icon: 'error'
             }).then(() => {
             location.reload();

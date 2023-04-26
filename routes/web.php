@@ -183,8 +183,10 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
     
     Route::get('editor/Order/index', [OrderController::class, 'index'])->name('orders.index');
 
-    Route::patch('/orders/{order}/update-status', 'OrderController@updateOrderStatus')
-    ->name('orders.updateorderStatus');
+    Route::patch("/orders/{order}/update-status", [
+        OrderController::class, 
+        "updateOrderStatus",
+    ])->name('orders.updateOrderStatus');
 
     Route::get("editor/orders/export/xml", [
         OrderController::class,

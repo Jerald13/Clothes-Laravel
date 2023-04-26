@@ -13,20 +13,26 @@ class OrderController extends Controller
 
     public function index()
     {
-        $orders = Order::where('order_status', 'new')->get();
+        $orders = Order::all();
         return view('editor.order.index', compact('orders'));
     }
-
+    
     public function updateOrderStatus(Request $request, Order $order)
     {
         $validatedData = $request->validate([
-            'order_status' => ['required', Rule::in(['pending', 'successful', 'cancelled'])],
+            'status' => 'required',
         ]);
+    
+        $allowedStatuses = ['pending', 'successful', 'cancelled'];
+        if (!in_array($validatedData['status'], $allowedStatuses)) {
+            return redirect()->back()->with('error', 'Invalid status value.');
+        }
     
         $order->update(['order_status' => $validatedData['status']]);
     
         return redirect()->back();
     }
+    
     
     
     function search($id)
@@ -48,9 +54,9 @@ class OrderController extends Controller
         $orderXml->addChild("phone_number", $order->user->phone_number);
         $orderXml->addChild("shipping_address", empty($order->shipping_address) ? "-" : $order->shipping_address);
         $orderXml->addChild("state", empty($order->state) ? "-" : $order->state);
-        $orderXml->addChild("city", empty($order->city) ? "-" : $order->city);
         $orderXml->addChild("post_code", empty($order->post_code) ? "-" : $order->post_code);
         $orderXml->addChild("order_total", $order->order_total);
+        $orderXml->addChild("order_status", $order->order_status);
     }
 
     $xmlString = $xml->asXML();
@@ -89,9 +95,9 @@ class OrderController extends Controller
         $orderXml->addChild("phone_number", $order->user->phone_number);
         $orderXml->addChild("shipping_address", $order->shipping_address);
         $orderXml->addChild("state", $order->state);
-        $orderXml->addChild("city", $order->city);
         $orderXml->addChild("post_code", $order->post_code);
         $orderXml->addChild("total", $order->order_total);
+        $orderXml->addChild("order_status", $order->order_status);
     }
 
     $xmlString = $xml->asXML();
