@@ -92,11 +92,11 @@
                                                                     <span class="text-muted sr-only">Action</span>
                                                                 </button>
                                                                 <div class="dropdown-menu dropdown-menu-right">
-                                                                    <a class="dropdown-item" href="{{ route('editor.productEdit',$product->id) }}">Edit</a>
                                                                     <a class="dropdown-item"
-                                                                        href="{{ route('editor.productDestory', $product->id) }}"
-                                                                        onclick="return confirm('Are you sure you want to delete Product (Name: {{ $product->name.', ID:'.$product->id.'' }})?')">Remove</a>
-                                                                    <a class="dropdown-item" href="#">Assign</a>
+                                                                        href="{{ route('editor.product.productEdit', $product->id) }}">Edit</a>
+                                                                    <a class="dropdown-item"
+                                                                        href="{{ route('editor.product.productDestory', $product->id) }}"
+                                                                        onclick="return confirm('Are you sure you want to delete Product (Name: {{ $product->name . ', ID:' . $product->id . '' }})?')">Remove</a>
                                                                 </div>
                                                             </td>
                                                         </tr>

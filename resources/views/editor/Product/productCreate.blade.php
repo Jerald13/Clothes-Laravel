@@ -55,7 +55,7 @@
                                                         <strong>Dropzone</strong>
                                                     </div>
                                                     <div class="card-body">
-                                                        <form action="{{ route('editor.productCreate') }}" method="POST"
+                                                        <form action="{{ route('editor.product.productCreate') }}" method="POST"
                                                             class="dropzone bg-light rounded-lg" id="tinydash-dropzone">
                                                             @csrf
                                                             <div class="dz-message needsclick">

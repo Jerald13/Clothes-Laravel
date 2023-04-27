@@ -139,7 +139,7 @@ class ProductController extends Controller
         $route = Route::getCurrentRoute()->getName();
         $products =  $this->prodRepository->getAll();
 
-        return view($route, compact("products"));
+        return view('editor.product.productDisplay', compact("products"));
     }
 
     /**
@@ -154,7 +154,7 @@ class ProductController extends Controller
         $colors = $this->colorRepository->getAll();
 
         return view(
-            "editor.productCreate",
+            "editor.product.productCreate",
             compact("categories", "sizes", "colors")
         );
     }
@@ -167,7 +167,7 @@ class ProductController extends Controller
     public function getAllProduct()
     {
         $products = $this->prodRepository->getAll();
-        return view("editor.productDisplay", compact("products"));
+        return view("editor.product.productDisplay", compact("products"));
     }
 
     /**
@@ -326,7 +326,7 @@ class ProductController extends Controller
     public function edit($id)
     {
         $product = Product::find($id);
-        return view("editor.ProductCreate", ["product" => $product]);
+        return view("product.ProductCreate", ["product" => $product]);
     }
 
     /**
@@ -369,7 +369,7 @@ class ProductController extends Controller
             $count++;
         }
 
-        return redirect()->route('editor.productEdit', ['id' => $id]);
+        return redirect()->route('editor.product.productEdit', ['product' => $id]);
     }
 
     public function getSingleProd($id)
@@ -427,6 +427,6 @@ class ProductController extends Controller
         }
 
         $this->prodRepository->delete($id);
-        return redirect("editor/productDisplay")->with('msg_deleted', 'Product has been successfully deleted.');
+        return redirect("editor/Product/productDisplay")->with('msg_deleted', 'Product has been successfully deleted.');
     }
 }

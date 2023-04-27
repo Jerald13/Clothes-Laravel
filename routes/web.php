@@ -110,46 +110,44 @@ Route::middleware(["auth", "user-role:admin"])->group(function () {
 Route::middleware(["auth", "user-role:editor"])->group(function () {
     /*   Product    */
     // product create
-    Route::post("editor/productCreate", [
+    Route::post("editor/Product/productCreate", [
         ImageController::class,
         "upload",
-    ])->name("editor.productCreate");
+    ])->name("editor.product.productCreate");
 
-    Route::post("editor/productCreate", [
+    Route::post("editor/Product/productCreate", [
         ProductController::class,
         "createProduct",
-    ])->name("editor.productCreate");
+    ])->name("editor.product.productCreate");
 
-    Route::get("editor/productCreate", [
+    Route::get("editor/Product/productCreate", [
         ProductController::class,
         "displayCreateForm",
-    ])->name("editor.productCreate");
+    ])->name("editor.product.productCreate");
 
 
     //product editing
-    Route::get("editor/productEdit/{product}", [
+    Route::get("editor/Product/productEdit/{product}", [
         ProductController::class,
         "getSingleProd",
-    ])->name("editor.productEdit");
+    ])->name("editor.product.productEdit");
 
-    Route::post("editor/productEdit/{product}", [
+    Route::post("editor/Product/productEdit/{product}", [
         ProductController::class,
         "update",
-    ])->name("editor.productUpdate");
+    ])->name("editor.product.productUpdate");
 
     //product display (admin)
-    Route::get("editor/productDisplay", [
+    Route::get("editor/Product/productDisplay", [
         ProductController::class,
         "getAllProds",
-    ])->name("editor.productDisplay");
+    ])->name("editor.product.productDisplay");
 
     //product deleting 
-    Route::get("editor/productDisplay/{product}", [
+    Route::get("editor/Product/productDisplay/{product}", [
         ProductController::class,
         "destroy",
-    ])->name("editor.productDestory");
-
-
+    ])->name("editor.product.productDestory");
 
     Route::view("editor/index", "editor/index")->name("editor.index");
 
