@@ -120,7 +120,7 @@
               </a>
               <ul class="collapse list-unstyled pl-4 w-100" id="Product">
                 <li class="nav-item">
-                  <a class="nav-link pl-3" href="productDisplay"><span class="ml-1 item-text">Display Product</span>
+                  <a class="nav-link pl-3" href="{{ route('editor.product.productDisplay') }}"><span class="ml-1 item-text">Display Product</span>
                   </a>
                   <a class="nav-link pl-3" href="productCreate"><span class="ml-1 item-text">Add Product</span>
                   </a>
