@@ -19,6 +19,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\FreeGiftController;
 use App\Http\Controllers\TagController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\VoucherController;
 
 use Illuminate\Support\Facades\Mail;
 use App\Notifications\VerifyEmail;
@@ -120,11 +121,10 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
         "createProduct",
     ])->name("editor.productCreate");
 
-    Route::get("editor/productCreate", [
+    Route::get("editor/productDisplay", [
         ProductController::class,
         "displayCreateForm",
-    ])->name("editor.productCreate");
-
+    ])->name("editor.productDisplay");
 
     //product editing
     Route::get("editor/productEdit/{product}", [
@@ -143,13 +143,11 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
         "getAllProds",
     ])->name("editor.productDisplay");
 
-    //product deleting 
+    //product deleting
     Route::get("editor/productDisplay/{product}", [
         ProductController::class,
         "destroy",
     ])->name("editor.productDestory");
-
-
 
     Route::view("editor/index", "editor/index")->name("editor.index");
 
@@ -212,13 +210,15 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
         OrderController::class,
         "displayInXML",
     ])->name("orders.display.xml");
-    
-    Route::get('editor/Order/index', [OrderController::class, 'index'])->name('orders.index');
+
+    Route::get("editor/Order/index", [OrderController::class, "index"])->name(
+        "orders.index"
+    );
 
     Route::patch("/orders/{order}/update-status", [
-        OrderController::class, 
+        OrderController::class,
         "updateOrderStatus",
-    ])->name('orders.updateOrderStatus');
+    ])->name("orders.updateOrderStatus");
 
     Route::get("editor/orders/export/xml", [
         OrderController::class,
@@ -253,14 +253,30 @@ Route::middleware(["auth", "user-role:user", "web"])->group(function () {
         "cart.destroy"
     );
 
-        /* Orders */
+    /* Orders */
     Route::get("/order", [OrderController::class, "order"])->name("order");
-Route::post("/order", [OrderController::class, "store"])->name("orders.store");
-Route::get('/order/cancel/{id}', [OrderController::class, "cancel"])->name('order.cancel');
-Route::get("/order", [OrderController::class, "show"])->name("order");
-Route::get('/myorders', [OrderController::class, 'showOrders'])->name('orders.showOrders');
-Route::get("orderdetail", [OrderController::class, "showOrderDetail"])->name('orders.showOrderDetail');
+    Route::post("/order", [OrderController::class, "store"])->name(
+        "orders.store"
+    );
+    Route::get("/order/cancel/{id}", [OrderController::class, "cancel"])->name(
+        "order.cancel"
+    );
+    Route::get("/order", [OrderController::class, "show"])->name("order");
+    Route::get("/myorders", [OrderController::class, "showOrders"])->name(
+        "orders.showOrders"
+    );
+    Route::get("orderdetail", [
+        OrderController::class,
+        "showOrderDetail",
+    ])->name("orders.showOrderDetail");
+    // Route::get("/order", function () {
+    //     return view("order");
+    // });
 
+    Route::post("vouchers/check", [
+        VoucherController::class,
+        "checkVoucher",
+    ])->name("vouchers.check");
 });
 
 Route::prefix("metamask")->group(function () {
@@ -291,10 +307,6 @@ Route::get("/testing", function () {
     return view("testing");
 });
 
-Route::get("/order", function () {
-    return view("order");
-});
-
 // Route::get("/index", [ProductController::class, "index"])->name("index");
 Route::get("/index", [HomeController::class, "index"])->name("index");
 
@@ -304,7 +316,7 @@ Route::get("/get-quantity", [ProductController::class, "getQuantity"])->name(
 );
 
 // Product Client
-// Product Display 
+// Product Display
 Route::get("/productDetails/{id}", [
     ProductController::class,
     "getSingleProd",

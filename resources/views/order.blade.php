@@ -20,6 +20,12 @@
                     width: 50% !important;
                 }
             }
+            .valid {
+    color: green!important;;
+}
+.invalid {
+    color: red!important;
+}
         </style>
     </head>
 
@@ -42,6 +48,8 @@
                                 style="background-color: #f8f8f8; color: #555;">
                         </div>
                         <form method="POST" action="{{ route('orders.store') }}">
+                      <meta name="csrf-token" content="{{ csrf_token() }}">
+
                             @csrf
                             <div class="form-group">
                                 <label for="billing_address">Address *</label>
@@ -131,10 +139,24 @@
                                             <td colspan="3"><em
                                                     id="shipping-fee">{{ number_format($shippingFee, 2) }}</em></td>
                                         </tr>
+                                        <tr id="Voucher-row">
+                                            <th>Voucher Offer (RM)</th>
+                                            <td colspan="3"><em
+                                                    id="voucherChanged"></em></td>
+                                        </tr>
                                         <tr>
                                             <th>Total (RM) </th>
-                                            <td colspan="3" class="product-subtotal"><span id="total"
+                                            <td colspan="3" class="product-subtotal">
+                                                <span id="total"
                                                     class="font-xl text-brand fw-900">{{ number_format($orderTotal, 2) }}</span>
+                                                  
+                                            </td>
+                                        </tr>
+                                        <tr >
+                                            <th>Discounted Total (RM) </th>
+                                            <td colspan="3" class="product-subtotal">
+                                                <span id="totalDiscount" 
+                                                class="font-xl text-brand fw-900">-</span>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -147,10 +169,17 @@
                                   <h4>Voucher</h4>
                                 </div>
                                 <div class="form-group" style="display: flex; justify-content: space-between;">
-                                    <input required="" type="text" name="zipcode" placeholder="Enter Voucher Code" style="width:70%; margin-right: 10px;">
-                                    <button type="submit" style="width:30%; display: flex; justify-content: center; align-items: center; color: white; background:#1a9cb7; border: none;">
-                                        <span style="text-align: center;">APPLY</span>
+                                    <input required="" id="voucher" type="text" name="voucher" placeholder="Enter Voucher Code" style="width:70%; margin-right: 10px;">
+                                    <input id="voucher-status" type="text" readonly style="border:none; font-weight:bold; font-size:16px;">
+
+                                    <button id="apply-btn" style="width:30%; display: flex; justify-content: center; align-items: center; color: white; background:#1a9cb7; border: none;" onclick="event.preventDefault(); applyVoucher()" formnovalidate>
+                                        <span id="apply-text" style="text-align: center;">APPLY</span>
                                     </button>
+                                    
+                                      
+                                      
+                                      
+                                      
                                 </div>
                               </div>
                             <div class="bt-1 border-color-1 mt-30 mb-30"></div>
@@ -196,6 +225,60 @@
                 </div>
             </div>
         </div>
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+        <script>
+$.ajaxSetup({
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    }
+});
+
+function applyVoucher() {
+    var voucherCode = $('#voucher').val();
+    if (voucherCode.length == 0) {
+                $('#voucher-status').val('Invalid Voucher').removeClass('valid').addClass('invalid');
+        $('#voucherChanged').text('0%');
+        $('#totalDiscount').text('-');
+ 
+            }
+    $.ajax({
+        url: '{{ route('vouchers.check') }}',
+        type: 'POST',
+        data: {
+            voucher_code: voucherCode,
+            _token: $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(response) {
+            if (response.status) {
+                $('#voucher-status').val(response.message).removeClass('invalid').addClass('valid');
+                $('#voucherChanged').text(response.discount_percentage + '%');
+                var currentTotal = parseFloat($('#total').text());
+                var discount = (currentTotal * response.discount_percentage) / 100;
+                var newTotal = currentTotal - discount;
+                $('#totalDiscount').text(newTotal.toFixed(2));
+           
+            }
+            else {
+        $('#voucher-status').val('Invalid Voucher').removeClass('valid').addClass('invalid');
+        $('#voucherChanged').text('0%');
+        $('#totalDiscount').text('-');
+ 
+    }
+
+},
+
+        error: function(xhr) {
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                $('#voucher-status').val('Invalid Voucher').removeClass('valid').addClass('invalid');
+            } else {
+                $('#voucher-status').val('Invalid Voucher').removeClass('valid').addClass('invalid');
+            }
+        }
+    });
+}
+
+        </script>
         <script>
             // Define the state and city options as arrays of objects
             var states = [{
@@ -263,6 +346,7 @@
                     cities: ["Kuala Terengganu", "Besut", "Dungun"]
                 }
             ];
+       
 
             // Get the state and city select elements
             var stateSelect = document.getElementById("state");
