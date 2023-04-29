@@ -223,6 +223,43 @@ class OrderController extends Controller
         ]);
     }
 
+    function orderNow()
+    {
+        $userId = auth()->user()->id;
+        $total = $products = DB::table("cart")
+            ->join("products", "cart.product_id", "=", "products.id")
+            ->where("cart.user_id", $userId)
+            ->sum("products.price");
+        return view("ordernow", ["total" => $total]);
+    }
+
+    function orderPlace(Request $req)
+    {
+        $userId = auth()->user()->id;
+        $allCart = Cart::where("user_id", $userId)->get();
+        foreach ($allCart as $cart) {
+            $order = new Order();
+            $order->user_id = $cart["user_id"];
+            $order->order_status = "new";
+            $order->address = $req->address;
+            $order->save();
+            Cart::where("user_id", $userId)->delete();
+        }
+        $req->input();
+        return redirect("/");
+    }
+    
+    function myOrders()
+    {
+        $userId = auth()->user()->id;
+        $user = User::find($userId);
+        $orders = $user
+            ->myOrder()
+            ->with("product")
+            ->get();
+        return view("myorders", compact("orders"));
+    }
+
     public function store(Request $request)
     {
         $voucherCode = $request->input("voucher");

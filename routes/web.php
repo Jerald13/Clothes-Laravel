@@ -262,9 +262,10 @@ Route::middleware(["auth", "user-role:user", "web"])->group(function () {
         "order.cancel"
     );
     Route::get("/order", [OrderController::class, "show"])->name("order");
-    Route::get("/myorders", [OrderController::class, "showOrders"])->name(
-        "orders.showOrders"
-    );
+    Route::get("ordernow", [OrderController::class, "orderNow"]);
+    Route::post("orderplace", [OrderController::class, "orderPlace"]);
+    Route::get("myorders", [OrderController::class, "myOrders"]);
+    Route::get('/myorders', [OrderController::class, 'showOrders'])->name('orders.showOrders');
     Route::get("orderdetail", [
         OrderController::class,
         "showOrderDetail",
@@ -328,9 +329,6 @@ Route::get("search", [ProductController::class, "search"]);
 Route::post("add_to_cart", [ProductController::class, "addToCart"]);
 Route::get("cartlist", [ProductController::class, "cartList"]);
 Route::get("removecart/{id}", [ProductController::class, "removeCart"]);
-Route::get("ordernow", [ProductController::class, "orderNow"]);
-Route::post("orderplace", [ProductController::class, "orderPlace"]);
-Route::get("myorders", [ProductController::class, "myOrders"]);
 Route::view("/error", "error")->name("error");
 
 //Web service
