@@ -258,6 +258,7 @@ Route::middleware(["auth", "user-role:user", "web"])->group(function () {
     Route::post("/order", [OrderController::class, "store"])->name(
         "orders.store"
     );
+
     Route::get("/order/cancel/{id}", [OrderController::class, "cancel"])->name(
         "order.cancel"
     );
@@ -270,14 +271,22 @@ Route::middleware(["auth", "user-role:user", "web"])->group(function () {
         OrderController::class,
         "showOrderDetail",
     ])->name("orders.showOrderDetail");
-    // Route::get("/order", function () {
-    //     return view("order");
-    // });
-
     Route::post("vouchers/check", [
         VoucherController::class,
         "checkVoucher",
     ])->name("vouchers.check");
+
+    /* Payments */
+    Route::post("/payment/{id}", [PaymentController::class, "updateOrderPayment"])->name(
+        "payments.insertNewPayment"
+    );
+
+    Route::get('/payment', [PaymentController::class, 'payment'])->name('payment');
+
+    Route::get('/paymentsuccess', function () {
+        return view('paymentsuccess');
+    })->name('paymentsuccess');
+    
 });
 
 Route::prefix("metamask")->group(function () {

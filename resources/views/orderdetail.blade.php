@@ -279,10 +279,10 @@
                     <div class="jumbotron-fluid">
                         <div class="row justify-content-between ">
                             <div class="col-auto my-auto ">
-                                <h2 class="mb-0 font-weight-bold">TOTAL PAYMENT (RM)</h2>
+                                <h2 class="mb-0 font-weight-bold">TOTAL PAYMENT AFTER DISCOUNT (RM)</h2>
                             </div>
                             <div class="col-auto my-auto ml-auto">
-                                <h1 class="display-3 ">{{ number_format($item->order->order_total, 2) }}</h1>
+                                <h1 class="display-3 ">{{ number_format($item->order->payment->payment_amount, 2) }}</h1>
                             </div>
                         </div>
                     </div>

@@ -43,7 +43,7 @@
                                             <td> {{ auth()->user()->username }}</td>
                                             <td> {{ auth()->user()->phone_number }}</td>
                                             {{-- wait payment done --}}
-                                            <td> Paid By ...</td>
+                                            <td>Paid By {{ $item->payment->payment_method }}</td>
                                             <td> {{ $item->created_at->format('d-m-Y') }}</td>
                                             <td>
                                                 @if ($item->order_status == 'new')
