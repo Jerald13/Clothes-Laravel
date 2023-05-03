@@ -228,6 +228,18 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
         OrderController::class,
         "importOrdersToXml",
     ])->name("orders.import.xml");
+
+    /*-----------------------*/
+    /* Payment */
+    Route::get("editor/Payment/index", [PaymentController::class, "index"])->name(
+        "payments.index"
+    );
+
+    Route::patch("/payment/{payment}/update-status", [
+        PaymentController::class,
+        "updatePaymentStatus",
+    ])->name("payments.updatePaymentStatus");
+
 });
 
 /*   User Route    */

@@ -16,6 +16,30 @@ use Illuminate\Support\Facades\Session;
 
 class PaymentController extends Controller
 {
+    public function index()
+    {
+        $payments = Payment::all();
+        return view("editor.payment.index", compact("payments"));
+    }
+
+    public function updatePaymentStatus(Request $request, Payment $payment)
+    {
+        $validatedData = $request->validate([
+            "status" => "required",
+        ]);
+
+        $allowedStatuses = ["pending", "completed", "cancelled"];
+        if (!in_array($validatedData["status"], $allowedStatuses)) {
+            return redirect()
+                ->back()
+                ->with("error", "Invalid status value.");
+        }
+
+        $payment->update(["payment_status" => $validatedData["status"]]);
+
+        return redirect()->back();
+    }
+
     public function updateOrderPayment(Request $request, $id) {
 
         // Use $id variable to retrieve the Order object from the database

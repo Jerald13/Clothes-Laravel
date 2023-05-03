@@ -179,9 +179,7 @@
                       </a>
                       <ul class="collapse list-unstyled pl-4 w-100" id="Payment">
                         <li class="nav-item">
-                          <a class="nav-link pl-3" href="productDisplay"><span class="ml-1 item-text">Display Payment</span>
-                          </a>
-                          <a class="nav-link pl-3" href="productCreate"><span class="ml-1 item-text">Add Payment</span>
+                          <a class="nav-link pl-3" href="{{ route('payments.index') }}"><span class="ml-1 item-text">Display Payment</span>
                           </a>
                         </li>
                       </ul>
