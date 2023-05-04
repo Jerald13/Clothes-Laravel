@@ -16,7 +16,6 @@ class StockSeeder extends Seeder
     {
         DB::table("stock")->insert([
             [
-                "color_id" => "1",
                 "size_id" => "1",
                 "product_id" => "1",
                 "quantity" => "10",
@@ -24,7 +23,6 @@ class StockSeeder extends Seeder
                 "updated_at" => Carbon::now()->format("Y-m-d H:i:s"),
             ],
             [
-                "color_id" => "2",
                 "size_id" => "1",
                 "product_id" => "1",
                 "quantity" => "10",
@@ -32,7 +30,6 @@ class StockSeeder extends Seeder
                 "updated_at" => Carbon::now()->format("Y-m-d H:i:s"),
             ],
             [
-                "color_id" => "3",
                 "size_id" => "1",
                 "product_id" => "1",
                 "quantity" => "1",
@@ -40,7 +37,6 @@ class StockSeeder extends Seeder
                 "updated_at" => Carbon::now()->format("Y-m-d H:i:s"),
             ],
             [
-                "color_id" => "4",
                 "size_id" => "1",
                 "product_id" => "1",
                 "quantity" => "1",
@@ -48,7 +44,6 @@ class StockSeeder extends Seeder
                 "updated_at" => Carbon::now()->format("Y-m-d H:i:s"),
             ],
             [
-                "color_id" => "5",
                 "size_id" => "1",
                 "product_id" => "1",
                 "quantity" => "1",

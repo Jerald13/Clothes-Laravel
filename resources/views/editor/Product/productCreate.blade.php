@@ -76,236 +76,124 @@
                         <h2 class="page-title">Form Add Product</h2>
                         <p class="text-muted">Create product with category</p>
                         <div class="row" style="justify-content: center;">
+
                             <div class="col-md-12" style="width:958px;max-width: 110%;">
+                                <form action="{{ route('editor.product.productCreate') }}" method="POST"
+                                    enctype="multipart/form-data">
 
-                                <!-- Card !-->
-                                <div class="card shadow mb-4">
-                                    <div class="card-header">
-                                        <strong class="card-title">Add Product</strong>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="card shadow mb-4">
-                                                    <div class="card-header">
-                                                        <strong>Dropzone</strong>
-                                                    </div>
-                                                    <div class="parent">
-                                                        <div class="form-group">
-                                                            <input class="filepond" name="images" type="file" id="id"
-                                                                multiple="multiple" data-allow-reorder="true">
+                                    <!-- Card !-->
+                                    <div class="card shadow mb-4">
+                                        <div class="card-header">
+                                            <strong class="card-title">Add Product</strong>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <div class="row">
+
+                                                @csrf
+                                                <div class="col-md-12">
+                                                    <div class="card shadow mb-4">
+                                                        <div class="card-header">
+                                                            <strong>Dropzone</strong>
                                                         </div>
-                                                    </div>
-                                                    <script>
-                                                        FilePond.registerPlugin(FilePondPluginFileValidateType);
-                                                        FilePond.registerPlugin(FilePondPluginImagePreview);
-                                                        FilePond.registerPlugin(FilePondPluginFileEncode);
-                                                        FilePond.registerPlugin(FilePondPluginFileValidateSize);
-                                                        FilePond.registerPlugin(FilePondPluginImageExifOrientation);
-
-                                                        const pondInput = FilePond.create(
-                                                            document.querySelector('#id')
-                                                        );
-
-
-
-                                                        //   let data = new FormData();
-                                                        // const pondFiles = pondInput.getFiles();
-                                                        //   console.log(pondFiles);
-                                                        // for (let i = 0; i < pondFiles.length; i++) {
-                                                        //   data.append('File', pondFiles[i].file);
-                                                        //   pondInput.removeFile(i);
-                                                        // }
-                                                    </script>
-                                                </div> <!-- .card -->
-                                            </div>
-                                            <div class="col-md-12">
-                                                <div class="form-group mb-3">
-                                                    <label for="simpleinput">Product Name</label>
-                                                    <input type="text" id="simpleinput" name='prodName'
-                                                        class="form-control">
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label for="example-textarea">Description</label>
-                                                    <textarea class="form-control" id="example-textarea" name="prodDesc" rows="4"></textarea>
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label for="custom-select">Category</label>
-                                                    <select class="custom-select" id="custom-select" name='category_id'>
-                                                        <option selected>--Select Category--</option>
-                                                        @foreach ($categories as $category)
-                                                            <option value="{{ $category->id }}"> {{ $category->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-
-                                                <label>Price</label>
-                                                <div class="input-group mb-3" style='width:150px;'>
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text">$</span>
-                                                    </div>
-                                                    <input type="text" class="form-control"
-                                                        aria-label="Amount (to the nearest dollar)" name="prodPrice">
-
-                                                </div>
-                                                <div id="input-container">
-                                                    <label for="size">Variable</label>
-                                                    <button type="button" class="btn btn-primary add-row" id="add-row"
-                                                        onclick="add()">Add</button>
-                                                    <div class="row" id="new_1">
-                                                        <div class="col-md-2">
-                                                            <div class="form-group mb-3">
-                                                                <label for="size">Size</label>
-                                                                <select class="custom-select" name="size[]">
-                                                                    <option selected>--Select Category--</option>
-                                                                    @foreach ($sizes as $size)
-                                                                        <option value="{{ $size->id }}">
-                                                                            {{ $size->size }}
-                                                                        </option>
-                                                                    @endforeach
-                                                                </select>
+                                                        <div class="parent">
+                                                            <div class="form-group">
+                                                                  <input type="file" name="images[]" multiple>
                                                             </div>
                                                         </div>
-                                                        <div class="col-md-2" width="150px">
-                                                            <div class="form-group mb-3">
-                                                                <label for="color">Color</label>
-                                                                <select class="custom-select" name="color[]">
-                                                                    <option selected>--Select Category--</option>
-                                                                    @foreach ($colors as $color)
-                                                                        <option value="{{ $color->id }}">
-                                                                            {{ $color->color }}</option>
-                                                                    @endforeach
+                                                        <script>
+                                                            FilePond.registerPlugin(FilePondPluginFileValidateType);
+                                                            FilePond.registerPlugin(FilePondPluginImagePreview);
+                                                            FilePond.registerPlugin(FilePondPluginFileEncode);
+                                                            FilePond.registerPlugin(FilePondPluginFileValidateSize);
+                                                            FilePond.registerPlugin(FilePondPluginImageExifOrientation);
+
+                                                            const pondInput = FilePond.create(
+                                                                document.querySelector('#image')
+                                                            );
 
 
-                                                                </select>
-                                                            </div>
+
+                                                            //   let data = new FormData();
+                                                            // const pondFiles = pondInput.getFiles();
+                                                            //   console.log(pondFiles);
+                                                            // for (let i = 0; i < pondFiles.length; i++) {
+                                                            //   data.append('File', pondFiles[i].file);
+                                                            //   pondInput.removeFile(i);
+                                                            // }
+                                                        </script>
+                                                    </div> <!-- .card -->
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group mb-3">
+                                                        <label for="simpleinput">Product Name</label>
+                                                        <input type="text" id="simpleinput" name='prodName'
+                                                            class="form-control">
+                                                    </div>
+                                                    <div class="form-group mb-3" style="width:70%">
+                                                        <label for="example-textarea">Description</label>
+                                                        <textarea class="form-control" id="example-textarea" name="prodDesc" rows="4"></textarea>
+                                                    </div>
+                                                    <div class="form-group mb-3">
+                                                        <label for="custom-select">Category</label>
+                                                        <select class="custom-select" id="custom-select" name='category_id'>
+                                                            <option selected>--Select Category--</option>
+                                                            @foreach ($categories as $category)
+                                                                <option value="{{ $category->id }}"> {{ $category->name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+
+                                                    <label>Price</label>
+                                                    <div class="input-group mb-3" style='width:150px;'>
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">$</span>
                                                         </div>
-                                                        <div class="col-md-2">
-                                                            <div class="form-group mb-3 " style="width:100px;">
-                                                                <label for="quantity">Quantity</label>
-                                                                <input type="number" class="form-control" id="quantity"
-                                                                    name="quantity[]" min="0">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-1">
-                                                            <div class="form-group mb-3">
-                                                                <label>&nbsp;</label>
-                                                                <div class="form-group mb-2">
-                                                                    <button type="button" style="visibility: hidden"
-                                                                        class="btn btn-danger remove-row"
-                                                                        onclick="remove(1)">Remove</button>
+                                                        <input type="text" class="form-control"
+                                                            aria-label="Amount (to the nearest dollar)" name="prodPrice">
+
+                                                    </div>
+                                                    <div id="input-container">
+                                                        <label for="size">Variable</label>
+
+                                                        @for ($i = 0; $i < 5; $i++)
+                                                            <div class="row" id="new_1">
+                                                                <div class="col-md-3">
+                                                                    <div class="form-group mb-2">
+                                                                        <label for="size">Size</label>
+                                                                        <select class="custom-select" name="size[]">
+                                                                            <option selected value=0>--Select Category--</option>
+                                                                            @foreach ($sizes as $size)
+                                                                                <option value="{{ $size->id }}">
+                                                                                    {{ $size->size }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-3">
+                                                                    <div class="form-group mb-7 " style="width:100px;">
+                                                                        <label for="quantity">Quantity</label>
+                                                                        <input type="number" class="form-control"
+                                                                            id="quantity" name="quantity[]"
+                                                                            min="0" value="0">
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
+                                                        @endfor
+
+
                                                     </div>
-                                                    <input type="hidden" value="1" id="total_input">
-                                                    <div id="new_input"></div>
-
-                                                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-                                                    <script>
-                                                        function add() {
-                                                            var new_input_no = parseInt($('#total_input').val()) + 1;
-                                                            var new_input_field = '<div class="row" id="new_' + new_input_no + '">' +
-                                                                '<div class="col-md-2">' +
-                                                                '<div class="form-group mb-3">' +
-                                                                '<label for="size">Size</label>' +
-                                                                '<select class="custom-select" name="size[]">' +
-                                                                '<option selected>--Select Category--</option>' +
-                                                                '@foreach ($sizes as $size)' +
-                                                                '<option value="{{ $size->id }}">' +
-                                                                ' {{ $size->size }}</option>' +
-                                                                '@endforeach' +
-                                                                '</select>' +
-                                                                '</div>' +
-                                                                '</div>' +
-                                                                '<div class="col-md-2">' +
-                                                                '<div class="form-group mb-3">' +
-                                                                '<label for="color">Color</label>' +
-                                                                '<select class="custom-select" name="color[]">' +
-                                                                '<option selected>--Select Category--</option>' +
-                                                                '@foreach ($colors as $color)' +
-                                                                '<option value="{{ $color->id }}">' +
-                                                                ' {{ $color->color }}</option>' +
-                                                                '@endforeach' +
-                                                                '</select>' +
-                                                                '</div>' +
-                                                                '</div>' +
-                                                                '<div class="col-md-2">' +
-                                                                '<div class="form-group mb-3" style="width:100px;">' +
-                                                                '<label for="quantity">Quantity</label>' +
-                                                                '<input type="number" class="form-control" id="quantity" min="0" name="quantity[]">' +
-                                                                '</div>' +
-                                                                '</div>' +
-                                                                '<div class="col-md-1">' +
-                                                                '<div class="form-group mb-3">' +
-                                                                '<label>&nbsp;</label>' +
-                                                                '<div class="form-group mb-2">' +
-                                                                '<button type="button" class="btn btn-danger remove-row"' +
-                                                                '  onclick="remove(' + new_input_no + ')">Remove</button>' +
-                                                                '</div>' +
-                                                                '</div>' +
-                                                                '</div>' +
-                                                                '</div>';
-
-                                                            $('#new_input').append(new_input_field);
-                                                            $('#total_input').val(new_input_no);
-                                                            $('#new_1').find('.remove-row').css('visibility', 'visible');
-                                                        }
-
-                                                        function remove(id) {
-                                                            var last_input_no = $('#total_input').val();
-
-                                                            if (last_input_no > 1) {
-
-                                                                $('#new_' + id).remove();
-                                                                $('#total_input').val(last_input_no - 1);
-
-
-                                                            }
-                                                        }
-
-                                                        function collectData() {
-                                                            var data = {};
-                                                            $('select[name^="size"]').each(function(index, element) {
-                                                                var key = $(element).val();
-                                                                if (data[key] === undefined) {
-                                                                    data[key] = {};
-                                                                }
-                                                                data[key]['size'] = $(element).val();
-                                                            });
-
-                                                            $('select[name^="color"]').each(function(index, element) {
-                                                                var key = $(element).val();
-                                                                if (data[key] === undefined) {
-                                                                    data[key] = {};
-                                                                }
-                                                                data[key]['color'] = $(element).val();
-                                                            });
-
-                                                            $('input[name^="quantity"]').each(function(index, element) {
-                                                                var key = $(element).siblings('select[name^="color"]').val() + '_' + $(element).siblings(
-                                                                    'select[name^="size"]').val();
-                                                                if (data[key] === undefined) {
-                                                                    data[key] = {};
-                                                                }
-                                                                data[key]['quantity'] = $(element).val();
-                                                            });
-
-                                                            console.log(data); // or do something else with the collected data
-                                                        }
-                                                    </script>
-
-
                                                 </div>
-                                            </div>
-                                            <div align="right">
-                                                <input class="btn btn-primary" type='submit' value="Submit"
-                                                    onclick="submitData()">
-                                            </div>
-                                            </form>
-                                        </div> <!-- / .card -->
-                                    </div> <!-- /.col -->
+                                                <div>
+                                                    <input class="btn btn-primary" type='submit' value="Submit"
+                                                        onclick="submitData()">
+                                                </div>
+                                </form>
+                            </div> <!-- / .card -->
+                        </div> <!-- /.col -->
 
         </main> <!-- main -->
 

@@ -9,13 +9,15 @@ use App\Models\Cart;
 use App\Models\Category;
 use App\Models\User;
 use App\Models\Stock;
-use App\Models\Product_images;
+use App\Models\product_images;
+
 
 use App\Models\Order;
+use Illuminate\Http\UploadedFile;
 use App\Repositories\ProductRepository;
 use App\Repositories\CategoryRepository;
 use App\Repositories\SizeRepository;
-use App\Repositories\ColorRepository;
+use App\Repositories\ProductImageRepository;
 use App\Repositories\UserRepository;
 use App\Repositories\StockRepository;
 use Illuminate\Support\Facades\Route;
@@ -31,18 +33,19 @@ class ProductController extends Controller
     protected $colorRepository;
     protected $cateRepository;
     protected $stockRepository;
+    protected $ProductImageRepository;
 
     public function __construct(
         ProductRepository $prodRepository,
         CategoryRepository $cateRepository,
         SizeRepository $sizeRepository,
-        ColorRepository $colorRepository,
-        StockRepository $stockRepository
+        StockRepository $stockRepository,
+        ProductImageRepository $productImageRepository
     ) {
         $this->prodRepository = $prodRepository;
         $this->cateRepository = $cateRepository;
         $this->sizeRepository = $sizeRepository;
-        $this->colorRepository = $colorRepository;
+        $this->ProductImageRepository = $productImageRepository;
         $this->stockRepository = $stockRepository;
     }
 
@@ -56,10 +59,10 @@ class ProductController extends Controller
         $data = $request;
 
         $sizes = $data->input("size");
-        $colors = $data->input("color");
         $quantity = $data->input("quantity");
 
         //table product insert
+
         $product = $this->prodRepository->create([
             "category_id" => $data["category_id"],
             "name" => $data["prodName"],
@@ -68,51 +71,41 @@ class ProductController extends Controller
         ]);
 
         $latestProdId = $this->prodRepository->getLatestId();
-        $this->stockRepository->create([
-            "color_id" => sizeof($sizes),
-            "size_id" => $sizes[0],
-            "product_id" => $latestProdId,
-            "quantity" => $quantity[0],
-        ]);
 
-        $this->uploadImage($data, $latestProdId);
+        for ($i = 0; $i < count($sizes); $i++) {
+            if ((int)$sizes[$i] >= 1 && (int)$sizes[$i] <= 5 && (int)$quantity[$i] != null) {
+                $this->stockRepository->create([
+                    "size_id" => $sizes[$i],
+                    "product_id" => $latestProdId,
+                    "quantity" => $quantity[$i],
+                ]);
+            }
+        }
 
-        return view("testing");
+        $this->uploadImage($request, $latestProdId);
+
+
+        return view("editor.product.productDisplay");
     }
 
     public function uploadImage(Request $request, $latestProdId)
     {
+        // Validate the uploaded files
         $validatedData = $request->validate([
-            "images.*" => "required|image|mimes:jpeg,png,jpg,gif|max:20000",
+            "images.*" => "required|image|max:20000",
         ]);
 
-        $images = $request->file("image");
+        $images = $request->file("images");
         $imageData = [];
 
         foreach ($images as $image) {
-            $imageData[] = [
+            product_images::insert([
                 "name" => $image->getClientOriginalName(),
-                "data" => file_get_contents($image),
+                "data" => $image->get(),
                 "mime" => $image->getClientMimeType(),
-                "product_id" => $latestProdId,
-            ];
+                "product_id" => $latestProdId
+            ]);
         }
-        Product_images::insert($imageData);
-        try {
-        } catch (\Illuminate\Database\QueryException $e) {
-            // handle the exception, log the error, or return a custom error response
-            return response()->json(
-                [
-                    "error" =>
-                    "An error occurred while running a database query.",
-                ],
-                500
-            );
-        }
-
-        return redirect()
-            ->back()
-            ->with("success", "Images uploaded successfully.");
     }
 
     public function getQuantity(Request $request)
@@ -151,11 +144,10 @@ class ProductController extends Controller
     {
         $categories = $this->cateRepository->allCategories();
         $sizes = $this->sizeRepository->getAll();
-        $colors = $this->colorRepository->getAll();
 
         return view(
             "editor.product.productCreate",
-            compact("categories", "sizes", "colors")
+            compact("categories", "sizes")
         );
     }
 
@@ -340,16 +332,11 @@ class ProductController extends Controller
             ->stocks()
             ->distinct()
             ->get(["size_id"]); // to get the stock has what izes
-        $stockVariableColor = $product
-            ->stocks()
-            ->distinct()
-            ->get(["color_id"]); // to get the stock has what colors
+
         $sizes = $this->sizeRepository->getAll();
-        $colors = $this->colorRepository->getAll();
 
         $categories = $this->cateRepository->allCategories();
         $sizes = $this->sizeRepository->getAll();
-        $colors = $this->colorRepository->getAll();
 
         return view(
             $route,
@@ -357,9 +344,7 @@ class ProductController extends Controller
                 "product",
                 "stocks",
                 "stockVariableSize",
-                "stockVariableColor",
                 "sizes",
-                "colors",
                 "categories"
             )
         );

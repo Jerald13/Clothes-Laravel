@@ -107,11 +107,11 @@
                                                     <input type="text" id="simpleinput" name='prodName'
                                                         value="{{ $product->name }}" class="form-control">
                                                 </div>
-                                                <div class="form-group mb-3">
+                                                <div class="form-group mb-3" style="width: 70%">
                                                     <label for="example-textarea">Description</label>
                                                     <textarea class="form-control" id="example-textarea" name="prodDesc" rows="4">{{ $product->description }}</textarea>
                                                 </div>
-                                                <div class="form-group mb-3">
+                                                <div class="form-group mb-3" style="width:20%">
                                                     <label for="custom-select">Category</label>
                                                     <select class="custom-select" id="custom-select" name='category_id'>
                                                         <option value="{{ $product->category_id }}"selected>
@@ -144,8 +144,7 @@
                                                 </div>
                                                 <div id="input-container">
                                                     <label for="size">Variable</label>
-                                                    <button type="button" class="btn btn-primary add-row" id="add-row"
-                                                        onclick="add()">Add</button>
+
                                                     @foreach ($stocks as $stock)
                                                         <div class="row" id="new_1">
                                                             <div class="col-md-2">
@@ -170,30 +169,7 @@
                                                                     </select>
                                                                 </div>
                                                             </div>
-                                                            <div class="col-md-2" width="150px">
-                                                                <div class="form-group mb-3">
-                                                                    <label for="color">Color</label>
-                                                                    <select class="custom-select" name="color[]">
-                                                                        <option
-                                                                            value="{{ $stock->color_id }}"selected>
-                                                                            @foreach ($colors as $color)
-                                                                                @if ($stock->color_id == $color->id)
-                                                                                    {{ $color->color }}
-                                                                                @endif
-                                                                            @endforeach
-                                                                        </option>
-                                                                        @foreach ($colors as $color)
-                                                                            @if ($stock->color_id != $color->id)
-                                                                                <option value="{{ $color->id }}">
-                                                                                    {{ $color->color }}
-                                                                                </option>
-                                                                            @endif
-                                                                        @endforeach
-
-                                                                    </select>
-                                                                </div>
-                                                            </div>
-                                                         
+                                                        
                                                             <div class="col-md-2">
                                                                 <div class="form-group mb-3 " style="width:100px;">
                                                                     <label for="quantity">Quantity</label>
@@ -202,26 +178,13 @@
                                                                         value="{{ $stock->quantity }}">
                                                                 </div>
                                                             </div>
-                                                            <div class="col-md-1">
-                                                                <div class="form-group mb-3">
-                                                                    <label>&nbsp;</label>
-                                                                    <div class="form-group mb-2">
-                                                                        <button type="button" style="visibility: hidden"
-                                                                            class="btn btn-danger remove-row"
-                                                                            onclick="remove(1)">Remove</button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                   
                                                         </div>
                                                     @endforeach
 
-
-                                                    <input type="hidden" value="1" id="total_input">
-                                                    <div id="new_input"></div>
-
                                                 </div>
                                             </div>
-                                            <div align="right">
+                                            <div>
                                                 <input class="btn btn-primary" type='submit' value="Submit"
                                                     onclick="submitData()">
                                             </div>

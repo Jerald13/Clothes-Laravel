@@ -10,7 +10,6 @@ class stock extends Model
     protected $table = 'stock';
 
     protected $fillable = [
-        'color_id',
         'size_id',
         'product_id',
         'quantity'

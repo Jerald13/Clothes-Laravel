@@ -111,10 +111,6 @@ Route::middleware(["auth", "user-role:admin"])->group(function () {
 Route::middleware(["auth", "user-role:editor"])->group(function () {
     /*   Product    */
     // product create
-    Route::post("editor/Product/productCreate", [
-        ImageController::class,
-        "upload",
-    ])->name("editor.product.productCreate");
 
     Route::post("editor/Product/productCreate", [
         ProductController::class,
@@ -124,7 +120,7 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
     Route::get("editor/Product/productCreate", [
         ProductController::class,
         "displayCreateForm",
-    ])->name("editor.product.productCreate");
+    ])->name("editor.product.productCreateDisplay");
 
     //product editing
     Route::get("editor/Product/productEdit/{product}", [
