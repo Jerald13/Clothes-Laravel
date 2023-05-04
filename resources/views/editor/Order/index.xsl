@@ -34,7 +34,7 @@
                 <td><xsl:value-of select="phone_number"/></td>
                 <td><xsl:value-of select="shipping_address"/></td>
                 <td><xsl:value-of select="state"/></td>
-                <td><xsl:value-of select="post_code"/></td>
+                <td><xsl:value-of select="postcode"/></td>
                 <td><xsl:value-of select="order_total"/></td>
                 <td><xsl:value-of select="order_status"/></td>
               </tr>

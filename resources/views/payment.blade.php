@@ -142,7 +142,7 @@
         <form id="paymentform">
             <div class="card">
                 <div class="rightside">
-                    <input type="hidden" name="paymentId" value="{{ $id }}">
+                    <input type="hidden" name="paymentId" value="{{ $paymentId }}">
                     <input type="hidden" name="bankName" value="{{ $bankName }}">
                     <input type="hidden" name="paymentAmount" value="{{ $paymentAmount }}">
                     <h1 style="text-align: center">{{ $bankName }}</h1>
@@ -219,24 +219,80 @@
                                             // Payment successful
                                             alert('Payment successful! Your new account balance is ' +
                                                 response.balance);
-                                                window.location.href = '{{ route("paymentsuccess") }}';
+                                            $.ajax({
+                                                type: 'GET',
+                                                headers: {
+                                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                                },
+                                                url: '{{ route('payments.update', ':paymentId') }}'
+                                                    .replace(
+                                                        ':paymentId',
+                                                        paymentId),
+                                                success: function(
+                                                    response) {
+                                                    window
+                                                        .location
+                                                        .href =
+                                                        '{{ route('paymentsuccess') }}';
+                                                },
+                                                error: function(
+                                                    jqXHR,
+                                                    textStatus,
+                                                    errorThrown
+                                                ) {
+                                                    alert('Payment status update failed: ' +
+                                                        jqXHR
+                                                        .responseJSON
+                                                        .message
+                                                    );
+                                                }
+                                            });
                                         },
                                         error: function(jqXHR, textStatus,
                                             errorThrown) {
                                             alert('Payment failed: ' + jqXHR
                                                 .responseJSON.message);
+                                            // Payment failed
+                                            $.ajax({
+                                                type: 'GET',
+                                                headers: {
+                                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                                },
+                                                url: '{{ route('payments.updatePending', ':paymentId') }}'
+                                                    .replace(
+                                                        ':paymentId',
+                                                        paymentId),
+                                            });
                                         }
                                     });
                                 },
                                 error: function(jqXHR, textStatus, errorThrown) {
                                     alert('Account validation failed: ' + jqXHR
                                         .responseJSON.message);
+                                    // Payment failed
+                                    $.ajax({
+                                        type: 'GET',
+                                        headers: {
+                                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                        },
+                                        url: '{{ route('payments.updatePending', ':paymentId') }}'
+                                            .replace(':paymentId', paymentId),
+                                    });
                                 }
                             });
                         },
                         error: function(jqXHR, textStatus, errorThrown) {
                             alert('Failed to retrieve account information: ' + jqXHR.responseJSON
                                 .message);
+                            // Payment failed
+                            $.ajax({
+                                type: 'GET',
+                                headers: {
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                },
+                                url: '{{ route('payments.updatePending', ':paymentId') }}'
+                                    .replace(':paymentId', paymentId),
+                            });
                         }
                     });
                 });

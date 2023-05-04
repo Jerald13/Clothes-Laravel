@@ -64,8 +64,8 @@ class OrderController extends Controller
                 empty($order->state) ? "-" : $order->state
             );
             $orderXml->addChild(
-                "post_code",
-                empty($order->post_code) ? "-" : $order->post_code
+                "postcode",
+                empty($order->postcode) ? "-" : $order->postcode
             );
             $orderXml->addChild("order_total", $order->order_total);
             $orderXml->addChild("order_status", $order->order_status);
@@ -107,7 +107,7 @@ class OrderController extends Controller
             $orderXml->addChild("phone_number", $order->user->phone_number);
             $orderXml->addChild("shipping_address", $order->shipping_address);
             $orderXml->addChild("state", $order->state);
-            $orderXml->addChild("post_code", $order->post_code);
+            $orderXml->addChild("postcode", $order->postcode);
             $orderXml->addChild("total", $order->order_total);
             $orderXml->addChild("order_status", $order->order_status);
         }
@@ -356,6 +356,7 @@ class OrderController extends Controller
             $orderDetail->order_id = $order->id;
             $orderDetail->product_id = $item->product_id;
             $orderDetail->order_quantity = $item->user_quantity;
+            $orderDetail->order_size = $item->user_size;
             $orderDetail->order_subtotal =
                 $item->product->price * $item->user_quantity;
             $orderDetail->save();

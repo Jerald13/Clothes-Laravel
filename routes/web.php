@@ -243,6 +243,19 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
         "updatePaymentStatus",
     ])->name("payments.updatePaymentStatus");
 
+        //payment status
+        Route::get('/payment/updateStatus/{id}', [PaymentController::class, 'updateStatus'])->name(
+            "payments.update"
+        );
+    
+        Route::get('/payment/updatePending/{id}', [PaymentController::class, 'updatePending'])->name(
+            "payments.updatePending"
+        );
+    
+        Route::get('/payment/updatePending/{id}', [PaymentController::class, 'updatePending'])->name(
+            "payments.updatePending"
+        );
+
 });
 
 /*   User Route    */

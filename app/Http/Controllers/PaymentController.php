@@ -1,9 +1,15 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Observers\Subject;
+use App\Observers\EmailObserver;
+use App\Observers\UpdateStatusObserver;
+
 use App\Models\Payment;
 use App\Models\User;
-
+use App\Models\Stock;
+use App\Models\Size;
+use App\Models\Product;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use Illuminate\Http\Response;
@@ -16,6 +22,15 @@ use Illuminate\Support\Facades\Session;
 
 class PaymentController extends Controller
 {
+    // public function __construct()
+    // {
+    //     $subject = new Subject();
+    //     $emailObserver = new EmailObserver($subject);
+    //     $updateStatusObserver = new UpdateStatusObserver($subject);
+    //     $subject->setState("Your payment has been processed successfully!!!");
+    //     $subject->setState("Your payment status has been updated to completed!!!");
+    // }
+
     public function index()
     {
         $payments = Payment::all();
@@ -109,7 +124,7 @@ class PaymentController extends Controller
         'id' => $id, 
         'bankName' => $bankName,
         'paymentAmount' => $paymentAmount, 
-        'payment_id' => $paymentId
+        'paymentId' => $id
         ]);
     }
 
@@ -117,45 +132,42 @@ class PaymentController extends Controller
         $id = $request->input('id');
         $bankName = $request->input('bankName');
         $paymentAmount = $request->input('paymentAmount');
-        $paymentId = $request->input('payment_id');
+        $paymentId = $request->input('paymentId');
 
-        return view("payment", ['id' => $id, 'bankName' => $bankName, 'paymentAmount' => $paymentAmount, 'payment_id' => $paymentId]);
+        return view("payment", ['id' => $id, 'bankName' => $bankName, 'paymentAmount' => $paymentAmount, 'paymentId' => $paymentId]);
+    }
+
+    public function updateStatus($id)
+    {
+        $subject = new Subject();
+        $emailObserver = new EmailObserver($subject);
+        $updateStatusObserver = new UpdateStatusObserver($subject);
+        $subject->setState("Your payment has been processed successfully!!!");
+        $subject->getState();
+        // Update the payment status in the database
+        $payment = Payment::find($id);
+        $payment->payment_status = "completed";
+        $payment->save();
+
+        $payment->order->order_status = "successful";
+        $payment->order->save();
+    
+        // Return a response
+        return view('paymentsuccess');
     }
 
 
-    // public function updatePaymentStatus(Request $request)
-    // {
-    //     $paymentId = $request->input('id');
-
-    //     // Search for the bank ID based on the provided bank name
-    //     $payment = Payment::where('id', $paymentId)->first();
-    //     if (!$payment) {
-    //         return response()->json(['message' => 'Payment not found'], 404);
-    //     }
+    public function updatePending($id)
+    {
+        // Update the payment status in the database
+        $payment = Payment::find($id);
+        $payment->payment_status = "pending";
+        $payment->save();
     
-    //     // Update payment status to successful
-    //     $payment->payment_status = 'successful';
-    //     $payment->save();
-    
-    //     return view('paymentsuccess');
-    // }
-
-    // function updatePaymentStatus($id)
-    // {
-    //     $payment = Payment::findOrFail($id);
-    //     $orderId = $payment->order->id;
-    
-    //     // Update payment status to successful
-    //     $payment->payment_status = 'successful';
-    //     $payment->save();
-    
-    //     // Update order status to successful
-    //     $order = Order::findOrFail($orderId);
-    //     $order->order_status = 'successful';
-    //     $order->save();
-    
-    //     return view('paymentsuccess');
-    // }
+        // window.location.href = '{{ route('paymentsuccess') }}';
+        // Return a JSON response
+        return response()->json(['message' => 'Payment status updated to pending']);
+    }
     
 
     public function create()
