@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id'); // foreign key column
             $table->foreign('product_id')->references('id')->on('products');
             $table->integer('order_quantity');
+            $table->string("order_size");
             $table->decimal('order_subtotal', 8, 2);
             $table->timestamps();
         });

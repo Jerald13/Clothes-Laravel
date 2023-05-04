@@ -161,17 +161,18 @@
                                 <div class="card card-2">
                                     <div class="card-body">
                                         <div class="media">
-                                            <div class="sq align-self-center "> <img
+                                            <div class="sq align-self-center " style='width="135" height="135"'> 
+                                                {{-- <img
                                                     class="img-fluid  my-auto align-self-center mr-2 mr-md-4 pl-0 p-0 m-0"
-                                                    width="135" height="135" /> </div>
+                                                    width="135" height="135" />  --}}
+                                                </div>
                                             <div class="media-body my-auto text-right">
                                                 <div class="row  my-auto flex-column flex-md-row">
                                                     <div class="col my-auto">
                                                         <h6 class="mb-0">{{ $item->product->name }}</h6>
                                                     </div>
                                                     {{-- wait product done, then only can show the color and size --}}
-                                                    <div class="col-auto my-auto"> <small>Color: White</small></div>
-                                                    <div class="col my-auto"> <small>Size : M</small></div>
+                                                    <div class="col my-auto"> <small>Size : {{ $item->order_size }}</small></div>
                                                     <div class="col my-auto"> <small>{{ $item->order_quantity }}</small>
                                                     </div>
                                                     <div class="col my-auto">
