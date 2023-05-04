@@ -52,10 +52,6 @@
 
                             </span>
 
-                            <p class="stext-102 cl3 p-t-23">
-                                {{ $product->description }}
-                            </p>
-
                             <!--  -->
                             <div class="p-t-33">
 
@@ -68,7 +64,8 @@
 
                                     <div class="size-204 respon6-next">
                                         <div class="rs1-select2 bor8 bg0 " id="variableContainer">
-                                            <select id="size" name="size">
+                                            <select id="size" name="size" class="form-control"
+                                                id="exampleFormControlSelect1">
                                                 <!--class="js-select2"!-->
                                                     <option>Choose an option</option>
 
@@ -82,13 +79,33 @@
                                                         @endforeach
                                                     @endforeach
                                             </select>
-                                            <div class="dropDownSelect2"></div>
                                         </div>
                                     </div>
                                 </div>
 
+                                <div class="flex-w flex-r-m p-b-10">
+                                    <div class="size-203 flex-c-m respon6">
+                                        Quantity
+                                    </div>
+                                    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-
+                                    <div class="size-204 respon6-next">
+                                        <div  style="width: 30%">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <button class="btn btn-dark" type="button"
+                                                        onclick="decrementQuantity()" style="user-select: none;">-</button>
+                                                </div>
+                                                <input type="number" id="inputQuantityNew" class="form-control"
+                                                    value="0" style="width: 80%">
+                                                <div class="input-group-append">
+                                                    <button class="btn btn-dark" type="button"
+                                                        onclick="incrementQuantity()"  style="user-select: none;">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <input type="hidden" value="{{ $product->id }}" id="productId">
 
@@ -146,6 +163,27 @@
                         });
                     });
 
+                    function decrementQuantity() {
+                        var value = parseInt(document.getElementById('inputQuantityNew').value, 10);
+
+                        if (value !== 0) {
+                            value--;
+                        }
+                        document.getElementById('inputQuantityNew').value = value;
+                    }
+
+                    function incrementQuantity() {
+                        var value = parseInt(document.getElementById('inputQuantityNew').value, 10);
+                        var max = parseInt(document.getElementById('quantity').textContent, 10);
+
+                        if (value < max) {
+                            value++;
+                            document.getElementById('inputQuantityNew').value = value;
+                        }
+
+                    }
+
+
 
                     containerElement.addEventListener('change', function() {
                         if (event.target.id === 'size') {
@@ -165,7 +203,7 @@
                 </script>
 
 
-               
+
 
                 <!--  -->
                 <div class="flex-w flex-m p-l-100 p-t-40 respon7">
@@ -232,22 +270,12 @@
                                     <div class="p-b-30 m-lr-15-sm">
                                         <!-- Review -->
                                         <div class="flex-w flex-t p-b-68">
-                                            <div class="wrap-pic-s size-109 bor0 of-hidden m-r-18 m-t-6">
-                                                <img src="{{ asset('images/avatar-01.jpg') }}" alt="AVATAR">
-                                            </div>
+
 
                                             <div class="size-207">
                                                 <div class="flex-w flex-sb-m p-b-17">
                                                     <span class="mtext-107 cl2 p-r-20">
                                                         Ariana Grande
-                                                    </span>
-
-                                                    <span class="fs-18 cl11">
-                                                        <i class="zmdi zmdi-star"></i>
-                                                        <i class="zmdi zmdi-star"></i>
-                                                        <i class="zmdi zmdi-star"></i>
-                                                        <i class="zmdi zmdi-star"></i>
-                                                        <i class="zmdi zmdi-star-half"></i>
                                                     </span>
                                                 </div>
 
@@ -264,41 +292,11 @@
                                                 Add a review
                                             </h5>
 
-                                            <p class="stext-102 cl6">
-                                                Your email address will not be published. Required fields are marked *
-                                            </p>
-
-                                            <div class="flex-w flex-m p-t-50 p-b-23">
-                                                <span class="stext-102 cl3 m-r-16">
-                                                    Your Rating
-                                                </span>
-
-                                                <span class="wrap-rating fs-18 cl11 pointer">
-                                                    <i class="item-rating pointer zmdi zmdi-star-outline"></i>
-                                                    <i class="item-rating pointer zmdi zmdi-star-outline"></i>
-                                                    <i class="item-rating pointer zmdi zmdi-star-outline"></i>
-                                                    <i class="item-rating pointer zmdi zmdi-star-outline"></i>
-                                                    <i class="item-rating pointer zmdi zmdi-star-outline"></i>
-                                                    <input class="dis-none" type="number" name="rating">
-                                                </span>
-                                            </div>
 
                                             <div class="row p-b-25">
                                                 <div class="col-12 p-b-5">
                                                     <label class="stext-102 cl3" for="review">Your review</label>
                                                     <textarea class="size-110 bor8 stext-102 cl2 p-lr-20 p-tb-10" id="review" name="review"></textarea>
-                                                </div>
-
-                                                <div class="col-sm-6 p-b-5">
-                                                    <label class="stext-102 cl3" for="name">Name</label>
-                                                    <input class="size-111 bor8 stext-102 cl2 p-lr-20" id="name"
-                                                        type="text" name="name">
-                                                </div>
-
-                                                <div class="col-sm-6 p-b-5">
-                                                    <label class="stext-102 cl3" for="email">Email</label>
-                                                    <input class="size-111 bor8 stext-102 cl2 p-lr-20" id="email"
-                                                        type="text" name="email">
                                                 </div>
                                             </div>
 
@@ -317,13 +315,7 @@
             </div>
 
             <div class="bg6 flex-c-m flex-w size-302 m-t-73 p-tb-15">
-                <span class="stext-107 cl6 p-lr-25">
-                    SKU: JAK-01
-                </span>
 
-                <span class="stext-107 cl6 p-lr-25">
-                    Categories: Jacket, Men
-                </span>
             </div>
         </section>
 
@@ -339,41 +331,37 @@
                 <!-- Slide2 -->
                 <div class="wrap-slick2">
                     <div class="slick2">
+                        @foreach ($productsSameCate as $product)
+                            
+                       
                         <div class="item-slick2 p-l-15 p-r-15 p-t-15 p-b-15">
                             <!-- Block2 -->
                             <div class="block2">
                                 <div class="block2-pic hov-img0">
-                                    <img src="{{ asset('images/product-01.jpg') }}" alt="IMG-PRODUCT">
+                                    <?php
+                                    $productImage = $images->where('product_id', $product->id)->first();
+                                    $encodedData = $productImage ? base64_encode($productImage->data) : '';
+                                    ?>
 
-                                    <a href="#"
-                                        class="block2-btn flex-c-m stext-103 cl2    -102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
-                                        Quick View
-                                    </a>
+                                    <img src="data:image/jpeg;base64,{{ $encodedData }}" alt="IMG-PRODUCT">
+                                        
                                 </div>
 
                                 <div class="block2-txt flex-w flex-t p-t-14">
                                     <div class="block2-txt-child1 flex-col-l ">
                                         <a href="product-detail.html"
                                             class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
-                                            Esprit Ruffle Shirt
+                                            {{ $product->name }}
                                         </a>
 
                                         <span class="stext-105 cl3">
-                                            $16.64
+                                            {{ $product->price }}
                                         </span>
-                                    </div>
-
-                                    <div class="block2-txt-child2 flex-r p-t-3">
-                                        <a href="#" class="btn-addwish-b2 dis-block pos-relative js-addwish-b2">
-                                            <img class="icon-heart1 dis-block trans-04"
-                                                src="{{ asset('images/icons/icon-heart-01.png') }}" alt="ICON">
-                                            <img class="icon-heart2 dis-block trans-04 ab-t-l"
-                                                src="{{ asset('images/icons/icon-heart-02.png') }}" alt="ICON">
-                                        </a>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        @endforeach
 
                         <div class="item-slick2 p-l-15 p-r-15 p-t-15 p-b-15">
                             <!-- Block2 -->

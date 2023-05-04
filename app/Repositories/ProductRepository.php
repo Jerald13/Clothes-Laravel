@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Repositories;
 
 use App\Repositories\Interfaces\ProductRepositoryInterface;
@@ -6,7 +7,7 @@ use App\Models\Product;
 
 class ProductRepository implements ProductRepositoryInterface
 {
-    
+
     public function getAll()
     {
         return Product::all();
@@ -34,8 +35,20 @@ class ProductRepository implements ProductRepositoryInterface
         Product::destroy($id);
     }
 
-    public function getLatestId(){
+    public function getLatestId()
+    {
         return Product::latest()->value('id');
     }
-}
 
+    public function getCategoryByProductId($productId)
+    {
+        $product = Product::find($productId);
+
+        if (!$product) {
+            return null;
+        }
+
+        return $product->category;
+    }
+
+}

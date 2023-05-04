@@ -135,8 +135,8 @@ class ProductController extends Controller
 
     public function getAllProds()
     {
-        $route = Route::getCurrentRoute()->getName();
         $products =  $this->prodRepository->getAll();
+        $route = Route::getCurrentRoute()->getName();
 
         return view('editor.product.productDisplay', compact("products"));
     }
@@ -346,7 +346,9 @@ class ProductController extends Controller
         $categories = $this->cateRepository->allCategories();
         $sizes = $this->sizeRepository->getAll();
         $images = $this->ProductImageRepository->getAllByProductId($id);
-
+        $categoryProduct = $this->prodRepository->getCategoryByProductId($id);
+        $productsSameCate = $categoryProduct->products;
+        
 
         return view(
             $route,
@@ -356,7 +358,8 @@ class ProductController extends Controller
                 "stockVariableSize",
                 "sizes",
                 "categories",
-                "images"
+                "images",
+                "productsSameCate"
             )
         );
     }
