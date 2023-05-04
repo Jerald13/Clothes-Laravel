@@ -196,8 +196,8 @@ class OrderController extends Controller
     {
         // Retrieve the order items for the authenticated user
         $userId = auth()->user()->id;
-        $orderItems = Order::where("user_id", $userId)->get();
-
+        $orderItems = Order::with('payment')->where('user_id', $userId)->get();
+        
         // Pass the order items to the view
         return view("myorders", ["orderItems" => $orderItems]);
     }
@@ -205,7 +205,7 @@ class OrderController extends Controller
     public function showOrderDetail(Request $request)
     {
         $id = $request->input("id");
-
+        
         // Retrieve the order items for the specified order ID
         $orderItems = OrderDetail::with("product")
             ->where("order_id", $id)
@@ -216,17 +216,58 @@ class OrderController extends Controller
             "order_subtotal"
         );
 
-        // Pass the order items and the total order subtotal to the view
+        // Retrieve the payment amount for the specified order ID
+        $order = Order::with("payment")->find($id);
+        $paymentAmount = $order->payment->payment_amount;
+
+        // Pass the order items, the total order subtotal and the payment amount to the view
         return view("orderdetail", [
             "orderItems" => $orderItems,
             "totalOrderSubtotal" => $totalOrderSubtotal,
-        ]);
+            "paymentAmount" => $paymentAmount
+    ]);
+    }
+
+    function orderNow()
+    {
+        $userId = auth()->user()->id;
+        $total = $products = DB::table("cart")
+            ->join("products", "cart.product_id", "=", "products.id")
+            ->where("cart.user_id", $userId)
+            ->sum("products.price");
+        return view("ordernow", ["total" => $total]);
+    }
+
+    function orderPlace(Request $req)
+    {
+        $userId = auth()->user()->id;
+        $allCart = Cart::where("user_id", $userId)->get();
+        foreach ($allCart as $cart) {
+            $order = new Order();
+            $order->user_id = $cart["user_id"];
+            $order->order_status = "new";
+            $order->save();
+            Cart::where("user_id", $userId)->delete();
+        }
+        $req->input();
+        return redirect("/");
+    }
+    
+    function myOrders()
+    {
+        $userId = auth()->user()->id;
+        $user = User::find($userId);
+        $orders = $user
+            ->myOrder()
+            ->with("product")
+            ->get();
+        return view("myorders", compact("orders"));
     }
 
     public function store(Request $request)
-    {
+    {  
         $voucherCode = $request->input("voucher");
-        $response = Http::post("http://127.0.0.1:3232/api/vouchers/check", [
+        $response = Http::get("http://127.0.0.1:3232/api/vouchers/check", [
             "voucher_code" => $voucherCode,
         ]);
 
@@ -246,7 +287,7 @@ class OrderController extends Controller
             $message = "Error occurred while checking voucher";
         }
 
-        dd($discount_percentage);
+        //dd($discount_percentage);
 
         // generate and check unique track number
         $trackNumber = "";
@@ -269,9 +310,9 @@ class OrderController extends Controller
         $subtotal = $this->calculateSubtotal($cartItems);
 
         // Get the selected state from the form input
-        // $state = $request->input('state');
+        $state = $request->input('state');
 
-        // Set the shipping fee based on the state
+        // //et the shipping fee based on the state
         // if ($state == 'Sabah' || $state == 'Sarawak') {
         //     $shippingFee = 8;
         // } else {
@@ -316,7 +357,6 @@ class OrderController extends Controller
             $orderDetail->save();
         }
 
-        // Redirect the user to a check out page to proceed their payment
         return redirect()->route("order");
     }
 
@@ -359,6 +399,12 @@ class OrderController extends Controller
             // Calculate the order total
             $orderTotal = $subtotal + $shippingFee + $taxAmount;
 
+            $response = Http::get('http://127.0.0.1:3232/api/banks/names');
+            $bankNames = [];
+            if ($response->successful()) {
+                $bankNames = $response->json();
+            }
+
             return view(
                 "order",
                 compact(
@@ -367,7 +413,8 @@ class OrderController extends Controller
                     "shippingFee",
                     "taxAmount",
                     "orderTotal",
-                    "orderId"
+                    "orderId",
+                    "bankNames"
                 )
             );
         } else {
@@ -380,7 +427,6 @@ class OrderController extends Controller
     public function cancel($id)
     {
         $order = Order::find($id);
-
         if ($order) {
             $order->order_status = "cancelled"; // Update the status of the order
             $order->save();
@@ -427,4 +473,5 @@ class OrderController extends Controller
             ->route("orders.index")
             ->with("success", "Order deleted successfully!");
     }
+    
 }

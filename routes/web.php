@@ -228,6 +228,18 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
         OrderController::class,
         "importOrdersToXml",
     ])->name("orders.import.xml");
+
+    /*-----------------------*/
+    /* Payment */
+    Route::get("editor/Payment/index", [PaymentController::class, "index"])->name(
+        "payments.index"
+    );
+
+    Route::patch("/payment/{payment}/update-status", [
+        PaymentController::class,
+        "updatePaymentStatus",
+    ])->name("payments.updatePaymentStatus");
+
 });
 
 /*   User Route    */
@@ -258,25 +270,35 @@ Route::middleware(["auth", "user-role:user", "web"])->group(function () {
     Route::post("/order", [OrderController::class, "store"])->name(
         "orders.store"
     );
+
     Route::get("/order/cancel/{id}", [OrderController::class, "cancel"])->name(
         "order.cancel"
     );
     Route::get("/order", [OrderController::class, "show"])->name("order");
-    Route::get("/myorders", [OrderController::class, "showOrders"])->name(
-        "orders.showOrders"
-    );
+    Route::get("ordernow", [OrderController::class, "orderNow"]);
+    Route::post("orderplace", [OrderController::class, "orderPlace"]);
+    Route::get("myorders", [OrderController::class, "myOrders"]);
+    Route::get('/myorders', [OrderController::class, 'showOrders'])->name('orders.showOrders');
     Route::get("orderdetail", [
         OrderController::class,
         "showOrderDetail",
     ])->name("orders.showOrderDetail");
-    // Route::get("/order", function () {
-    //     return view("order");
-    // });
-
     Route::post("vouchers/check", [
         VoucherController::class,
         "checkVoucher",
     ])->name("vouchers.check");
+
+    /* Payments */
+    Route::post("/payment/{id}", [PaymentController::class, "updateOrderPayment"])->name(
+        "payments.insertNewPayment"
+    );
+
+    Route::get('/payment', [PaymentController::class, 'payment'])->name('payment');
+
+    Route::get('/paymentsuccess', function () {
+        return view('paymentsuccess');
+    })->name('paymentsuccess');
+    
 });
 
 Route::prefix("metamask")->group(function () {
@@ -328,9 +350,6 @@ Route::get("search", [ProductController::class, "search"]);
 Route::post("add_to_cart", [ProductController::class, "addToCart"]);
 Route::get("cartlist", [ProductController::class, "cartList"]);
 Route::get("removecart/{id}", [ProductController::class, "removeCart"]);
-Route::get("ordernow", [ProductController::class, "orderNow"]);
-Route::post("orderplace", [ProductController::class, "orderPlace"]);
-Route::get("myorders", [ProductController::class, "myOrders"]);
 Route::view("/error", "error")->name("error");
 
 //Web service

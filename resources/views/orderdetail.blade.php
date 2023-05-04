@@ -65,25 +65,20 @@
 
             .progress-bar-new {
                 background-color: #AB47BC !important;
-                width: 20% !important;
+                width: 25% !important;
             }
 
-            .progress-bar-processing {
+            .progress-bar-pending {
                 background-color: #AB47BC !important;
-                width: 40% !important;
+                width: 50% !important;
             }
 
-            .progress-bar-shipping {
+            .progress-bar-successful {
                 background-color: #AB47BC !important;
-                width: 60% !important;
+                width: 75% !important;
             }
 
-            .progress-bar-received {
-                background-color: #AB47BC !important;
-                width: 80% !important;
-            }
-
-            .progress-bar-rated {
+            .progress-bar-cancelled {
                 background-color: #AB47BC !important;
                 width: 100% !important;
             }
@@ -197,18 +192,15 @@
                                                     $progress = 0;
                                                     switch ($status) {
                                                         case 'new':
-                                                            $progress = 20;
+                                                            $progress = 25;
                                                             break;
-                                                        case 'processing':
-                                                            $progress = 40;
+                                                        case 'pending':
+                                                            $progress = 50;
                                                             break;
-                                                        case 'shipping':
-                                                            $progress = 60;
+                                                        case 'successful':
+                                                            $progress = 75;
                                                             break;
-                                                        case 'received':
-                                                            $progress = 80;
-                                                            break;
-                                                        case 'rated':
+                                                        case 'cancelled':
                                                             $progress = 100;
                                                             break;
                                                     }
@@ -223,17 +215,14 @@
                                                                 class="text-right mr-sm-2">New</small> <i
                                                                 class="fa fa-circle <?php echo $status == 'new' ? 'active' : ''; ?>"></i> </span></div>
                                                     <div class="flex-col"> <span> <small
-                                                                class="text-right mr-sm-2">Processing</small><i
-                                                                class="fa fa-circle <?php echo $status == 'processing' ? 'active' : ''; ?>"></i></span></div>
+                                                                class="text-right mr-sm-2">Pending</small><i
+                                                                class="fa fa-circle <?php echo $status == 'pending' ? 'active' : ''; ?>"></i></span></div>
                                                     <div class="col-auto flex-col-auto"><small
-                                                            class="text-right mr-sm-2">Shipping</small><span> <i
-                                                                class="fa fa-circle <?php echo $status == 'shipping' ? 'active' : ''; ?>"></i></span></div>
+                                                            class="text-right mr-sm-2">Successful</small><span> <i
+                                                                class="fa fa-circle <?php echo $status == 'successful' ? 'active' : ''; ?>"></i></span></div>
                                                     <div class="col-auto flex-col-auto"><small
-                                                            class="text-right mr-sm-2">Received</small><span> <i
-                                                                class="fa fa-circle <?php echo $status == 'received' ? 'active' : ''; ?>"></i></span></div>
-                                                    <div class="col-auto flex-col-auto"><small
-                                                            class="text-right mr-sm-2">Rated</small><span> <i
-                                                                class="fa fa-circle <?php echo $status == 'rated' ? 'active' : ''; ?>"></i></span></div>
+                                                            class="text-right mr-sm-2">Cancelled</small><span> <i
+                                                                class="fa fa-circle <?php echo $status == 'cancelled' ? 'active' : ''; ?>"></i></span></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -290,10 +279,10 @@
                     <div class="jumbotron-fluid">
                         <div class="row justify-content-between ">
                             <div class="col-auto my-auto ">
-                                <h2 class="mb-0 font-weight-bold">TOTAL PAYMENT (RM)</h2>
+                                <h2 class="mb-0 font-weight-bold">TOTAL PAYMENT AFTER DISCOUNT (RM)</h2>
                             </div>
                             <div class="col-auto my-auto ml-auto">
-                                <h1 class="display-3 ">{{ number_format($item->order->order_total, 2) }}</h1>
+                                <h1 class="display-3 ">{{ number_format($item->order->payment->payment_amount, 2) }}</h1>
                             </div>
                         </div>
                     </div>

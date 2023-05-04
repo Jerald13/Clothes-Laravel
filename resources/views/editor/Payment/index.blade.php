@@ -134,15 +134,15 @@
             <div class="container-fluid">
                 <div class="row justify-content-center">
                     <div class="col-12">
-                        <h2 class="mb-2 page-title">Orders Data table</h2>
+                        <h2 class="mb-2 page-title">Payments Data table</h2>
 
                         <div class="row">
                             <div class="col-9">
-                                <p class="text-muted">Display order status with username, email, phone number, shipping
-                                    address, order total. For those who order items that are new,pending,successful,cancelled, 
-                                    then the Editor or Admin able update order status.</p>
+                                <p class="text-muted">Display payment status with username, email, phone number, payment method, 
+                                    payment amount, payment status. For those who order items that are new,pending, completed, cancelled,
+                                    then the Editor or Admin able update payment status.</p>
                             </div>
-                            <div class="col-3" style="text-align: right;">
+                            {{-- <div class="col-3" style="text-align: right;">
 
                                 <button class="btn btn-primary" id="uploadButton" style="margin-right: 10px;">Import XML
                                     File</button>
@@ -168,7 +168,7 @@
                                 </div>
                                 <a href="{{ route('orders.export.xml') }}"><button class="btn btn-primary">Export XML
                                         File</button></a>
-                            </div>
+                            </div> --}}
                         </div>
 
                         <div class="row my-4">
@@ -180,24 +180,21 @@
                                         <table class="table datatables" id="dataTable-1">
                                             <thead>
                                                 <tr>
-
                                                     <th>#</th>
                                                     <th>ID</th>
                                                     <th>UserName</th>
                                                     <th>Email</th>
                                                     <th>Phone Number</th>
-                                                    <th>Address</th>
-                                                    <th>State</th>
-                                                    <th>Post Code</th>
-                                                    <th>Total (RM)</th>
-                                                    <th>Status</th>
+                                                    <th>Payment Method</th>
+                                                    <th>Payment Amount (RM)</th>
+                                                    <th>Payment Status</th>
                                                     <th>Created At</th>
                                                     <th>Updated At</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($orders as $order)
+                                                @foreach ($payments as $payment)
                                                     <tr>
                                                         <td>
                                                             <div class="custom-control custom-checkbox">
@@ -206,17 +203,15 @@
                                                             </div>
                                                         </td>
 
-                                                        <td>{{ $order->id }}</td>
-                                                        <td>{{ $order->user->username }}</td>
-                                                        <td>{{ $order->user->email }}</td>
-                                                        <td>{{ $order->user->phone_number }}</td>
-                                                        <td>{{ $order->shipping_address ?? '-' }}</td>
-                                                        <td>{{ $order->state ?? '-' }}</td>
-                                                        <td>{{ $order->postcode ?? '-' }}</td>
-                                                        <td>{{ $order->order_total }}</td>
-                                                        <td>{{ $order->order_status }}</td>
-                                                        <td>{{ $order->created_at }}</td>
-                                                        <td>{{ $order->updated_at }}</td>
+                                                        <td>{{ $payment->id }}</td>
+                                                        <td>{{ $payment->user->username }}</td>
+                                                        <td>{{ $payment->user->email }}</td>
+                                                        <td>{{ $payment->user->phone_number }}</td>
+                                                        <td>{{ $payment->payment_method ?? '-' }}</td>
+                                                        <td>{{ $payment->payment_amount ?? '-' }}</td>
+                                                        <td>{{ $payment->payment_status ?? '-' }}</td>
+                                                        <td>{{ $payment->created_at }}</td>
+                                                        <td>{{ $payment->updated_at }}</td>
 
                                                         <td>
                                                             <div class="dropdown">
@@ -228,19 +223,19 @@
                                                                 <div class="dropdown-menu dropdown-menu-right"
                                                                     style="padding: 10px;">
                                                                     <form
-                                                                        action="{{ route('orders.updateOrderStatus', $order) }}"
+                                                                        action="{{ route('payments.updatePaymentStatus', $payment) }}"
                                                                         method="POST">
                                                                         @csrf
                                                                         @method('PATCH')
                                                                         <select name="status">
                                                                             <option
-                                                                                value="pending"{{ $order->status == 'pending' ? ' selected' : '' }}>
+                                                                                value="pending"{{ $payment->status == 'pending' ? ' selected' : '' }}>
                                                                                 Pending</option>
                                                                             <option
-                                                                                value="successful"{{ $order->status == 'successful' ? ' selected' : '' }}>
-                                                                                Successful</option>
+                                                                                value="completed"{{ $payment->status == 'successful' ? ' selected' : '' }}>
+                                                                                Completed</option>
                                                                             <option
-                                                                                value="cancelled"{{ $order->status == 'cancelled' ? ' selected' : '' }}>
+                                                                                value="cancelled"{{ $payment->status == 'cancelled' ? ' selected' : '' }}>
                                                                                 Cancelled</option>
                                                                         </select>
                                                                         <button type="submit"
