@@ -10,6 +10,7 @@ use App\Models\Category;
 use App\Models\User;
 use App\Models\Stock;
 use App\Models\product_images;
+use Illuminate\Database\QueryException;
 
 
 use App\Models\Order;
@@ -90,6 +91,7 @@ class ProductController extends Controller
 
     public function uploadImage(Request $request, $latestProdId)
     {
+
         // Validate the uploaded files
         $validatedData = $request->validate([
             "images.*" => "required|image|max:20000",
@@ -97,25 +99,29 @@ class ProductController extends Controller
 
         $images = $request->file("images");
         $imageData = [];
+        try {
 
-        foreach ($images as $image) {
-            product_images::insert([
-                "name" => $image->getClientOriginalName(),
-                "data" => $image->get(),
-                "mime" => $image->getClientMimeType(),
-                "product_id" => $latestProdId
-            ]);
+            foreach ($images as $image) {
+                $this->ProductImageRepository->create([
+                    "name" => $image->getClientOriginalName(),
+                    "data" => $image->get(),
+                    "mime" => $image->getClientMimeType(),
+                    "product_id" => $latestProdId
+                ]);
+            }
+            // your database query here
+        } catch (QueryException $e) {
+            $errorMessage = $e->getMessage();
+            var_dump("Database error: $errorMessage");
         }
     }
 
     public function getQuantity(Request $request)
     {
-        $color = $request->input("color");
-        $size = $request->input("size");
+        $sizeId = $request->input("size");
         $prodId = $request->input("productId");
 
-        $stock = Stock::where("color_id", $color)
-            ->where("size_id", $size)
+        $stock = Stock::where("size_id", $sizeId)
             ->where("product_id", $prodId)
             ->first();
         if ($stock) {
@@ -179,7 +185,9 @@ class ProductController extends Controller
     {
         $products = $this->prodRepository->getAll();
         $categories = $this->cateRepository->allCategories();
-        return view("shop", compact("products", "categories"));
+        $images = $this->ProductImageRepository->getAll();
+
+        return view("shop", compact("products", "categories", "images"));
     }
 
     function detail($id)
@@ -337,6 +345,8 @@ class ProductController extends Controller
 
         $categories = $this->cateRepository->allCategories();
         $sizes = $this->sizeRepository->getAll();
+        $images = $this->ProductImageRepository->getAllByProductId($id);
+
 
         return view(
             $route,
@@ -345,7 +355,8 @@ class ProductController extends Controller
                 "stocks",
                 "stockVariableSize",
                 "sizes",
-                "categories"
+                "categories",
+                "images"
             )
         );
     }

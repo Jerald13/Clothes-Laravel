@@ -9,8 +9,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class product_images extends Model
 {
     use HasFactory;
-
-    protected $fillable = ["name", "data", "mime","product_id"];
+  
+    protected $fillable = [
+        'product_id',
+        'name',
+        'data',
+        'mime'
+    ];
 
     public function product(){
         return $this->BelongsToMany(Product::class);

@@ -22,38 +22,20 @@
                                 <div class="wrap-slick3-arrows flex-sb-m flex-w"></div>
 
                                 <div class="slick3 gallery-lb">
-                                    <div class="item-slick3" data-thumb="{{ asset('images/product-detail-01.jpg') }}">
-                                        <div class="wrap-pic-w pos-relative">
-                                            <img src="{{ asset('images/product-detail-01.jpg') }}" alt="IMG-PRODUCT">
+                                    @foreach ($images as $image)
+                                        <?php $encodedData = base64_encode($image->data); ?>
+                                        <div class="item-slick3" data-thumb="data:image/jpeg;base64,{{ $encodedData }}">
+                                            <div class="wrap-pic-w pos-relative">
+                                                <img src="data:image/jpeg;base64,{{ $encodedData }}" alt="IMG-PRODUCT">
 
-                                            <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04"
-                                                href="{{ asset('images/product-detail-01.jpg') }}">
-                                                <i class="fa fa-expand"></i>
-                                            </a>
+                                                <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04"
+                                                    href="data:image/jpeg;base64,{{ $encodedData }}">
+                                                    <i class="fa fa-expand"></i>
+                                                </a>
+                                            </div>
                                         </div>
-                                    </div>
+                                    @endforeach
 
-                                    <div class="item-slick3" data-thumb="{{ asset('images/product-detail-02.jpg') }}">
-                                        <div class="wrap-pic-w pos-relative">
-                                            <img src="{{ asset('images/product-detail-02.jpg') }}" alt="IMG-PRODUCT">
-
-                                            <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04"
-                                                href="{{ asset('images/product-detail-02.jpg') }}">
-                                                <i class="fa fa-expand"></i>
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                    <div class="item-slick3" data-thumb="{{ asset('images/product-detail-03.jpg') }}">
-                                        <div class="wrap-pic-w pos-relative">
-                                            <img src="{{ asset('images/product-detail-03.jpg') }}" alt="IMG-PRODUCT">
-
-                                            <a class="flex-c-m size-108 how-pos1 bor0 fs-16 cl10 bg0 hov-btn3 trans-04"
-                                                href="{{ asset('images/product-detail-03.jpg') }}">
-                                                <i class="fa fa-expand"></i>
-                                            </a>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -76,6 +58,7 @@
 
                             <!--  -->
                             <div class="p-t-33">
+
                                 <div>Quantity: <span id="quantity">0</span></div>
                                 <div class="flex-w flex-r-m p-b-10">
                                     <div class="size-203 flex-c-m respon6">
@@ -104,109 +87,72 @@
                                     </div>
                                 </div>
 
-                                <div class="flex-w flex-r-m p-b-10">
-                                    <div class="size-203 flex-c-m respon6">
-                                        Color
-                                    </div>
 
-                                    <div class="size-204 respon6-next">
-                                        <div class="rs1-select2 bor8 bg0" id="variableContainer">
-                                            <select name="color" id="color">
-                                                <option>Choose an option</option>
-                                                @foreach ($stockVariableColor as $stock)
-                                                    @foreach ($colors as $color)
-                                                        @if ($stock->color_id == $color->id)
-                                                            <option value="{{ $color->id }}">
-                                                                {{ $color->color }}
-                                                            </option>
-                                                        @endif
-                                                    @endforeach
-                                                @endforeach
-                                            </select>
-                                            <div class="dropDownSelect2"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <input type="hidden" value="{{ $product->id }}" id="productId">
 
-                                <button id="add-to-cart"
-                                    class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
-                                    Add to cart
-                                </button>
                             </div>
+                            <input type="hidden" value="{{ $product->id }}" id="productId">
+
+                            <button id="add-to-cart"
+                                class="flex-c-m stext-101 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 js-addcart-detail">
+                                Add to cart
+                            </button>
                         </div>
                     </div>
+                </div>
 
 
-                    <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-                    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-                    <script>
-                        // Get the elements we need
-                        let colorElement = document.getElementById('color');
-                        let sizeElement = document.getElementById('size');
-                        let quantityElement = document.getElementById('quantity');
-                        let productIdElement = document.getElementById('productId');
-                        let addToCartButton = document.getElementById('add-to-cart');
-                        let containerElement = document.getElementById('variableContainer');
-                        let inputQuantityElement = document.getElementById('inputQuantityNew');
+                <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                <script>
+                    // Get the elements we need
+                    let colorElement = document.getElementById('color');
+                    let sizeElement = document.getElementById('size');
+                    let quantityElement = document.getElementById('quantity');
+                    let productIdElement = document.getElementById('productId');
+                    let addToCartButton = document.getElementById('add-to-cart');
+                    let containerElement = document.getElementById('variableContainer');
+                    let inputQuantityElement = document.getElementById('inputQuantityNew');
 
-                        $('#add-to-cart').on('click', function() {
-                            let productId = $('#productId').val();
-                            let quantity = $('#inputQuantityNew').val();
-                            let color = $('#color').val();
-                            let size = $('#size').val();
+                    $('#add-to-cart').on('click', function() {
+                        let productId = $('#productId').val();
+                        let quantity = $('#inputQuantityNew').val();
+                        let color = $('#color').val();
+                        let size = $('#size').val();
 
-                            $.ajax({
-                                url: "{{ route('cart.add') }}",
-                                type: "POST",
-                                headers: {
-                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                },
-                                data: {
-                                    productId: productId,
-                                    quantity: quantity,
-                                    color: color,
-                                    size: size
-                                },
+                        $.ajax({
+                            url: "{{ route('cart.add') }}",
+                            type: "POST",
+                            headers: {
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            },
+                            data: {
+                                productId: productId,
+                                quantity: quantity,
+                                color: color,
+                                size: size
+                            },
 
-                                success: function(response) {
-                                    if (response.hasOwnProperty('carts')) {
-                                        let carts = response.carts;
-                                        sessionStorage.setItem('carts', JSON.stringify(carts));
-                                        location.reload();
-                                    }
-                                },
-                                error: function(xhr, status, error) {
-                                    console.log(error);
+                            success: function(response) {
+                                if (response.hasOwnProperty('carts')) {
+                                    let carts = response.carts;
+                                    sessionStorage.setItem('carts', JSON.stringify(carts));
+                                    location.reload();
                                 }
-
-                            });
-                        });
-
-
-                        containerElement.addEventListener('change', function() {
-                            if (event.target.id === 'size') {
-                                let color = colorElement.value;
-                                let size = this.value;
-                                // Make AJAX call here and pass the selected color and size as parameters
-                                // Update the quantity element with the AJAX response
-                                fetch('/get-quantity?color=' + color + '&size=' + size + '&productId=' + productIdElement.value)
-                                    .then(response => response.text())
-                                    .then(quantity => {
-                                        let result = JSON.parse(quantity);
-                                        quantityElement.innerHTML = result.quantity;
-                                        inputQuantityElement.max = result.quantity;
-                                    })
-                                    .catch(error => console.error(error));
+                            },
+                            error: function(xhr, status, error) {
+                                console.log(error);
                             }
-                        });
 
-                        colorElement.addEventListener('change', function() {
-                            let color = this.value;
+                        });
+                    });
+
+
+                    containerElement.addEventListener('change', function() {
+                        if (event.target.id === 'size') {
                             let size = sizeElement.value;
                             // Make AJAX call here and pass the selected color and size as parameters
                             // Update the quantity element with the AJAX response
-                            fetch('/get-quantity?color=' + color + '&size=' + size + '&productId=' + productIdElement.value)
+                            fetch('/get-quantity?size=' + size + '&productId=' + productIdElement.value)
                                 .then(response => response.text())
                                 .then(quantity => {
                                     let result = JSON.parse(quantity);
@@ -214,88 +160,39 @@
                                     inputQuantityElement.max = result.quantity;
                                 })
                                 .catch(error => console.error(error));
-                            // Swal.fire({
-                            //     icon: 'error',
-                            //     title: 'Error',
-                            //     text: 'Not enough stock',
-                            // });
-                        });
-                    </script>
+                        }
+                    });
+                </script>
 
 
-                    {{-- <script>
-                                let colorElement = document.getElementById('color');
-                                let sizeElement = document.getElementById('size');
-                                let quantityElement = document.getElementById('quantity');
-                                let productIdElement = document.getElementById('productId');
-                                let productId = productIdElement.value;
-                                let containerElement = document.getElementById('variableContainer');
-                                let inputQuantityElement = document.getElementById('inputQuantityNew');
-                      
+               
 
-                                containerElement.addEventListener('change', function() {
-                                    if (event.target.id === 'size') {
-                                        let color = colorElement.value;
-                                        let size = this.value;
-                                        // Make AJAX call here and pass the selected color and size as parameters
-                                        // Update the quantity element with the AJAX response
-                                        fetch('/get-quantity?color=' + color + '&size=' + size + '&productId=' + productId)
-                                            .then(response => response.text())
-                                            .then(quantity => {
-                                                let result = JSON.parse(quantity);
-                                                quantityElement.innerHTML = result.quantity;
-                                                inputQuantityElement.max = result.quantity; 
-
-
-                                            })
-                                            .catch(error => console.error(error));
-                                    }
-                                });
-                                colorElement.addEventListener('change', function() {
-                                    let color = this.value;
-                                    let size = sizeElement.value;
-                                    // Make AJAX call here and pass the selected color and size as parameters
-                                    // Update the quantity element with the AJAX response
-                                    fetch('/get-quantity?color=' + color + '&size=' + size + '&productId=' + productId)
-                                        .then(response => response.text())
-                                        .then(quantity => {
-                                            let result = JSON.parse(quantity);
-                                            quantityElement.innerHTML = result.quantity;
-                                            inputQuantityElement.max = result.quantity;
-  
-                                        })
-                                        .catch(error => console.error(error));
-                                });
-                            </script> --}}
-
-
-
-                    <!--  -->
-                    <div class="flex-w flex-m p-l-100 p-t-40 respon7">
-                        <div class="flex-m bor9 p-r-10 m-r-11">
-                            <a href="#"
-                                class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 js-addwish-detail tooltip100"
-                                data-tooltip="Add to Wishlist">
-                                <i class="zmdi zmdi-favorite"></i>
-                            </a>
-                        </div>
-
-                        <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
-                            data-tooltip="Facebook">
-                            <i class="fa fa-facebook"></i>
-                        </a>
-
-                        <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
-                            data-tooltip="Twitter">
-                            <i class="fa fa-twitter"></i>
-                        </a>
-
-                        <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
-                            data-tooltip="Google Plus">
-                            <i class="fa fa-google-plus"></i>
+                <!--  -->
+                <div class="flex-w flex-m p-l-100 p-t-40 respon7">
+                    <div class="flex-m bor9 p-r-10 m-r-11">
+                        <a href="#"
+                            class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 js-addwish-detail tooltip100"
+                            data-tooltip="Add to Wishlist">
+                            <i class="zmdi zmdi-favorite"></i>
                         </a>
                     </div>
+
+                    <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
+                        data-tooltip="Facebook">
+                        <i class="fa fa-facebook"></i>
+                    </a>
+
+                    <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
+                        data-tooltip="Twitter">
+                        <i class="fa fa-twitter"></i>
+                    </a>
+
+                    <a href="#" class="fs-14 cl3 hov-cl1 trans-04 lh-10 p-lr-5 p-tb-2 m-r-8 tooltip100"
+                        data-tooltip="Google Plus">
+                        <i class="fa fa-google-plus"></i>
+                    </a>
                 </div>
+            </div>
             </div>
             </div>
 
@@ -305,8 +202,7 @@
                     <!-- Nav tabs -->
                     <ul class="nav nav-tabs" role="tablist">
                         <li class="nav-item p-b-10">
-                            <a class="nav-link active" data-toggle="tab" href="#description"
-                                role="tab">Description</a>
+                            <a class="nav-link active" data-toggle="tab" href="#description" role="tab">Description</a>
                         </li>
 
 
