@@ -283,7 +283,7 @@
 				@foreach ($categories as $category)	
 									
 				@if ($product->category_id == $category->id )
-					{{ $category->id }}
+					{{ $category->name }}
 				@endif @endforeach	
 				">
                             <!-- Block2 -->

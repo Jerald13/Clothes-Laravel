@@ -122,7 +122,7 @@
                 <li class="nav-item">
                   <a class="nav-link pl-3" href="{{ route('editor.product.productDisplay') }}"><span class="ml-1 item-text">Display Product</span>
                   </a>
-                  <a class="nav-link pl-3" href="productCreate"><span class="ml-1 item-text">Add Product</span>
+                  <a class="nav-link pl-3" href="{{ route('editor.product.productCreate') }}"><span class="ml-1 item-text">Add Product</span>
                   </a>
                 </li>
               </ul>

@@ -28,6 +28,42 @@
     <!-- App CSS -->
     <link rel="stylesheet" href="{{ asset('css/app-light.css') }}" id="lightTheme" disabled>
     <link rel="stylesheet" href="{{ asset('css/app-dark.css') }}" id="darkTheme">
+
+    {{-- upload image css --}}
+    <link rel="stylesheet"
+        href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.csss">
+    <link rel="stylesheet" href="https://unpkg.com/filepond/dist/filepond.min.css">
+
+
+    {{-- js for image upload --}}
+    <script src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.min.js"></script>
+    <script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.min.js">
+    </script>
+    <script
+        src="https://unpkg.com/filepond-plugin-image-exif-orientation/dist/filepond-plugin-image-exif-orientation.min.js">
+    </script>
+    <script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.min.js"></script>
+
+    <style>
+        body {
+            height: 100vh;
+            width: 100%;
+            margin: 0;
+            background: #dcafdf;
+        }
+
+        .parent {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            height: 100%;
+        }
+
+        .form-group {
+            width: 300px;
+        }
+    </style>
+
 </head>
 
 <body class="vertical dark ">
@@ -54,50 +90,33 @@
                                                     <div class="card-header">
                                                         <strong>Dropzone</strong>
                                                     </div>
-                                                    <div class="card-body">
-                                                        <form action="{{ route('editor.product.productCreate') }}" method="POST"
-                                                            class="dropzone bg-light rounded-lg" id="tinydash-dropzone">
-                                                            @csrf
-                                                            <div class="dz-message needsclick">
-                                                                <div class="circle circle-lg bg-primary">
-                                                                    <i class="fe fe-upload fe-24 text-white"></i>
-                                                                </div>
-                                                                <h5 class="text-muted mt-4">Drop files here or click to
-                                                                    upload
-                                                                </h5>
-                                                            </div>
+                                                    <div class="parent">
+                                                        <div class="form-group">
+                                                            <input class="filepond" name="images" type="file" id="id"
+                                                                multiple="multiple" data-allow-reorder="true">
+                                                        </div>
+                                                    </div>
+                                                    <script>
+                                                        FilePond.registerPlugin(FilePondPluginFileValidateType);
+                                                        FilePond.registerPlugin(FilePondPluginImagePreview);
+                                                        FilePond.registerPlugin(FilePondPluginFileEncode);
+                                                        FilePond.registerPlugin(FilePondPluginFileValidateSize);
+                                                        FilePond.registerPlugin(FilePondPluginImageExifOrientation);
 
-                                                            <!-- Preview -->
-                                                            <!-- <div class="dropzone-previews mt-3" id="file-previews"></div> -->
-                                                            <!-- file preview template -->
-                                                            <div class="d-none" id="uploadPreviewTemplate">
-                                                                <div class="card mt-1 mb-0 shadow-none border">
-                                                                    <div class="p-2">
-                                                                        <div class="row align-items-center">
-                                                                            <div class="col-auto">
-                                                                                <img data-dz-thumbnail src="#"
-                                                                                    class="avatar-sm rounded bg-light"
-                                                                                    alt="">
-                                                                            </div>
-                                                                            <div class="col pl-0">
-                                                                                <a href="javascript:void(0);"
-                                                                                    class="text-muted font-weight-bold"
-                                                                                    data-dz-name></a>
-                                                                                <p class="mb-0" data-dz-size></p>
-                                                                            </div>
-                                                                            <div class="col-auto">
-                                                                                <!-- Button -->
-                                                                                <a href=""
-                                                                                    class="btn btn-link btn-lg text-muted"
-                                                                                    data-dz-remove>
-                                                                                    <i class="dripicons-cross"></i>
-                                                                                </a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                    </div> <!-- .card-body -->
+                                                        const pondInput = FilePond.create(
+                                                            document.querySelector('#id')
+                                                        );
+
+
+
+                                                        //   let data = new FormData();
+                                                        // const pondFiles = pondInput.getFiles();
+                                                        //   console.log(pondFiles);
+                                                        // for (let i = 0; i < pondFiles.length; i++) {
+                                                        //   data.append('File', pondFiles[i].file);
+                                                        //   pondInput.removeFile(i);
+                                                        // }
+                                                    </script>
                                                 </div> <!-- .card -->
                                             </div>
                                             <div class="col-md-12">
@@ -275,14 +294,14 @@
 
                                                             console.log(data); // or do something else with the collected data
                                                         }
-                                                   
                                                     </script>
 
 
                                                 </div>
                                             </div>
                                             <div align="right">
-                                                <input class="btn btn-primary" type='submit' value="Submit" onclick="submitData()">
+                                                <input class="btn btn-primary" type='submit' value="Submit"
+                                                    onclick="submitData()">
                                             </div>
                                             </form>
                                         </div> <!-- / .card -->
