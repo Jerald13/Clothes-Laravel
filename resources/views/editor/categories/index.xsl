@@ -23,7 +23,7 @@
               <th>updated_at</th>
 
             </tr>
-            <xsl:for-each select="categories/category">
+            <xsl:for-each select="categories/category[status='active']">
               <tr>
                 <td><xsl:value-of select="id"/></td>
                 <td><xsl:value-of select="name"/></td>

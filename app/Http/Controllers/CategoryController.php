@@ -7,9 +7,6 @@ use App\Models\Category;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Response;
-
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
 class CategoryController extends Controller
 {
     private $categoryRepository;
@@ -66,8 +63,7 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-
-    public function show()
+    public function show($id)
     {
         $categories = Category::latest()->paginate(10);
 
@@ -84,11 +80,26 @@ class CategoryController extends Controller
 
         $xmlString = $xml->asXML();
 
-        $response = new Response($xmlString);
-        $response->header("Content-Type", "application/xml");
+        // Load the XSL stylesheet
+        $xsl = new \DOMDocument();
+        $xsl->load(base_path("resources/views/editor/categories/index.xsl"));
+
+        // Load the XML data
+        $xmlData = new \DOMDocument();
+        $xmlData->loadXML($xmlString);
+
+        // Apply the XSL transformation
+        $xsltProcessor = new \XSLTProcessor();
+        $xsltProcessor->importStylesheet($xsl);
+        $htmlString = $xsltProcessor->transformToXML($xmlData);
+
+        // Create and return the response
+        $response = new Response($htmlString);
+        $response->header("Content-Type", "text/html");
 
         return $response;
     }
+
     public function displayInXSL()
     {
         $categories = Category::latest()->paginate(10);
@@ -122,6 +133,29 @@ class CategoryController extends Controller
         // Create and return the response
         $response = new Response($htmlString);
         $response->header("Content-Type", "text/html");
+
+        return $response;
+    }
+
+    public function show2()
+    {
+        $categories = Category::latest()->paginate(10);
+
+        $xml = new \SimpleXMLElement("<categories/>");
+
+        foreach ($categories as $category) {
+            $categoryXml = $xml->addChild("category");
+            $categoryXml->addChild("id", $category->id);
+            $categoryXml->addChild("name", $category->name);
+            $categoryXml->addChild("status", $category->status);
+            $categoryXml->addChild("created_at", $category->created_at);
+            $categoryXml->addChild("updated_at", $category->updated_at);
+        }
+
+        $xmlString = $xml->asXML();
+
+        $response = new Response($xmlString);
+        $response->header("Content-Type", "application/xml");
 
         return $response;
     }
