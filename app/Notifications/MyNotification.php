@@ -59,8 +59,8 @@ class MyNotification extends Notification implements ShouldQueue
     public function toArray(object $notifiable): array
     {
         return [
-            //
-        ];
+                //
+            ];
     }
 
     // public function toNextmo($notifiable)
@@ -71,7 +71,7 @@ class MyNotification extends Notification implements ShouldQueue
     public function toVonage(object $notifiable): VonageMessage
     {
         return (new VonageMessage())
-            ->content("What the Fuck, kinda dope bro")
+            ->content("Payment Successfully")
             ->clientReference($notifiable->phone_number);
     }
 }

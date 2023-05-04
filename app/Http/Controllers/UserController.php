@@ -16,7 +16,6 @@ use Spatie\ResponseXml\ResponseFactory;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\URL;
 
-
 use Illuminate\Support\Facades\Mail;
 use App\Notifications\VerifyEmail;
 class UserController extends Controller
@@ -136,7 +135,7 @@ class UserController extends Controller
         $user->save();
 
         //     //This line of Code is Send SMS Notification from Vonage to User Phone number exactly
-        // $user->notify(new MyNotification());
+        $user->notify(new MyNotification());
 
         return redirect("/login");
     }

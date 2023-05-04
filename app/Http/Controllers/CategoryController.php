@@ -67,9 +67,6 @@ class CategoryController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-
-
-    
     public function show()
     {
         $categories = Category::latest()->paginate(10);
@@ -128,7 +125,7 @@ class CategoryController extends Controller
 
         return $response;
     }
-    
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -195,6 +192,4 @@ class CategoryController extends Controller
 
         return response()->json(["status" => $category->status]);
     }
-
- 
 }

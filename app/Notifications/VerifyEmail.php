@@ -15,9 +15,14 @@ class VerifyEmail extends Mailable
     /**
      * Create a new notification instance.
      */
-    public function __construct($verificationUrl)
+    // public function __construct($verificationUrl)
+    // {
+    //     $this->verificationUrl = $verificationUrl;
+    // }
+
+    public function __construct()
     {
-        $this->verificationUrl = $verificationUrl;
+        // $this->verificationUrl = $verificationUrl;
     }
 
     /**
