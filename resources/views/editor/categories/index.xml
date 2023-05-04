@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catagories>
+  <category>
+      <id>1</id>
+      <name>women</name>
+      <status>active</status>
+      <created_at>2023-05-04 10:50:34</created_at>
+      <updated_at>2023-05-04 11:18:43</updated_at>
+  </category>
+  <category>
+      <id>2</id>
+      <name>men</name>
+      <status>active</status>
+      <created_at>2023-05-04 10:50:34</created_at>
+      <updated_at>2023-05-04 10:50:34</updated_at>
+  </category>
+  <category>
+      <id>5</id>
+      <name>watches</name>
+      <status>inactive</status>
+      <created_at>2023-05-04 11:02:19</created_at>
+      <updated_at>2023-05-04 13:47:49</updated_at>
+  </category>
+</catagories>

@@ -141,7 +141,17 @@
                     <li class="nav-item">
                       <a class="nav-link pl-3" href="{{ route('categories.index') }}"><span class="ml-1 item-text">Display Category</span>
                       </a>
+                    </li>
+                    <li class="nav-item">
                       <a class="nav-link pl-3" href="{{ route('categories.create') }}"><span class="ml-1 item-text">Add Category</span>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link pl-3" href="{{ route('categories.display.xml') }}"><span class="ml-1 item-text">Display Category In XML</span>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link pl-3" href="{{ route('categories.display.xsl') }}"><span class="ml-1 item-text">Display Category In XSL</span>
                       </a>
                     </li>
                   </ul>

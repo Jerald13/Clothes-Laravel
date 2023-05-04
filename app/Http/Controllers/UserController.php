@@ -16,6 +16,7 @@ use Spatie\ResponseXml\ResponseFactory;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\URL;
 
+
 use Illuminate\Support\Facades\Mail;
 use App\Notifications\VerifyEmail;
 class UserController extends Controller

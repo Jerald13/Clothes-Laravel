@@ -153,7 +153,14 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
         CategoryController::class,
         "status",
     ]);
-
+    Route::get("editor/categories/categories-xml", [
+        CategoryController::class,
+        "displayInXML",
+    ])->name("categories.display.xml");
+    Route::get("editor/categories/categories-xsl", [
+        CategoryController::class,
+        "displayInXSL",
+    ])->name("categories.display.xsl");
     /*   Tags    */
     Route::resource("editor/tags", TagController::class);
     Route::post("/tags/{tag}/status", [TagController::class, "status"]);
