@@ -33,13 +33,13 @@
                     <div class="row justify-content-center">
                         <div class="col-12">
                             {{-- display massegae --}}
-                            @if (session('msg_deleted'))
-                                <div class="alert alert-success" id="msg_deleted">
-                                    {{ session('msg_deleted') }}
+                            @if (session('msg'))
+                                <div class="alert alert-success" id="msg">
+                                    {{ session('msg') }}
                                 </div>
                                 <script>
                                     setTimeout(function() {
-                                        $('#msg_deleted').fadeOut('slow');
+                                        $('#msg').fadeOut('slow');
                                     }, 5000); // 5000 milliseconds = 5 seconds                      
                                 </script>
                             @endif

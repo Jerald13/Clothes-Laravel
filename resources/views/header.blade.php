@@ -106,16 +106,12 @@ if (Session::has("user")) {
                     <div class="menu-desktop">
                         <ul class="main-menu">
                             <li class="active-menu">
-                                <a href="index">Home</a>
-                                <ul class="sub-menu">
-                                    <li><a href="index">Homepage 1</a></li>
-                                    <li><a href="index-02">Homepage 2</a></li>
-                                    <li><a href="home-03">Homepage 3</a></li>
-                                </ul>
+                                <a href="{{ route("getAllProductIndex") }}">Home</a>
+                              
                             </li>
 
                             <li>
-                                <a href="shop">Shop</a>
+                                <a href="{{ route("shop") }}">Shop</a>
                             </li>
 
                             <li class="label1" data-label1="hot">

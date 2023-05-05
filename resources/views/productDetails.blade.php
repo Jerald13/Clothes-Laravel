@@ -97,7 +97,7 @@
                                                         onclick="decrementQuantity()" style="user-select: none;">-</button>
                                                 </div>
                                                 <input type="number" id="inputQuantityNew" class="form-control"
-                                                    value="0" style="width: 80%">
+                                                    value="0" style="width:100px">
                                                 <div class="input-group-append">
                                                     <button class="btn btn-dark" type="button"
                                                         onclick="incrementQuantity()"  style="user-select: none;">+</button>
@@ -195,7 +195,9 @@
                                 .then(quantity => {
                                     let result = JSON.parse(quantity);
                                     quantityElement.innerHTML = result.quantity;
-                                    inputQuantityElement.max = result.quantity;
+                                    if( parseInt(result.quantity)===0){
+                                       document.getElementById('inputQuantityNew').value = 0;
+                                    }
                                 })
                                 .catch(error => console.error(error));
                         }

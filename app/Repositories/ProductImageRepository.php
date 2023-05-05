@@ -25,9 +25,11 @@ class ProductImageRepository implements ProductImageRepositoryInterface
 
     public function update($id, $data)
     {
-        $prod = product_images::find($id);
-        $prod->update($data);
-        return $prod;
+        var_dump($id);
+        $prodImage = product_images::find($id);
+     
+        $prodImage->update($data);
+        return $prodImage ;
     }
 
     public function delete($id)
