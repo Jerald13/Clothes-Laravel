@@ -14,6 +14,7 @@ class EmailObserver extends AbstractObserver
         // email sending code omitted for brevity
 
         $user = auth()->user();
-        // Mail::to($user->email)->send(new VerifyEmail());
+        $subjectState = $this->subject->getState();
+        Mail::to($user->email)->send(new VerifyEmail($subjectState));
     }
 }
