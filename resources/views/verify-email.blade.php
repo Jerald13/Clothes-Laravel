@@ -6,8 +6,12 @@
     <title>Email Verification</title>
 </head>
 <body>
-    <h2>Verify Your Email Address</h2>
+
+    <h2>Successfully Pasyment</h2>
+    Hooi Seng : Thanks For Buying our product.</p>
+    <a href="{{ $verificationUrl }}">Cozastore</a> 
+    {{-- <h2>Verify Your Email Address</h2>
     <p>Thank you for registering with us. Please click the button below to verify your email address:</p>
-    <a href="{{ $verificationUrl }}">Verify Email</a>
+    <a href="{{ $verificationUrl }}">Verify Email</a> --}}
 </body>
 </html>

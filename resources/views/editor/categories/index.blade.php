@@ -133,10 +133,11 @@
                                                         <td>{{ $category->created_at }}</td>
                                                         <td>{{ $category->updated_at }}</td>
 
-                                                        <td><button class="btn btn-sm dropdown-toggle more-horizontal"
+                                                        <td><button class="btn btn-outline-primary" 
                                                                 type="button" data-toggle="dropdown" aria-haspopup="true"
                                                                 aria-expanded="false">
-                                                                <span class="text-muted sr-only">Action</span>
+                                                                <span class="text-muted sr-only" >Action</span>
+                                                                Action
                                                             </button>
                                                             <div class="dropdown-menu dropdown-menu-right">
                                                                 <a class="dropdown-item"

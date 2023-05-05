@@ -94,9 +94,39 @@ class LoginController extends Controller
 
             return redirect()->route("index");
         } else {
+            // return redirect()
+            //     ->route("errors/page-404")
+            //     ->with("message", "Incorrect email or password");
+            // Authentication failed
+
+            // Get the number of login attempts
+            $loginAttempts = $request->session()->exists("login_attempts")
+                ? $request->session()->get("login_attempts")
+                : 0;
+
+            // Increment the login attempts counter
+            $loginAttempts++;
+
+            // Put the updated value back in the session
+            $request->session()->put("login_attempts", $loginAttempts);
+            // Check if the user has exceeded the maximum number of login attempts (in this case 5)
+            if ($loginAttempts >= 5) {
+                return redirect()
+                    ->route("login")
+                    ->with([
+                        "loginError" =>
+                            "You have attempted 5 times, Kindly wait 2 hours and try again.",
+                        "email" => $request->input("email"),
+                    ]);
+            }
+
             return redirect()
-                ->route("errors/page-404")
-                ->with("message", "Incorrect email or password");
+                ->route("login")
+                ->with([
+                    "loginError" =>
+                        "These credentials do not match our records.",
+                    "email" => $request->input("email"),
+                ]);
         }
     }
 

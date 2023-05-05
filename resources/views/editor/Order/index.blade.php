@@ -139,7 +139,7 @@
                         <div class="row">
                             <div class="col-9">
                                 <p class="text-muted">Display order status with username, email, phone number, shipping
-                                    address, order total. For those who order items that are new,pending,successful,cancelled, 
+                                    address, order total. For those who order items that are new,pending,successful,cancelled,delivered
                                     then the Editor or Admin able update order status.</p>
                             </div>
                             <div class="col-3" style="text-align: right;">
@@ -242,6 +242,9 @@
                                                                             <option
                                                                                 value="cancelled"{{ $order->status == 'cancelled' ? ' selected' : '' }}>
                                                                                 Cancelled</option>
+                                                                                <option
+                                                                                value="cancelled"{{ $order->status == 'delivered' ? ' selected' : '' }}>
+                                                                                Delivered</option>
                                                                         </select>
                                                                         <button type="submit"
                                                                             class="dropdown-item btn btn-sm btn-dark">Update

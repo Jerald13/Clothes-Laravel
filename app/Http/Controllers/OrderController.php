@@ -64,8 +64,8 @@ class OrderController extends Controller
                 empty($order->state) ? "-" : $order->state
             );
             $orderXml->addChild(
-                "post_code",
-                empty($order->post_code) ? "-" : $order->post_code
+                "postcode",
+                empty($order->postcode) ? "-" : $order->postcode
             );
             $orderXml->addChild("order_total", $order->order_total);
             $orderXml->addChild("order_status", $order->order_status);
@@ -107,7 +107,7 @@ class OrderController extends Controller
             $orderXml->addChild("phone_number", $order->user->phone_number);
             $orderXml->addChild("shipping_address", $order->shipping_address);
             $orderXml->addChild("state", $order->state);
-            $orderXml->addChild("post_code", $order->post_code);
+            $orderXml->addChild("postcode", $order->postcode);
             $orderXml->addChild("total", $order->order_total);
             $orderXml->addChild("order_status", $order->order_status);
         }
@@ -196,8 +196,10 @@ class OrderController extends Controller
     {
         // Retrieve the order items for the authenticated user
         $userId = auth()->user()->id;
-        $orderItems = Order::with('payment')->where('user_id', $userId)->get();
-        
+        $orderItems = Order::with("payment")
+            ->where("user_id", $userId)
+            ->get();
+
         // Pass the order items to the view
         return view("myorders", ["orderItems" => $orderItems]);
     }
@@ -205,7 +207,7 @@ class OrderController extends Controller
     public function showOrderDetail(Request $request)
     {
         $id = $request->input("id");
-        
+
         // Retrieve the order items for the specified order ID
         $orderItems = OrderDetail::with("product")
             ->where("order_id", $id)
@@ -224,8 +226,8 @@ class OrderController extends Controller
         return view("orderdetail", [
             "orderItems" => $orderItems,
             "totalOrderSubtotal" => $totalOrderSubtotal,
-            "paymentAmount" => $paymentAmount
-    ]);
+            "paymentAmount" => $paymentAmount,
+        ]);
     }
 
     function orderNow()
@@ -252,7 +254,7 @@ class OrderController extends Controller
         $req->input();
         return redirect("/");
     }
-    
+
     function myOrders()
     {
         $userId = auth()->user()->id;
@@ -265,7 +267,7 @@ class OrderController extends Controller
     }
 
     public function store(Request $request)
-    {  
+    {
         $voucherCode = $request->input("voucher");
         $response = Http::get("http://127.0.0.1:3232/api/vouchers/check", [
             "voucher_code" => $voucherCode,
@@ -310,7 +312,7 @@ class OrderController extends Controller
         $subtotal = $this->calculateSubtotal($cartItems);
 
         // Get the selected state from the form input
-        $state = $request->input('state');
+        $state = $request->input("state");
 
         // //et the shipping fee based on the state
         // if ($state == 'Sabah' || $state == 'Sarawak') {
@@ -320,7 +322,9 @@ class OrderController extends Controller
         // }
 
         $shippingFee = 0.0;
-
+        $response = Http::get("http://127.0.0.1:3232/api/deliver");
+        $deliveries = $response->json();
+        session()->put("deliveries", $deliveries);
         // Calculate the tax amount by mutiply 6% tax rate
         $taxRate = 0.06; // 6%
         $taxAmount = $subtotal * $taxRate;
@@ -352,6 +356,7 @@ class OrderController extends Controller
             $orderDetail->order_id = $order->id;
             $orderDetail->product_id = $item->product_id;
             $orderDetail->order_quantity = $item->user_quantity;
+            $orderDetail->order_size = $item->user_size;
             $orderDetail->order_subtotal =
                 $item->product->price * $item->user_quantity;
             $orderDetail->save();
@@ -399,7 +404,7 @@ class OrderController extends Controller
             // Calculate the order total
             $orderTotal = $subtotal + $shippingFee + $taxAmount;
 
-            $response = Http::get('http://127.0.0.1:3232/api/banks/names');
+            $response = Http::get("http://127.0.0.1:3232/api/banks/names");
             $bankNames = [];
             if ($response->successful()) {
                 $bankNames = $response->json();
@@ -473,5 +478,4 @@ class OrderController extends Controller
             ->route("orders.index")
             ->with("success", "Order deleted successfully!");
     }
-    
 }

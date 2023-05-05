@@ -206,6 +206,18 @@
                                 </div>
 
 
+                            <div classname="optionDeliver" style="margin-bottom: 30px;">
+                                @if(session('deliveries'))
+                                <label for="deliveries">Select Delivery:</label>
+                                <select name="deliveries" id="deliveries">
+                                    @foreach(session('deliveries') as $deliver)
+                                        <option >{{ $deliver['deliver'] }}</option>
+                                    @endforeach
+                                </select>
+                            @endif
+                            </div>
+                            
+
                             </div>
 
                         </div>

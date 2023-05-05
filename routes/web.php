@@ -163,6 +163,19 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
         CategoryController::class,
         "status",
     ]);
+    // Route::get("editor/categories/categories-xml", [
+    //     CategoryController::class,
+    //     "displayInXSL2",
+    // ])->name("categories.display.xml");
+    Route::get("editor/categories/categories-xsl", [
+        CategoryController::class,
+        "displayInXSL2",
+    ])->name("categories.display.xsl");
+
+    Route::get("editor/categories/categories-xml", [
+        CategoryController::class,
+        "show2",
+    ])->name("categories.display.xml");
 
     /*   Tags    */
     Route::resource("editor/tags", TagController::class);
@@ -237,15 +250,31 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
 
     /*-----------------------*/
     /* Payment */
-    Route::get("editor/Payment/index", [PaymentController::class, "index"])->name(
-        "payments.index"
-    );
+    Route::get("editor/Payment/index", [
+        PaymentController::class,
+        "index",
+    ])->name("payments.index");
 
     Route::patch("/payment/{payment}/update-status", [
         PaymentController::class,
         "updatePaymentStatus",
     ])->name("payments.updatePaymentStatus");
 
+    //payment status
+    Route::get("/payment/updateStatus/{id}", [
+        PaymentController::class,
+        "updateStatus",
+    ])->name("payments.update");
+
+    Route::get("/payment/updatePending/{id}", [
+        PaymentController::class,
+        "updatePending",
+    ])->name("payments.updatePending");
+
+    Route::get("/payment/updatePending/{id}", [
+        PaymentController::class,
+        "updatePending",
+    ])->name("payments.updatePending");
 });
 
 /*   User Route    */
@@ -284,7 +313,9 @@ Route::middleware(["auth", "user-role:user", "web"])->group(function () {
     Route::get("ordernow", [OrderController::class, "orderNow"]);
     Route::post("orderplace", [OrderController::class, "orderPlace"]);
     Route::get("myorders", [OrderController::class, "myOrders"]);
-    Route::get('/myorders', [OrderController::class, 'showOrders'])->name('orders.showOrders');
+    Route::get("/myorders", [OrderController::class, "showOrders"])->name(
+        "orders.showOrders"
+    );
     Route::get("orderdetail", [
         OrderController::class,
         "showOrderDetail",
@@ -295,16 +326,18 @@ Route::middleware(["auth", "user-role:user", "web"])->group(function () {
     ])->name("vouchers.check");
 
     /* Payments */
-    Route::post("/payment/{id}", [PaymentController::class, "updateOrderPayment"])->name(
-        "payments.insertNewPayment"
+    Route::post("/payment/{id}", [
+        PaymentController::class,
+        "updateOrderPayment",
+    ])->name("payments.insertNewPayment");
+
+    Route::get("/payment", [PaymentController::class, "payment"])->name(
+        "payment"
     );
 
-    Route::get('/payment', [PaymentController::class, 'payment'])->name('payment');
-
-    Route::get('/paymentsuccess', function () {
-        return view('paymentsuccess');
-    })->name('paymentsuccess');
-    
+    Route::get("/paymentsuccess", function () {
+        return view("paymentsuccess");
+    })->name("paymentsuccess");
 });
 
 Route::prefix("metamask")->group(function () {

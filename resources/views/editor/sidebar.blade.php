@@ -159,27 +159,34 @@
                 </ul>
                 </li>
 
-                <p class="text-muted nav-heading mt-4 mb-1">
-                    <span>Product Category Site</span>
-                </p>
-                <ul class="navbar-nav flex-fill w-100 mb-2">
-                    <li class="nav-item dropdown">
-                        <a href="#Category" data-toggle="collapse" aria-expanded="false"
-                            class="dropdown-toggle nav-link">
-                            <i class="fe-box fe-16"></i>
-                            <span class="ml-3 item-text">Category</span>
-                        </a>
-                        <ul class="collapse list-unstyled pl-4 w-100" id="Category">
-                            <li class="nav-item">
-                                <a class="nav-link pl-3" href="{{ route('categories.index') }}"><span
-                                        class="ml-1 item-text">Display Category</span>
-                                </a>
-                                <a class="nav-link pl-3" href="{{ route('categories.create') }}"><span
-                                        class="ml-1 item-text">Add Category</span>
-                                </a>
-                            </li>
-                        </ul>
+            <p class="text-muted nav-heading mt-4 mb-1">
+                <span>Product Category Site</span>
+              </p>
+              <ul class="navbar-nav flex-fill w-100 mb-2">
+                <li class="nav-item dropdown">
+                  <a href="#Category" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle nav-link">
+                    <i class="fe-box fe-16"></i>
+                    <span class="ml-3 item-text">Category</span>
+                  </a>
+                  <ul class="collapse list-unstyled pl-4 w-100" id="Category">
+                    <li class="nav-item">
+                      <a class="nav-link pl-3" href="{{ route('categories.index') }}"><span class="ml-1 item-text">Display Category</span>
+                      </a>
                     </li>
+                    <li class="nav-item">
+                      <a class="nav-link pl-3" href="{{ route('categories.create') }}"><span class="ml-1 item-text">Add Category</span>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link pl-3" href="{{ route('categories.display.xml') }}"><span class="ml-1 item-text">Display Category In XML</span>
+                      </a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link pl-3" href="{{ route('categories.display.xsl') }}"><span class="ml-1 item-text">Display Category In XSL</span>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
 
 
                     <p class="text-muted nav-heading mt-4 mb-1">
