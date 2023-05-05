@@ -335,6 +335,10 @@ class OrderController extends Controller
         $response = Http::get("http://127.0.0.1:3232/api/deliver");
         $deliveries = $response->json();
         session()->put("deliveries", $deliveries);
+
+        $response = Http::get("http://127.0.0.1:3232/api/freegift");
+        $freegift = $response->json();
+        session()->put("freegift", $freegift);
         // Calculate the tax amount by mutiply 6% tax rate
         $taxRate = 0.06; // 6%
         $taxAmount = $subtotal * $taxRate;

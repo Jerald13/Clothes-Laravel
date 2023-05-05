@@ -397,4 +397,4 @@ Route::get("removecart/{id}", [ProductController::class, "removeCart"]);
 Route::view("/error", "error")->name("error");
 
 //Web service
-Route::get("/free-gifts", [FreeGiftController::class, "index"]);
+// Route::get("/free-gifts", [FreeGiftController::class, "index"]);
