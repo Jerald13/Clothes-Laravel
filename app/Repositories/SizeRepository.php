@@ -1,10 +1,10 @@
 <?php
 namespace App\Repositories;
 
-use App\Repositories\Interfaces\SizeRepositoryInterface;
+use App\Repositories\Interfaces\ProductRepositoryInterface;
 use App\Models\Size;
 
-class SizeRepository implements SizeRepositoryInterface
+class SizeRepository implements ProductRepositoryInterface
 {
     
     public function getAll()

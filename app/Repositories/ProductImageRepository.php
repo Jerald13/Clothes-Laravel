@@ -2,10 +2,10 @@
 
 namespace App\Repositories;
 
-use App\Repositories\Interfaces\ProductImageRepositoryInterface;
+use App\Repositories\Interfaces\ProductRepositoryInterface;
 use App\Models\Product_images;
 
-class ProductImageRepository implements ProductImageRepositoryInterface
+class ProductImageRepository implements ProductRepositoryInterface
 {
 
     public function getAll()

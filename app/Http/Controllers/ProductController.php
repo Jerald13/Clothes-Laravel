@@ -85,7 +85,7 @@ class ProductController extends Controller
      */
     public function displayCreateForm()
     {
-        $categories = $this->cateRepository->allCategories();
+        $categories = $this->cateRepository->getAll();
         $sizes = $this->sizeRepository->getAll();
 
         return view(
@@ -120,7 +120,7 @@ class ProductController extends Controller
     public function shop()
     {
         $products = $this->prodRepository->getAll();
-        $categories = $this->cateRepository->allCategories();
+        $categories = $this->cateRepository->getAll();
         $images = $this->ProductImageRepository->getAll();
 
         return view("shop", compact("products", "categories", "images"));
@@ -239,16 +239,16 @@ class ProductController extends Controller
         $prodDes = substr($data["prodDesc"], 0, 1000); // Truncate the input to 1000 characters
         $prodPrice = floatval($data["prodPrice"]); // Cast the input to a float
 
-     
+
         $images = $request->file("images");
         foreach ($images as $image) {
             $msg = ''; // Clear error messages from previous iteration
-        
+
             if (isset($image)) {
                 if ($image->isValid() && in_array($image->getClientOriginalExtension(), ['jpg', 'jpeg', 'png', 'gif'])) {
                     $imageSize = $image->getSize();
                     $maxSize = 2000000; // 2 MB
-        
+
                     if ($imageSize > $maxSize) {
                         // Invalid image file
                         $msg .= 'The file size is too large.<br>';
@@ -261,7 +261,7 @@ class ProductController extends Controller
                 // No image file uploaded
                 $msg .= 'No image file uploaded.<br>';
             }
-        
+
             if (!empty($msg)) {
                 return redirect()->route('editor.product.productCreate')->with('msg-error', $msg);
             }
@@ -344,7 +344,7 @@ class ProductController extends Controller
             'size.*' => 'required|integer|min:1',
             'quantity.*' => 'required|integer|min:1',
         ]);
-        
+
         if (!$validatedData) {
             return redirect()->route('editor.product.productCreate')->with('msg-error', 'Image cannot more than 20MB and the find must be a image file.');
         }
@@ -361,7 +361,7 @@ class ProductController extends Controller
 
         $productId = $id;
 
-     
+
         //table product insert
         $product = $this->prodRepository->update($productId, [
             "category_id" => $category_id,
@@ -392,7 +392,7 @@ class ProductController extends Controller
             $count++;
         }
 
-     
+
 
         if ($validatedData) {
             $this->updateImage($request, $product);
@@ -443,7 +443,7 @@ class ProductController extends Controller
 
         $sizes = $this->sizeRepository->getAll();
 
-        $categories = $this->cateRepository->allCategories();
+        $categories = $this->cateRepository->getAll();
         $sizes = $this->sizeRepository->getAll();
         $images = $this->ProductImageRepository->getAllByProductId($id);
         $categoryProduct = $this->prodRepository->getCategoryByProductId($id);
@@ -476,7 +476,7 @@ class ProductController extends Controller
 
         $sizes = $this->sizeRepository->getAll();
 
-        $categories = $this->cateRepository->allCategories();
+        $categories = $this->cateRepository->getAll();
         $sizes = $this->sizeRepository->getAll();
         $images = $this->ProductImageRepository->getAllByProductId($id);
         $categoryProduct = $this->prodRepository->getCategoryByProductId($id);
@@ -499,7 +499,7 @@ class ProductController extends Controller
     public function getAllProdIndex()
     {
         $products = $this->prodRepository->getAll();
-        $categories = $this->cateRepository->allCategories();
+        $categories = $this->cateRepository->getAll();
         $images = $this->ProductImageRepository->getAll();
 
         return view("product", compact("products", "categories", "images"));

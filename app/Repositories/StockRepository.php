@@ -1,10 +1,10 @@
 <?php
 namespace App\Repositories;
 
-use App\Repositories\Interfaces\StockRepositoryInterface;
+use App\Repositories\Interfaces\ProductRepositoryInterface;
 use App\Models\Stock;
 
-class StockRepository implements StockRepositoryInterface
+class StockRepository implements ProductRepositoryInterface
 {
     
     public function getAll()

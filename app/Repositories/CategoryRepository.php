@@ -2,39 +2,44 @@
 
 namespace App\Repositories;
 
-use App\Repositories\Interfaces\CategoryRepositoryInterface;
+use App\Repositories\Interfaces\ProductRepositoryInterface;
 use App\Models\Category;
 
-class CategoryRepository implements CategoryRepositoryInterface
+class CategoryRepository implements ProductRepositoryInterface
 {
     public function allCategories()
     {
         return Category::latest()->paginate(10);
     }
-
-    public function storeCategory($data)
+    public function getAll()
     {
-        return Category::create($data);
+        return Category::latest()->paginate(10);
     }
-
-    public function findCategory($id)
+    public function getById($id)
     {
         return Category::find($id);
     }
 
-    public function updateCategory($data, $id)
+    public function create($data)
     {
-        $category = Category::where("id", $id)->first();
-        $category->name = $data["name"];
-        $category->status = $data["status"];
-        // $category->product_count = $data["product_count"];
-
-        $category->save();
+        return Category::create($data);
+    }
+    public function delete($id)
+    {
+        Category::destroy($id);
     }
 
-    public function destroyCategory($id)
+    public function update($id,$data)
     {
-        $category = Category::find($id);
-        $category->delete();
+        var_dump($id);
+        $prodImage = Category::find($id);
+     
+        $prodImage->update($data);
+        return $prodImage ;
+    }
+
+    public function storeCategory($data)
+    {
+        return Category::create($data);
     }
 }
