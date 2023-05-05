@@ -21,6 +21,7 @@ use App\Http\Controllers\TagController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\VoucherController;
 
+
 use Illuminate\Support\Facades\Mail;
 use App\Notifications\VerifyEmail;
 use Illuminate\Support\Facades\URL;

@@ -230,28 +230,54 @@ class ProductController extends Controller
     {
         $data = $request;
 
-        $sizes = $data->input("size");
-        $quantity = $data->input("quantity");
-        $products = $this->prodRepository->getAll();
+        $sizes = array_slice($data->input("size"), 0, 5); // Get the first 5 values of the input array
+        $sizes = array_map('intval', $sizes); // Cast each value in the array to an integer
+        $quantity = array_slice($data->input("quantity"), 0, 5); // Get the first 5 values of the input array
+        $quantity = array_map('intval', $quantity); // Cast each value in the array to an integer
+        $category_id = intval($data->input("category_id"));
+        $productName = substr($data["prodName"], 0, 100); // Truncate the input to 100 characters
+        $prodDes = substr($data["prodDesc"], 0, 1000); // Truncate the input to 1000 characters
+        $prodPrice = floatval($data["prodPrice"]); // Cast the input to a float
 
-        //table product insert
-        // Validate the uploaded files
-        $validatedData = $request->validate([
-            "images.*" => "required|image|max:20000",
-        ]);
-
-        if (!$validatedData) {
-            return redirect()->route('editor.product.productCreate')->with('msg-error', 'Image is empty.');
+     
+        $images = $request->file("images");
+        foreach ($images as $image) {
+            $msg = ''; // Clear error messages from previous iteration
+        
+            if (isset($image)) {
+                if ($image->isValid() && in_array($image->getClientOriginalExtension(), ['jpg', 'jpeg', 'png', 'gif'])) {
+                    $imageSize = $image->getSize();
+                    $maxSize = 2000000; // 2 MB
+        
+                    if ($imageSize > $maxSize) {
+                        // Invalid image file
+                        $msg .= 'The file size is too large.<br>';
+                    }
+                } else {
+                    // Invalid image file
+                    $msg .= 'Invalid file type or file not found<br>';
+                }
+            } else {
+                // No image file uploaded
+                $msg .= 'No image file uploaded.<br>';
+            }
+        
+            if (!empty($msg)) {
+                return redirect()->route('editor.product.productCreate')->with('msg-error', $msg);
+            }
         }
 
+
         $product = $this->prodRepository->create([
-            "category_id" => $data["category_id"],
-            "name" => $data["prodName"],
-            "description" => $data["prodDesc"],
-            "price" => $data["prodPrice"],
+            "category_id" => $category_id,
+            "name" => $productName,
+            "description" =>   $prodDes,
+            "price" =>  $prodPrice,
         ]);
 
         $latestProdId = $this->prodRepository->getLatestId();
+        $products = $this->prodRepository->getAll();
+
 
         for ($i = 0; $i < count($sizes); $i++) {
             if ((int)$sizes[$i] >= 1 && (int)$sizes[$i] <= 5 && (int)$quantity[$i] != null) {
@@ -262,6 +288,14 @@ class ProductController extends Controller
                 ]);
             }
         }
+        unset($sizes); // free memory 
+        unset($quantity);
+        unset($quantity);
+        unset($quantity);
+        unset($quantity);
+
+
+
 
         $this->uploadImage($request, $latestProdId);
 
@@ -272,7 +306,7 @@ class ProductController extends Controller
     public function uploadImage(Request $request, $latestProdId)
     {
         $images = $request->file("images");
-        $imageData = [];
+
         try {
 
             foreach ($images as $image) {
@@ -301,17 +335,39 @@ class ProductController extends Controller
     {
         $data = $request;
 
-        $sizes = $data->input("size");
+        $validatedData = $data->validate([
+            'prodName' => 'required|string|max:100',
+            'prodDesc' => 'required|string|max:1000',
+            'prodPrice' => 'required|numeric|min:0',
+            'category_id' => 'required|integer|min:1',
+            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2000',
+            'size.*' => 'required|integer|min:1',
+            'quantity.*' => 'required|integer|min:1',
+        ]);
+        
+        if (!$validatedData) {
+            return redirect()->route('editor.product.productCreate')->with('msg-error', 'Image cannot more than 20MB and the find must be a image file.');
+        }
 
-        $quantity = $data->input("quantity");
+
+        $sizes = array_slice($data->input("size"), 0, 5); // Get the first 5 values of the input array
+        $sizes = array_map('intval', $sizes); // Cast each value in the array to an integer
+        $quantity = array_slice($data->input("quantity"), 0, 5); // Get the first 5 values of the input array
+        $quantity = array_map('intval', $quantity); // Cast each value in the array to an integer
+        $category_id = intval($data->input("category_id"));
+        $productName = substr($data["prodName"], 0, 100); // Truncate the input to 100 characters
+        $prodDes = substr($data["prodDesc"], 0, 1000); // Truncate the input to 1000 characters
+        $prodPrice = floatval($data["prodPrice"]); // Cast the input to a float
+
         $productId = $id;
 
+     
         //table product insert
         $product = $this->prodRepository->update($productId, [
-            "category_id" => $data["category_id"],
-            "name" => $data["prodName"],
-            "description" => $data["prodDesc"],
-            "price" => $data["prodPrice"],
+            "category_id" => $category_id,
+            "name" =>  $productName,
+            "description" => $prodDes,
+            "price" => $prodPrice,
         ]);
 
         $product = $this->prodRepository->getById($productId);
@@ -331,14 +387,12 @@ class ProductController extends Controller
                     "size_id" => $size,
                     "product_id" => $productId,
                     "quantity" => $quantity[$count],
-                ]);            
+                ]);
             }
             $count++;
         }
 
-        $validatedData = $request->validate([
-            "images.*" => "required",
-        ]);
+     
 
         if ($validatedData) {
             $this->updateImage($request, $product);
@@ -349,18 +403,6 @@ class ProductController extends Controller
 
     public function updateImage(Request $request, $product)
     {
-
-        // Validate the uploaded files
-        $validatedData = $request->validate([
-            "images.*" => "image|max:20000",
-        ]);
-
-        if (!$validatedData) {
-            return redirect()->route('editor.product.productCreate')->with('msg-error', 'Image cannot more than 20MB and the find must be a image file.');
-        }
-
-
-
         $images = $request->file("images");
         $imageData = [];
         $imagesExist = $product->images;

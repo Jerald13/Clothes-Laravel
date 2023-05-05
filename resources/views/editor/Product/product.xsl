@@ -34,13 +34,13 @@
                                     <xsl:value-of select="category_id"/>
                                 </td>
                                 <td>
-                                    <xsl:value-of select="name"/>
+                                    <xsl:value-of select="htmlspecialchars(name)"/>
                                 </td>
                                 <td>
                                     <xsl:value-of select="price"/>
                                 </td>
                                 <td>
-                                    <xsl:value-of select="description"/>
+                                    <xsl:value-of select="htmlspecialchars(description)"/>
                                 </td>
                             </tr>
                         </xsl:for-each>
