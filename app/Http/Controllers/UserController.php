@@ -135,7 +135,7 @@ class UserController extends Controller
         $user->save();
 
         //     //This line of Code is Send SMS Notification from Vonage to User Phone number exactly
-        $user->notify(new MyNotification());
+        // $user->notify(new MyNotification());
 
         return redirect("/login");
     }

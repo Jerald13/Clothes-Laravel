@@ -35,6 +35,7 @@
 								<form action="login" method="POST">
 									<div class="form-group">
 										@csrf
+										
 										<label for="email">Name / E-Mail</label>
 										<input id="email" type="text" class="form-control" name="email" required="" autofocus="">
 									</div>
@@ -43,6 +44,14 @@
 										<label for="password">Password
 										</label>
 										<input id="password" type="password" class="form-control" name="password" required="">
+										
+										@if (session("loginError"))
+    <div class="alert alert-danger">
+        {{ session("loginError") }}
+    </div>
+@endif
+
+
 										<div class="text-right">
 											<a href="password/email" class="small">
 												Forgot Your Password?
