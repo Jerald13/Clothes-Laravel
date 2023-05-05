@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\User;
-
+use App\Models\Payment;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use Illuminate\Http\Request;
@@ -64,9 +64,14 @@ class OrderController extends Controller
                 empty($order->state) ? "-" : $order->state
             );
             $orderXml->addChild(
+                "city",
+                empty($order->city) ? "-" : $order->city
+            );
+            $orderXml->addChild(
                 "postcode",
                 empty($order->postcode) ? "-" : $order->postcode
             );
+            $orderXml->addChild("country", $order->country);
             $orderXml->addChild("order_total", $order->order_total);
             $orderXml->addChild("order_status", $order->order_status);
         }
@@ -107,8 +112,10 @@ class OrderController extends Controller
             $orderXml->addChild("phone_number", $order->user->phone_number);
             $orderXml->addChild("shipping_address", $order->shipping_address);
             $orderXml->addChild("state", $order->state);
+            $orderXml->addChild("city", $order->city);
             $orderXml->addChild("postcode", $order->postcode);
-            $orderXml->addChild("total", $order->order_total);
+            $orderXml->addChild("country", $order->country);
+            $orderXml->addChild("order_total", $order->order_total);
             $orderXml->addChild("order_status", $order->order_status);
         }
 
@@ -134,9 +141,10 @@ class OrderController extends Controller
             $orderXml->addChild("shipping_address", $order->shipping_address);
             $orderXml->addChild("state", $order->state);
             $orderXml->addChild("city", $order->city);
-            $orderXml->addChild("post_code", $order->post_code);
+            $orderXml->addChild("postcode", $order->postcode);
+            $orderXml->addChild("country", $order->country);
             $orderXml->addChild("order_total", $order->order_total);
-            $orderXml->addChild("status", $order->order_status);
+            $orderXml->addChild("order_status", $order->order_status);
         }
 
         $response = response($xml->asXML(), 200);
@@ -163,8 +171,10 @@ class OrderController extends Controller
             $order->shipping_address = (string) $orderData->shipping_address;
             $order->state = (string) $orderData->state;
             $order->city = (string) $orderData->city;
-            $order->post_code = (string) $orderData->post_code;
+            $order->postcode = (int) $orderData->postcode;
+            $order->country = (string) $orderData->country;
             $order->order_total = (float) $orderData->order_total;
+            $order->order_status = (string) $orderData->order_status;
 
             $user = User::where("username", (string) $orderData->username)
                 ->where("email", (string) $orderData->email)
@@ -325,6 +335,10 @@ class OrderController extends Controller
         $response = Http::get("http://127.0.0.1:3232/api/deliver");
         $deliveries = $response->json();
         session()->put("deliveries", $deliveries);
+
+        $response = Http::get("http://127.0.0.1:3232/api/freegift");
+        $freegift = $response->json();
+        session()->put("freegift", $freegift);
         // Calculate the tax amount by mutiply 6% tax rate
         $taxRate = 0.06; // 6%
         $taxAmount = $subtotal * $taxRate;

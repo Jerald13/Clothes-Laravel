@@ -106,6 +106,10 @@ Route::middleware(["auth", "user-role:admin"])->group(function () {
     Route::view("admin/AddEditor", "admin/createUserWithRole")->name(
         "role.AddEditor"
     );
+    Route::post("admin/User/createUserWithRole", [
+        UserController::class,
+        "registerEditorOrAdmin",
+    ])->name("role.AddEditorForm");
 });
 
 /*   Editor Route    */
@@ -261,21 +265,6 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
         "updatePaymentStatus",
     ])->name("payments.updatePaymentStatus");
 
-    //payment status
-    Route::get("/payment/updateStatus/{id}", [
-        PaymentController::class,
-        "updateStatus",
-    ])->name("payments.update");
-
-    Route::get("/payment/updatePending/{id}", [
-        PaymentController::class,
-        "updatePending",
-    ])->name("payments.updatePending");
-
-    Route::get("/payment/updatePending/{id}", [
-        PaymentController::class,
-        "updatePending",
-    ])->name("payments.updatePending");
 });
 
 /*   User Route    */
@@ -339,6 +328,16 @@ Route::middleware(["auth", "user-role:user", "web"])->group(function () {
     Route::get("/paymentsuccess", function () {
         return view("paymentsuccess");
     })->name("paymentsuccess");
+
+    //payment status
+    Route::get('/payment/updateStatus/{id}', [PaymentController::class, 'updateStatus'])->name(
+        "payments.update"
+    );
+        
+    Route::get('/payment/updatePending/{id}', [PaymentController::class, 'updatePending'])->name(
+        "payments.updatePending"
+    );
+        
 });
 
 Route::prefix("metamask")->group(function () {
@@ -398,4 +397,4 @@ Route::get("removecart/{id}", [ProductController::class, "removeCart"]);
 Route::view("/error", "error")->name("error");
 
 //Web service
-Route::get("/free-gifts", [FreeGiftController::class, "index"]);
+// Route::get("/free-gifts", [FreeGiftController::class, "index"]);

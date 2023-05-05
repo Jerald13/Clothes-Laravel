@@ -139,11 +139,11 @@ class PaymentController extends Controller
 
     public function updateStatus($id)
     {
-        $subject = new Subject();
-        $emailObserver = new EmailObserver($subject);
-        $updateStatusObserver = new UpdateStatusObserver($subject);
-        $subject->setState("Your payment has been processed successfully!!!");
-        $subject->getState();
+        // $subject = new Subject();
+        // $emailObserver = new EmailObserver($subject);
+        // $updateStatusObserver = new UpdateStatusObserver($subject);
+        // $subject->setState("Your payment has been processed successfully!!!");
+
         // Update the payment status in the database
         $payment = Payment::find($id);
         $payment->payment_status = "completed";
@@ -151,6 +151,8 @@ class PaymentController extends Controller
 
         $payment->order->order_status = "successful";
         $payment->order->save();
+
+        // Mail::to(auth()->user()->email)->send($emailObserver);
     
         // Return a response
         return view('paymentsuccess');

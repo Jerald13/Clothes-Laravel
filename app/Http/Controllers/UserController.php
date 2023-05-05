@@ -140,6 +140,43 @@ class UserController extends Controller
         return redirect("/login");
     }
 
+    function registerEditorOrAdmin(Request $req)
+    {
+        $validator = Validator::make($req->all(), [
+            "username" => "required|unique:users",
+            "name" => "required",
+            "email" => "required|unique:users|email|max:255",
+            "phone_code" => "required",
+            "phone_number" => "required",
+            "password" => "required|min:6",
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator);
+        }
+        $user = new User();
+
+        if ($req->name == "Editor") {
+            $user->name = "Editor";
+            $user->role = "1";
+        } elseif ($req->name == "Admin") {
+            $user->name = "Admin";
+            $user->role = "2";
+        }
+        $user->username = $req->username;
+        $user->email = $req->email;
+        $user->phone_number = $req->phone_code . $req->phone_number;
+        $user->password = Hash::make($req->password);
+        $user->save();
+
+        $users = User::whereIn("role", [1, 2])
+            ->where("status", "Active")
+            ->orderByRaw("IF(role = 2, 0, IF(role = 1, 1, 2))")
+            ->get();
+
+        return view("editor.role.index", compact("users"));
+    }
+
     function testData(Request $req)
     {
         $rules = [

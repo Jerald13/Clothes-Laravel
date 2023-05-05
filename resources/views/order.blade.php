@@ -206,17 +206,32 @@
                                 </div>
 
 
-                            <div classname="optionDeliver" style="margin-bottom: 30px;">
-                                @if(session('deliveries'))
-                                <label for="deliveries">Select Delivery:</label>
-                                <select name="deliveries" id="deliveries">
-                                    @foreach(session('deliveries') as $deliver)
-                                        <option >{{ $deliver['deliver'] }}</option>
+                                <div classname="optionFreeGift" style="margin-bottom: 30px;">
+                                    @foreach (session('freegift') as $freegift)
+                                        <?php $encodedData = base64_encode($freegift['data']); ?>
+                                        <img style="width:50px; height:50px;"src="{{ $freegift['data'] }}"
+                                            alt="IMG-PRODUCT">
+                                        <p>{{ $freegift['name'] }}</p>
                                     @endforeach
-                                </select>
-                            @endif
-                            </div>
-                            
+                                    <label for="freegift">Select Free Gift:</label>
+                                    <select name="freegift" id="freegift">
+                                        @foreach (session('freegift') as $freegift)
+                                            <option>{{ $freegift['name'] }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+
+                                <div classname="optionDeliver" style="margin-bottom: 30px;">
+                                    @if (session('deliveries'))
+                                        <label for="deliveries">Select Delivery:</label>
+                                        <select name="deliveries" id="deliveries">
+                                            @foreach (session('deliveries') as $deliver)
+                                                <option>{{ $deliver['deliver'] }}</option>
+                                            @endforeach
+                                        </select>
+                                    @endif
+                                </div>
+
 
                             </div>
 

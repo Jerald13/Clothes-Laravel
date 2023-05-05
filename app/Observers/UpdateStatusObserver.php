@@ -10,7 +10,7 @@ class UpdateStatusObserver extends AbstractObserver
     public function update()
     {
         // sms
-        $user = auth()->user();
-        $user->notify(new MyNotification());
+        // $user = auth()->user();
+        // $user->notify(new MyNotification());
     }
 }

@@ -22,7 +22,9 @@
               <th>Phone Number</th>
               <th>Shipping Address</th>
               <th>State</th>
+              <th>City</th>
               <th>Post Code</th>
+              <th>Country</th>
               <th>Order Total (RM)</th>
               <th>Order Status</th>
             </tr>
@@ -34,12 +36,16 @@
                 <td><xsl:value-of select="phone_number"/></td>
                 <td><xsl:value-of select="shipping_address"/></td>
                 <td><xsl:value-of select="state"/></td>
+                <td><xsl:value-of select="city"/></td>
                 <td><xsl:value-of select="postcode"/></td>
+                <td><xsl:value-of select="country"/></td>
                 <td><xsl:value-of select="order_total"/></td>
                 <td><xsl:value-of select="order_status"/></td>
               </tr>
             </xsl:for-each>
           </table>
+          <p>There are <b style="color:black"><xsl:value-of select="count(orders/order)"/></b> order(s) inside this table</p>
+          <p>The total amount sold for the order(s) in this table is <b style="color:black">RM <xsl:value-of select="sum(orders/order/order_total)"/></b></p>
         </div>
       </body>
     </html>
