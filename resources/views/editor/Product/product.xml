@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/css"?>
+<products>
+  <product>
+      <id>1</id>
+      <category_id>2</category_id>
+      <name>Shirt 1</name>
+      <price>20.00</price>
+      <description>Good Product 1</description>
+  </product>
+  <product>
+      <id>2</id>
+      <category_id>2</category_id>
+      <name>Shirt 2</name>
+      <price>22.00</price>
+      <description>Good Product 2</description>
+  </product>
+  <product>
+      <id>3</id>
+      <category_id>3</category_id>
+      <name>Shirt 3</name>
+      <price>32.00</price>
+      <description>Good Product 3</description>
+  </product>
+</products>

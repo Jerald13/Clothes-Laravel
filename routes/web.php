@@ -125,7 +125,7 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
     //product editing
     Route::get("editor/Product/productEdit/{product}", [
         ProductController::class,
-        "getSingleProd",
+        "getSingleProdAdmin",
     ])->name("editor.product.productEdit");
 
     Route::post("editor/Product/productEdit/{product}", [
@@ -146,6 +146,16 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
     ])->name("editor.product.productDestory");
 
     Route::view("editor/index", "editor/index")->name("editor.index");
+
+    Route::get("editor/Product/product-xsl", [
+        ProductController::class,
+        "displayInXSL",
+    ])->name("product.display.xsl");
+
+    Route::get("editor/Product/product-xml", [
+        ProductController::class,
+        "displayInXML",
+    ])->name("product.display.xml");
 
     /*   Category    */
     Route::resource("editor/categories", CategoryController::class);
@@ -337,8 +347,13 @@ Route::get("/get-quantity", [ProductController::class, "getQuantity"])->name(
 // Product Display
 Route::get("/productDetails/{id}", [
     ProductController::class,
-    "getSingleProd",
+    "getSingleProdClient",
 ])->name("productDetails");
+
+Route::get("/product", [
+    ProductController::class,
+    "getAllProdIndex",
+])->name("getAllProductIndex");
 
 Route::get("/", [ProductController::class, "index"]);
 Route::get("detail/{id}", [ProductController::class, "detail"]);

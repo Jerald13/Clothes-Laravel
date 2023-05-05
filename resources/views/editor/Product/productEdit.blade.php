@@ -37,160 +37,195 @@
             <div class="container-fluid">
                 <div class="row justify-content-center">
                     <div class="col-12">
-                        <h2 class="page-title">Form Add Product</h2>
-                        <p class="text-muted">Create product with category</p>
+                        <h2 class="page-title">Form Edit Product</h2>
+                        {{-- display massegae --}}
+                        @if (session('msg'))
+                            <div class="alert alert-success" id="msg">
+                                {{ session('msg') }}
+                            </div>
+                            <script>
+                                setTimeout(function() {
+                                    $('#msg').fadeOut('slow');
+                                }, 5000); // 5000 milliseconds = 5 seconds                      
+                            </script>
+                        @elseif(session('msg-error'))
+                            <div class="alert alert-danger" id="msg">
+                                {{ session('msg-error') }}
+                            </div>
+                            <script>
+                                setTimeout(function() {
+                                    $('#msg').fadeOut('slow');
+                                }, 5000); // 5000 milliseconds = 5 seconds                      
+                            </script>
+                        @endif
+                        {{-- End display massegae --}}
                         <div class="row" style="justify-content: center;">
                             <div class="col-md-12" style="width:958px;max-width: 110%;">
+                                <form action="{{ route('editor.product.productEdit', $product->id) }}" method="POST"
+                                    enctype="multipart/form-data">
+                                    @csrf
 
-                                <!-- Card !-->
-                                <div class="card shadow mb-4">
-                                    <div class="card-header">
-                                        <strong class="card-title">Add Product</strong>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="card shadow mb-4">
-                                                    <div class="card-header">
-                                                        <strong>Dropzone</strong>
+                                    <!-- Card !-->
+                                    <div class="card shadow mb-4">
+                                        <div class="card-header">
+                                            <strong class="card-title">Add Product</strong>
+                                        </div>
+                                        <div class="card-body">
+                                            <p>Frist uploaded image will become feature image. Dont upload any if no to
+                                                update image</p>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="card shadow mb-4">
+                                                        <div class="card-header">
+                                                            <strong>Image Upload</strong>
+                                                        </div>
+                                                        <div class="parent">
+                                                            <div class="form-group">
+                                                                <input type="file" name="images[]" style="margin:auto"
+                                                                    multiple>
+                                                            </div>
+                                                        </div>
+                                                        <script>
+                                                            FilePond.registerPlugin(FilePondPluginFileValidateType);
+                                                            FilePond.registerPlugin(FilePondPluginImagePreview);
+                                                            FilePond.registerPlugin(FilePondPluginFileEncode);
+                                                            FilePond.registerPlugin(FilePondPluginFileValidateSize);
+                                                            FilePond.registerPlugin(FilePondPluginImageExifOrientation);
+
+                                                            const pondInput = FilePond.create(
+                                                                document.querySelector('#image')
+                                                            );
+
+
+
+                                                            //   let data = new FormData();
+                                                            // const pondFiles = pondInput.getFiles();
+                                                            //   console.log(pondFiles);
+                                                            // for (let i = 0; i < pondFiles.length; i++) {
+                                                            //   data.append('File', pondFiles[i].file);
+                                                            //   pondInput.removeFile(i);
+                                                            // }
+                                                        </script>
+                                                    </div> <!-- .card -->
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group mb-3">
+                                                        <label for="simpleinput">Product Name</label>
+                                                        <input type="text" id="simpleinput" name='prodName'
+                                                            value="{{ $product->name }}" class="form-control">
                                                     </div>
-                                                    <div class="card-body">
-                                                        <form action="{{ route('editor.product.productUpdate', $product->id) }}"
-                                                            method="POST" class="dropzone bg-light rounded-lg"
-                                                            id="tinydash-dropzone">
-                                                            @csrf
-                                                            <div class="dz-message needsclick">
-                                                                <div class="circle circle-lg bg-primary">
-                                                                    <i class="fe fe-upload fe-24 text-white"></i>
-                                                                </div>
-                                                                <h5 class="text-muted mt-4">Drop files here or click to
-                                                                    upload
-                                                                </h5>
-                                                            </div>
-
-                                                            <!-- Preview -->
-                                                            <!-- <div class="dropzone-previews mt-3" id="file-previews"></div> -->
-                                                            <!-- file preview template -->
-                                                            <div class="d-none" id="uploadPreviewTemplate">
-                                                                <div class="card mt-1 mb-0 shadow-none border">
-                                                                    <div class="p-2">
-                                                                        <div class="row align-items-center">
-                                                                            <div class="col-auto">
-                                                                                <img data-dz-thumbnail src="#"
-                                                                                    class="avatar-sm rounded bg-light"
-                                                                                    alt="">
-                                                                            </div>
-                                                                            <div class="col pl-0">
-                                                                                <a href="javascript:void(0);"
-                                                                                    class="text-muted font-weight-bold"
-                                                                                    data-dz-name></a>
-                                                                                <p class="mb-0" data-dz-size></p>
-                                                                            </div>
-                                                                            <div class="col-auto">
-                                                                                <!-- Button -->
-                                                                                <a href=""
-                                                                                    class="btn btn-link btn-lg text-muted"
-                                                                                    data-dz-remove>
-                                                                                    <i class="dripicons-cross"></i>
-                                                                                </a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                    </div> <!-- .card-body -->
-                                                </div> <!-- .card -->
-                                            </div>
-                                            <div class="col-md-12">
-                                                <div class="form-group mb-3">
-                                                    <label for="simpleinput">Product Name</label>
-                                                    <input type="text" id="simpleinput" name='prodName'
-                                                        value="{{ $product->name }}" class="form-control">
-                                                </div>
-                                                <div class="form-group mb-3" style="width: 70%">
-                                                    <label for="example-textarea">Description</label>
-                                                    <textarea class="form-control" id="example-textarea" name="prodDesc" rows="4">{{ $product->description }}</textarea>
-                                                </div>
-                                                <div class="form-group mb-3" style="width:20%">
-                                                    <label for="custom-select">Category</label>
-                                                    <select class="custom-select" id="custom-select" name='category_id'>
-                                                        <option value="{{ $product->category_id }}"selected>
-                                                            @foreach ($categories as $category)
-                                                                @if ($category->id == $product->category_id)
-                                                                    {{ $category->name }}
-                                                                @endif
-                                                            @endforeach
-                                                        </option>
-                                                        @foreach ($categories as $category)
-                                                            @if ($category->id != $product->category_id)
-                                                                <option value="{{ $category->id }}">
-                                                                    {{ $category->name }}
-                                                            @endif
-
+                                                    <div class="form-group mb-3" style="width: 70%">
+                                                        <label for="example-textarea">Description</label>
+                                                        <textarea class="form-control" id="example-textarea" name="prodDesc" rows="4">{{ $product->description }}</textarea>
+                                                    </div>
+                                                    <div class="form-group mb-3" style="width:20%">
+                                                        <label for="custom-select">Category</label>
+                                                        <select class="custom-select" id="custom-select" name='category_id'>
+                                                            <option value="{{ $product->category_id }}"selected>
+                                                                @foreach ($categories as $category)
+                                                                    @if ($category->id == $product->category_id)
+                                                                        {{ $category->name }}
+                                                                    @endif
+                                                                @endforeach
                                                             </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
+                                                            @foreach ($categories as $category)
+                                                                @if ($category->id != $product->category_id)
+                                                                    <option value="{{ $category->id }}">
+                                                                        {{ $category->name }}
+                                                                @endif
 
-                                                <label>Price</label>
-                                                <div class="input-group mb-3" style='width:150px;'>
-                                                    <div class="input-group-prepend">
-                                                        <span class="input-group-text">$</span>
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
                                                     </div>
-                                                    <input type="text" class="form-control"
-                                                        aria-label="Amount (to the nearest dollar)" name="prodPrice"
-                                                        value="{{ $product->price }}">
 
-                                                </div>
-                                                <div id="input-container">
-                                                    <label for="size">Variable</label>
+                                                    <label>Price</label>
+                                                    <div class="input-group mb-3" style='width:150px;'>
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text">$</span>
+                                                        </div>
+                                                        <input type="text" class="form-control"
+                                                            aria-label="Amount (to the nearest dollar)" name="prodPrice"
+                                                            value="{{ $product->price }}">
 
-                                                    @foreach ($stocks as $stock)
-                                                        <div class="row" id="new_1">
-                                                            <div class="col-md-2">
-                                                                <div class="form-group mb-3">
-                                                                    <label for="size">Size</label>
-                                                                    <select class="custom-select" name="size[]">
-                                                                        <option
-                                                                            value="{{ $stock->size_id }}"selected>
+                                                    </div>
+                                                    <div id="input-container">
+                                                        <label for="size">Variable</label>
+                                                        <?php $count = 0; ?>
+                                                        @foreach ($stocks as $stock)
+                                                            <?php $count++; ?>
+                                                            <div class="row" id="new_1">
+
+                                                                <div class="col-md-2">
+                                                                    <div class="form-group mb-3">
+                                                                        <label for="size">Size</label>
+                                                                        <select class="custom-select" name="size[]">
+                                                                            <option value="{{ $stock->size_id }}"selected>
+                                                                                @foreach ($sizes as $size)
+                                                                                    @if ($stock->size_id == $size->id)
+                                                                                        {{ $size->size }}
+                                                                                    @endif
+                                                                                @endforeach
+                                                                            </option>
                                                                             @foreach ($sizes as $size)
-                                                                                @if ($stock->size_id == $size->id)
-                                                                                    {{ $size->size }}
+                                                                                @if ($stock->size_id != $size->id)
+                                                                                    <option value="{{ $size->id }}">
+                                                                                        {{ $size->size }}
+                                                                                    </option>
                                                                                 @endif
                                                                             @endforeach
-                                                                        </option>
-                                                                        @foreach ($sizes as $size)
-                                                                            @if ($stock->size_id != $size->id)
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="col-md-2">
+                                                                    <div class="form-group mb-3 " style="width:100px;">
+                                                                        <label for="quantity">Quantity</label>
+                                                                        <input type="number" class="form-control"
+                                                                            id="quantity" name="quantity[]"
+                                                                            min="0"
+                                                                            value="{{ $stock->quantity }}">
+                                                                    </div>
+                                                                </div>
+
+                                                            </div>
+                                                        @endforeach
+                                                        @for ($i = $count; $i < 5; $i++)
+                                                            <div class="row" id="new_1">
+                                                                <div class="col-md-3">
+                                                                    <div class="form-group mb-2">
+                                                                        <label for="size">Size</label>
+                                                                        <select class="custom-select" name="size[]">
+                                                                            <option selected value=0>--Select Category--
+                                                                            </option>
+                                                                            @foreach ($sizes as $size)
                                                                                 <option value="{{ $size->id }}">
                                                                                     {{ $size->size }}
                                                                                 </option>
-                                                                            @endif
-                                                                        @endforeach
-                                                                    </select>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        
-                                                            <div class="col-md-2">
-                                                                <div class="form-group mb-3 " style="width:100px;">
-                                                                    <label for="quantity">Quantity</label>
-                                                                    <input type="number" class="form-control"
-                                                                        id="quantity" name="quantity[]" min="0"
-                                                                        value="{{ $stock->quantity }}">
-                                                                </div>
-                                                            </div>
-                                                   
-                                                        </div>
-                                                    @endforeach
 
+                                                                <div class="col-md-3">
+                                                                    <div class="form-group mb-7 " style="width:100px;">
+                                                                        <label for="quantity">Quantity</label>
+                                                                        <input type="number" class="form-control"
+                                                                            id="quantity" name="quantity[]"
+                                                                            min="0" value="0">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        @endfor
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div>
-                                                <input class="btn btn-primary" type='submit' value="Submit"
-                                                    onclick="submitData()">
-                                            </div>
-                                            </form>
-                                        </div> <!-- / .card -->
-                                    </div> <!-- /.col -->
+                                                <div>
+                                                    <input class="btn btn-primary" type='submit' value="Submit"
+                                                        onclick="submitData()">
+                                                </div>
+                                </form>
+                            </div> <!-- / .card -->
+                        </div> <!-- /.col -->
 
         </main> <!-- main -->
 

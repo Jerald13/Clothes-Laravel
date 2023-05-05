@@ -75,12 +75,24 @@
                     <div class="col-12">
                         <h2 class="page-title">Form Add Product</h2>
                         <p class="text-muted">Create product with category</p>
+                        {{-- display massegae --}}
+                        @if (session('msg-error'))
+                            <div class="alert alert-danger" id="msg">
+                                {{ session('msg-error') }}
+                            </div>
+                            <script>
+                                setTimeout(function() {
+                                    $('#msg').fadeOut('slow');
+                                }, 5000); // 5000 milliseconds = 5 seconds                      
+                            </script>
+                        @endif
+                        {{-- End display massegae --}}
                         <div class="row" style="justify-content: center;">
 
                             <div class="col-md-12" style="width:958px;max-width: 110%;">
                                 <form action="{{ route('editor.product.productCreate') }}" method="POST"
                                     enctype="multipart/form-data">
-
+                                    @csrf
                                     <!-- Card !-->
                                     <div class="card shadow mb-4">
                                         <div class="card-header">
@@ -89,16 +101,17 @@
 
                                         <div class="card-body">
                                             <div class="row">
-
-                                                @csrf
                                                 <div class="col-md-12">
+                                                    <p>Frist uploaded image will become feature image. Dont upload any if no
+                                                        to update image</p>
                                                     <div class="card shadow mb-4">
                                                         <div class="card-header">
-                                                            <strong>Dropzone</strong>
+
+                                                            <strong>Image Upload</strong>
                                                         </div>
                                                         <div class="parent">
                                                             <div class="form-group">
-                                                                  <input type="file" name="images[]" multiple>
+                                                                <input type="file" name="images[]" multiple>
                                                             </div>
                                                         </div>
                                                         <script>
@@ -163,7 +176,8 @@
                                                                     <div class="form-group mb-2">
                                                                         <label for="size">Size</label>
                                                                         <select class="custom-select" name="size[]">
-                                                                            <option selected value=0>--Select Category--</option>
+                                                                            <option selected value=0>--Select Category--
+                                                                            </option>
                                                                             @foreach ($sizes as $size)
                                                                                 <option value="{{ $size->id }}">
                                                                                     {{ $size->size }}
