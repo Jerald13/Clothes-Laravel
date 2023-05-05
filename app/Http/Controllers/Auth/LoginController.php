@@ -64,6 +64,11 @@ class LoginController extends Controller
             "password" => "required",
         ]);
 
+        // Get the number of login attempts
+        $loginAttempts = $request->session()->exists("login_attempts")
+            ? $request->session()->get("login_attempts")
+            : 0;
+
         $remember = $request->has("remember");
         $emailOrUsername = $request->input("email");
 
@@ -91,7 +96,7 @@ class LoginController extends Controller
             }
 
             $request->session()->put("user", $user);
-
+            $request->session()->put("login_attempts", 0);
             return redirect()->route("index");
         } else {
             // return redirect()
@@ -109,6 +114,7 @@ class LoginController extends Controller
 
             // Put the updated value back in the session
             $request->session()->put("login_attempts", $loginAttempts);
+
             // Check if the user has exceeded the maximum number of login attempts (in this case 5)
             if ($loginAttempts >= 5) {
                 return redirect()

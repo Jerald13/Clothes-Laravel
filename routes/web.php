@@ -105,6 +105,10 @@ Route::middleware(["auth", "user-role:admin"])->group(function () {
     Route::view("admin/AddEditor", "admin/createUserWithRole")->name(
         "role.AddEditor"
     );
+    Route::post("admin/User/createUserWithRole", [
+        UserController::class,
+        "registerEditorOrAdmin",
+    ])->name("role.AddEditorForm");
 });
 
 /*   Editor Route    */

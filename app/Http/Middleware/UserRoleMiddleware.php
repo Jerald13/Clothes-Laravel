@@ -32,8 +32,10 @@ class UserRoleMiddleware
             }
         }
 
-        return response()->json([
-            "You don't have permission to access this page.",
-        ]);
+        // return response()->json([
+        //     "You don't have permission to access this page.",
+        // ]);
+
+        return redirect()->route("errors/page-404");
     }
 }
