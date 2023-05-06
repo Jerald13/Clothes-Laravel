@@ -29,22 +29,35 @@ class CartController extends Controller
         $product = Product::findOrFail($request->productId);
         $sizeId = $request->size;
         $size = Size::findOrFail($sizeId);
-
-        $cart = new Cart();
-        $cart->user_id = $user->id;
-        $cart->product_id = $product->id;
-        $cart->user_quantity = $request->quantity;
-        $cart->user_size = $size->size;
-        $cart->save();
-
+    
+        // Check if the same product ID and size already exist in the cart
+        $existingCart = $user->carts()->where([
+            ["product_id", $product->id],
+            ["user_size", $size->size]
+        ])->first();
+    
+        if ($existingCart) {
+            // If the same product ID and size exist, update the quantity
+            $existingCart->user_quantity += $request->quantity;
+            $existingCart->save();
+        } else {
+            // If the same product ID and size do not exist, add a new cart
+            $cart = new Cart();
+            $cart->user_id = $user->id;
+            $cart->product_id = $product->id;
+            $cart->user_quantity = $request->quantity;
+            $cart->user_size = $size->size;
+            $cart->save();
+        }
+    
         $carts = $user
             ->carts()
             ->with("product")
             ->get();
         session()->put("carts", $carts);
-
+    
         return response()->json(["carts" => $carts]);
-    }
+    }    
 
     // Store a newly created cart in storage
     public function store(Request $request)
