@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Cart;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Product;
+use App\Models\Size;
 
 class CartController extends Controller
 {
@@ -26,12 +27,14 @@ class CartController extends Controller
     {
         $user = session()->get("user");
         $product = Product::findOrFail($request->productId);
+        $sizeId = $request->size;
+        $size = Size::findOrFail($sizeId);
 
         $cart = new Cart();
         $cart->user_id = $user->id;
         $cart->product_id = $product->id;
         $cart->user_quantity = $request->quantity;
-        $cart->user_size = $request->size;
+        $cart->user_size = $size->size;
         $cart->save();
 
         $carts = $user
