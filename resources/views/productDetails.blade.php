@@ -122,7 +122,6 @@
                 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                 <script>
                     // Get the elements we need
-                    let colorElement = document.getElementById('color');
                     let sizeElement = document.getElementById('size');
                     let quantityElement = document.getElementById('quantity');
                     let productIdElement = document.getElementById('productId');
@@ -133,7 +132,6 @@
                     $('#add-to-cart').on('click', function() {
                         let productId = $('#productId').val();
                         let quantity = $('#inputQuantityNew').val();
-                        let color = $('#color').val();
                         let size = $('#size').val();
 
                         $.ajax({
@@ -145,7 +143,6 @@
                             data: {
                                 productId: productId,
                                 quantity: quantity,
-                                color: color,
                                 size: size
                             },
 

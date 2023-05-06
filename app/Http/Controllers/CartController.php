@@ -31,7 +31,6 @@ class CartController extends Controller
         $cart->user_id = $user->id;
         $cart->product_id = $product->id;
         $cart->user_quantity = $request->quantity;
-        $cart->user_color = $request->color;
         $cart->user_size = $request->size;
         $cart->save();
 
@@ -56,7 +55,6 @@ class CartController extends Controller
             "product_id" => $request->product_id,
             "user_id" => Auth::id(),
             "user_quantity" => $request->user_quantity,
-            "user_color" => $request->user_color,
         ]);
 
         return redirect()
