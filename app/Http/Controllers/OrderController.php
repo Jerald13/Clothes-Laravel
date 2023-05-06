@@ -404,6 +404,10 @@ class OrderController extends Controller
 
             // Get the cart items from the database
             $cartItems = Cart::where("user_id", auth()->user()->id)->get();
+            // Remove the cart items data from the database
+            Cart::where("user_id", auth()->user()->id)->delete();
+            // Delete the session data for cart
+            session()->forget('carts');
 
             // Calculate the subtotal
             $subtotal = $this->calculateSubtotal($cartItems);
@@ -449,7 +453,21 @@ class OrderController extends Controller
         if ($order) {
             $order->order_status = "cancelled"; // Update the status of the order
             $order->save();
-
+    
+            // Restore the cart items
+            $orderDetails = OrderDetail::where("order_id", $id)->get();
+            foreach ($orderDetails as $orderDetail) {
+                $cartItem = new Cart();
+                $cartItem->user_id = auth()->user()->id;
+                $cartItem->product_id = $orderDetail->product_id;
+                $cartItem->user_quantity = $orderDetail->order_quantity;
+                $cartItem->user_size = $orderDetail->order_size;
+                $cartItem->save();
+                // Restore the cart items in the session
+                $cartItems = Cart::where("user_id", auth()->user()->id)->get();
+                session()->put("cartItems", $cartItems);
+            }
+    
             return redirect()->route("index");
         } else {
             return redirect()
@@ -457,7 +475,7 @@ class OrderController extends Controller
                 ->with("error", "Order not found.");
         }
     }
-
+    
     public function create()
     {
         // Return a view with a form to create a new order

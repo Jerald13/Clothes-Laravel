@@ -110,7 +110,8 @@ class PaymentController extends Controller
         // need to store the product id inside the order details with the same order id
         $orderDetails = OrderDetail::where('order_id', $id)->get();
         $productIds = $orderDetails->pluck('product_id')->toArray();
-        $payment->product_id = implode(',', $productIds);
+        $productIds = array_unique($productIds); // remove duplicate values
+        $payment->product_id = implode(',', $productIds);        
         $payment->user_id = auth()->user()->id;
         $payment->payment_method = $bankName;
         $payment->payment_date = now()->format('Y-m-d');
@@ -145,6 +146,7 @@ class PaymentController extends Controller
         // $subject->setState("Your payment has been processed successfully!!!");
 
         // Update the payment status in the database
+
         $payment = Payment::find($id);
         $payment->payment_status = "completed";
         $payment->save();
@@ -152,7 +154,7 @@ class PaymentController extends Controller
         $payment->order->order_status = "successful";
         $payment->order->save();
 
-        // Mail::to(auth()->user()->email)->send($emailObserver);
+         // Mail::to(auth()->user()->email)->send($emailObserver);
     
         // Return a response
         return view('paymentsuccess');
