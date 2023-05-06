@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('payment_method');
             $table->dateTime('payment_date');
             $table->decimal('payment_amount', 8, 2);
-            $table->enum('payment_status', ['new', 'pending', 'completed', 'cancelled'])->default('pending');
+            $table->enum('payment_status', ['new', 'pending', 'completed', 'cancelled'])->default('new');
             $table->timestamps();
         });
     }
