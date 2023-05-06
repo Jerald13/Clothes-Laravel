@@ -242,9 +242,6 @@
                                                                             <option
                                                                                 value="cancelled"{{ $order->status == 'cancelled' ? ' selected' : '' }}>
                                                                                 Cancelled</option>
-                                                                                <option
-                                                                                value="cancelled"{{ $order->status == 'delivered' ? ' selected' : '' }}>
-                                                                                Delivered</option>
                                                                         </select>
                                                                         <button type="submit"
                                                                             class="dropdown-item btn btn-sm btn-dark">Update
