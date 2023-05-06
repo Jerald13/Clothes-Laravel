@@ -502,6 +502,18 @@ class ProductController extends Controller
         $categories = $this->cateRepository->getAll();
         $images = $this->ProductImageRepository->getAll();
 
+        $user = session()->get("user");
+        $carts = null;
+        if ($user) {
+            $carts = $user
+                ->carts()
+                ->with("product")
+                ->get();
+            session()->put("carts", $carts);
+        } else {
+            session()->forget("carts");
+        }
+
         return view("product", compact("products", "categories", "images"));
     }
 
