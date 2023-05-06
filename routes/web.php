@@ -368,8 +368,8 @@ Route::get("/testing", function () {
     return view("testing");
 });
 
-// Route::get("/index", [ProductController::class, "index"])->name("index");
-Route::get("/index", [HomeController::class, "index"])->name("index");
+Route::get("/index", [ProductController::class, "index"])->name("index");
+// Route::get("/index", [HomeController::class, "index"])->name("index");
 
 Route::get("/shop", [ProductController::class, "shop"])->name("shop");
 Route::get("/get-quantity", [ProductController::class, "getQuantity"])->name(
