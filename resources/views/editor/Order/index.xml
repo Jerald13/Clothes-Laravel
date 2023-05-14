@@ -1,40 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <orders>
     <order>
-        <username>ZhongLiang</username>
-        <email>ZhongLiang@gmail.com</email>
-        <phone_number>+60182055007</phone_number>
+        <user_id>7</user_id>
+        <track_number>ABC-99999</track_number>
+        <order_total>100.00</order_total>
+        <order_status>successful</order_status>
         <shipping_address>123 Main St</shipping_address>
         <state>Selangor</state>
         <city>Petaling Jaya</city>
-        <postcode>88000</postcode>
+        <postcode>46050</postcode>
         <country>Malaysia</country>
-        <order_total>100.00</order_total>
-        <order_status>new</order_status>
+        <shipping_fee>5.00</shipping_fee>
+        <tax_rate>0.06</tax_rate>
+        <tax_amount>6.30</tax_amount>
+        <logistics>DHL</logistics>
     </order>
     <order>
-        <username>HooiSeng</username>
-        <email>HooiSeng@gmail.com</email>
-        <phone_number>+60182055007</phone_number>
-        <shipping_address>456 Elm St</shipping_address>
+        <user_id>8</user_id>
+        <track_number>ABC-99998</track_number>
+        <order_total>200.00</order_total>
+        <order_status>successful</order_status>
+        <shipping_address>1 Jalan Kepong</shipping_address>
         <state>Kuala Lumpur</state>
         <city>Kepong</city>
         <postcode>52100</postcode>
         <country>Malaysia</country>
-        <order_total>200.00</order_total>
-        <order_status>new</order_status>
+        <shipping_fee>5.00</shipping_fee>
+        <tax_rate>0.06</tax_rate>
+        <tax_amount>12.00</tax_amount>
+        <logistics>DHL</logistics>
     </order>
     <order>
-        <username>Chye</username>
-        <email>Chye@gmail.com</email>
-        <phone_number>+60182055007</phone_number>
-        <shipping_address>456 Elm St</shipping_address>
+        <user_id>9</user_id>
+        <track_number>ABC-99997</track_number>
+        <order_total>300.00</order_total>
+        <order_status>successful</order_status>
+        <shipping_address>2 Jalan Jinjang</shipping_address>
         <state>Kuala Lumpur</state>
         <city>Kepong</city>
         <postcode>52100</postcode>
         <country>Malaysia</country>
-        <order_total>200.00</order_total>
-        <order_status>new</order_status>
+        <shipping_fee>5.00</shipping_fee>
+        <tax_rate>0.06</tax_rate>
+        <tax_amount>18.00</tax_amount>
+        <logistics>DHL</logistics>
     </order>
-    <!-- more orders... -->
 </orders>
+

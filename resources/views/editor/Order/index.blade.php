@@ -281,30 +281,6 @@
         <script src="{{ asset('js/quill.min.js') }}"></script>
         <script src="https://unpkg.com/sweetalert@2.1.2/dist/sweetalert.min.js"></script>
 
-
-
-        {{-- <script>
-        $(document).on('click', '.delete-order-btn', function(e) {
-            e.preventDefault();
-            var orderId = $(this).data('id');
-            swal({
-                title: "Are you sure?",
-                text: "Once deleted, you will not be able to recover this order!",
-                icon: "warning",
-                buttons: ["Cancel", "Yes, delete it!"],
-                dangerMode: true,
-            })
-            .then((willDelete) => {
-                if (willDelete) {
-                    $('#delete-order-form-' + orderId).submit();
-                }
-            });
-        });
-
-
-
-
-    </script> --}}
         <script>
             $('#dataTable-1').DataTable({
                 autoWidth: true,

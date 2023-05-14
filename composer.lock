@@ -1595,16 +1595,16 @@
         },
         {
             "name": "laravel/vonage-notification-channel",
-            "version": "v3.2.0",
+            "version": "v3.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/vonage-notification-channel.git",
-                "reference": "a63c3cdf70aba15eb8711849dfcf3433ce777a45"
+                "reference": "9423dbdfff4a47ed7be5eb4bff9c050a6de4e2f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/vonage-notification-channel/zipball/a63c3cdf70aba15eb8711849dfcf3433ce777a45",
-                "reference": "a63c3cdf70aba15eb8711849dfcf3433ce777a45",
+                "url": "https://api.github.com/repos/laravel/vonage-notification-channel/zipball/9423dbdfff4a47ed7be5eb4bff9c050a6de4e2f4",
+                "reference": "9423dbdfff4a47ed7be5eb4bff9c050a6de4e2f4",
                 "shasum": ""
             },
             "require": {
@@ -1617,6 +1617,7 @@
                 "guzzlehttp/guzzle": "^7.2",
                 "mockery/mockery": "^1.0",
                 "orchestra/testbench": "^6.0|^7.0|^8.0",
+                "phpstan/phpstan": "^1.10",
                 "phpunit/phpunit": "^9.0"
             },
             "type": "library",
@@ -1657,9 +1658,9 @@
             ],
             "support": {
                 "issues": "https://github.com/laravel/vonage-notification-channel/issues",
-                "source": "https://github.com/laravel/vonage-notification-channel/tree/v3.2.0"
+                "source": "https://github.com/laravel/vonage-notification-channel/tree/v3.2.1"
             },
-            "time": "2023-02-06T14:36:29+00:00"
+            "time": "2023-05-01T15:47:10+00:00"
         },
         {
             "name": "lcobucci/clock",

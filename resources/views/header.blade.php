@@ -43,7 +43,7 @@ if (Session::has("user")) {
             <div class="top-bar">
                 <div class="content-topbar flex-sb-m h-full container">
                     <div class="left-top-bar">
-                        Free shipping for standard order over $100
+                        30% Offer for standard order over $100
                     </div>
                     <div class="right-top-bar flex-w h-full">
                         @if (Session::has('user'))
@@ -82,13 +82,6 @@ if (Session::has("user")) {
                                 Register
                             </a>
                         @endif
-                        <a href="#" class="flex-c-m p-lr-10 trans-04">
-                            EN
-                        </a>
-
-                        <a href="#" class="flex-c-m p-lr-10 trans-04">
-                            USD
-                        </a>
                     </div>
                 </div>
             </div>
@@ -114,21 +107,6 @@ if (Session::has("user")) {
                                 <a href="{{ route("shop") }}">Shop</a>
                             </li>
 
-                            <li class="label1" data-label1="hot">
-                                <a href="shoping-cart.html">Features</a>
-                            </li>
-
-                            <li>
-                                <a href="blog.html">Blog</a>
-                            </li>
-
-                            <li>
-                                <a href="about.html">About</a>
-                            </li>
-
-                            <li>
-                                <a href="contact.html">Contact</a>
-                            </li>
                         </ul>
                     </div>
 
@@ -143,13 +121,6 @@ if (Session::has("user")) {
                             data-notify="{{ count(session('carts', [])) }}">
                             <i class="zmdi zmdi-shopping-cart"></i>
                         </div>
-
-
-                        <a href="#"
-                            class="dis-block icon-header-item cl2 hov-cl1 trans-04 p-l-22 p-r-11 icon-header-noti"
-                            data-notify="0">
-                            <i class="zmdi zmdi-favorite-outline"></i>
-                        </a>
                     </div>
                 </nav>
             </div>
@@ -194,7 +165,7 @@ if (Session::has("user")) {
             <ul class="topbar-mobile">
                 <li>
                     <div class="left-top-bar">
-                        Free shipping for standard order over $100
+                        30% off for standard order over $100
                     </div>
                 </li>
 
@@ -238,22 +209,6 @@ if (Session::has("user")) {
 
                 <li>
                     <a href="product.html">Shop</a>
-                </li>
-
-                <li>
-                    <a href="shoping-cart.html" class="label1 rs1" data-label1="hot">Features</a>
-                </li>
-
-                <li>
-                    <a href="blog.html">Blog</a>
-                </li>
-
-                <li>
-                    <a href="about.html">About</a>
-                </li>
-
-                <li>
-                    <a href="contact.html">Contact</a>
                 </li>
             </ul>
         </div>
@@ -301,7 +256,11 @@ if (Session::has("user")) {
                         <li class="header-cart-item flex-w flex-t m-b-12">
                             <div class="header-cart-item-img delete-cart-item-btn"
                                 data-cart-id="{{ $cart->id }}">
-                                <img src="{{ asset('images/item-cart-03.jpg') }}" alt="item-cart-03.jpg">
+                                <?php
+                                $productImage = DB::table('product_images')->where('product_id', $cart->product_id)->first();
+                                $encodedData = $productImage ? base64_encode($productImage->data) : '';
+                                ?>
+                                <img src="data:image/jpeg;base64,{{ $encodedData }}" alt="IMG-PRODUCT">
                             </div>
                             <div class="header-cart-item-txt p-t-8">
                                 <a href="#" class="header-cart-item-name m-b-18 hov-cl1 trans-04">

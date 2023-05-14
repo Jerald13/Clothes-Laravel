@@ -11,7 +11,7 @@ class Order extends Model
 
     protected $fillable = [
         'user_id',
-        'order_date',
+        'track_number',
         'order_total',
         'order_status',
         'shipping_address',
@@ -19,8 +19,10 @@ class Order extends Model
         'city',
         'postcode',
         'shipping_fee',
+        'tax_rate',
         'tax_amount',
-        'tax_rate'
+        'logistics'
+
     ];
 
     public function user()

@@ -109,33 +109,47 @@
                             <h4>Product Ordered</h4>
                         </div>
                         <div class="table-responsive order_table text-center">
-                            @if (!is_null($cartItems) && count($cartItems) > 0)
+                            @if (!is_null($orderDetails) && count($orderDetails) > 0)
                                 <table class="table">
                                     <thead>
                                         <tr>
-                                            <th>Product</th>
+                                            <th colspan="2">Product</th>
                                             <th>Quantity</th>
-                                            <th>Total</th>
+                                            <th>Total (RM)</th>
 
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($cartItems as $item)
+                                        @foreach ($orderDetails as $item)
                                             <tr>
-                                                <td>
-                                                    <h5>{{ $item->product->name }}</h5>
+                                                <td colspan="2">
+                                                    <?php
+                                                    $productImage = DB::table('product_images')
+                                                        ->where('product_id', $item->product_id)
+                                                        ->first();
+                                                    $encodedData = $productImage ? base64_encode($productImage->data) : '';
+                                                    ?>
+                                                    <div style="display: flex; align-items: center;">
+                                                        <img src="data:image/jpeg;base64,{{ $encodedData }}"
+                                                            alt="IMG-PRODUCT"
+                                                            style="width:60px;height:65px; margin-right: 10px;">
+                                                        <div>
+                                                            <h5>{{ $item->product->name }}</h5>
+                                                        </div>
+                                                    </div>
                                                 </td>
-                                                <td class="product-qty">{{ $item->user_quantity }}</td>
-                                                <td>{{ $item->product->price * $item->user_quantity }}</td>
+                                                <td class="product-qty">{{ $item->order_quantity }}</td>
+                                                <td>{{ number_format($item->product->price * $item->order_quantity, 2) }}</td>
                                             </tr>
                                         @endforeach
+
                                         <tr>
                                             <th>Subtotal (RM)</th>
                                             <td class="product-subtotal" colspan="3">{{ number_format($subtotal, 2) }}
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th>Tax Amount (RM)</th>
+                                            <th>Tax Amount (6% tax rate) (RM)</th>
                                             <td class="product-subtotal" colspan="3">{{ number_format($taxAmount, 2) }}
                                             </td>
                                         </tr>

@@ -157,45 +157,37 @@ class OrderController extends Controller
         return $response;
     }
 
-    public function importOrdersFromXml(Request $request)
+    public function importOrdersToXml(Request $request)
     {
         $xmlFile = $request->file("xmlFile");
-
+    
         $xmlString = file_get_contents($xmlFile);
-
+    
         $xml = new \SimpleXMLElement($xmlString);
-
+    
         foreach ($xml->order as $orderData) {
             $order = new Order();
-            $order->user_id = (int) $orderData->user_id;
+            $order->user_id = (string) $orderData->user_id;
+            $order->track_number =(string) $orderData->track_number;
+            $order->order_total = (float) $orderData->order_total;
+            $order->order_status = (string) $orderData->order_status;
             $order->shipping_address = (string) $orderData->shipping_address;
             $order->state = (string) $orderData->state;
             $order->city = (string) $orderData->city;
             $order->postcode = (int) $orderData->postcode;
             $order->country = (string) $orderData->country;
-            $order->order_total = (float) $orderData->order_total;
-            $order->order_status = (string) $orderData->order_status;
-
-            $user = User::where("username", (string) $orderData->username)
-                ->where("email", (string) $orderData->email)
-                ->where("phone_number", (string) $orderData->phone_number)
-                ->first();
-
-            if ($user) {
-                $order->user_id = $user->id;
-            } else {
-                return redirect()
-                    ->back()
-                    ->with("error", "User not found.");
-            }
-
+            $order->shipping_fee = (float) $orderData->shipping_fee;
+            $order->tax_rate = (float) $orderData->tax_rate;
+            $order->tax_amount = (float) $orderData->tax_amount;
+            $order->logistics = (string) $orderData->logistics;
             $order->save();
         }
-
+    
         return redirect()
             ->back()
             ->with("success", "Orders imported successfully.");
     }
+    
 
     public function order()
     {
@@ -310,11 +302,6 @@ class OrderController extends Controller
             $unique = Order::where("track_number", $trackNumber)->doesntExist();
         }
 
-        // $shippingAddress = $request->input('billing_address');
-        // $state = $request->input('state');
-        // $city= $request->input('city');
-        // $postcode = $request->input('zipcode');
-
         // Get the cart items from the database
         $cartItems = Cart::where("user_id", auth()->user()->id)->get();
 
@@ -323,13 +310,6 @@ class OrderController extends Controller
 
         // Get the selected state from the form input
         $state = $request->input("state");
-
-        // //et the shipping fee based on the state
-        // if ($state == 'Sabah' || $state == 'Sarawak') {
-        //     $shippingFee = 8;
-        // } else {
-        //     $shippingFee = 5;
-        // }
 
         $shippingFee = 0.0;
         $response = Http::get("http://127.0.0.1:3232/api/deliver");
@@ -409,8 +389,10 @@ class OrderController extends Controller
             // Delete the session data for cart
             session()->forget('carts');
 
+            $orderDetails = OrderDetail::where('order_id', $orderId)->get();
+
             // Calculate the subtotal
-            $subtotal = $this->calculateSubtotal($cartItems);
+            $subtotal = $orderDetails->sum('order_subtotal');
 
             //default shipping fee is RM0.00
             $shippingFee = 0.0;
@@ -431,7 +413,7 @@ class OrderController extends Controller
             return view(
                 "order",
                 compact(
-                    "cartItems",
+                    "orderDetails",
                     "subtotal",
                     "shippingFee",
                     "taxAmount",

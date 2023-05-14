@@ -11,19 +11,22 @@ use Illuminate\Queue\SerializesModels;
 class VerifyEmail extends Mailable
 {
     use Queueable, SerializesModels;
-    public $verificationUrl;
+
+    protected $subjectState;
+
     /**
      * Create a new notification instance.
      */
-    // public function __construct($verificationUrl)
-    // {
-    //     $this->verificationUrl = $verificationUrl;
-    // }
-
-    public function __construct()
+    public function __construct($subjectState)
     {
-        // $this->verificationUrl = $verificationUrl;
+        $this->subjectState = $subjectState;
+
     }
+
+    // public function __construct()
+    // {
+    //     // $this->verificationUrl = $verificationUrl;
+    // }
 
     /**
      * Get the notification's delivery channels.
@@ -60,8 +63,7 @@ class VerifyEmail extends Mailable
 
     public function build()
     {
-        return $this->view("verify-email")->subject(
-            "Verify your email address"
-        );
+        return $this->view("verify-email", ['subjectState' => $this->subjectState])
+            ->subject("Payment Successfully and Enjoy Your Day!!!");
     }
 }

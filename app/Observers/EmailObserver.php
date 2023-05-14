@@ -11,10 +11,9 @@ class EmailObserver extends AbstractObserver
 {
     public function update()
     {
-        // email sending code omitted for brevity
-
-        // $user = auth()->user();
-        // $subjectState = $this->subject->getState();
-        // Mail::to($user->email)->send(new VerifyEmail($subjectState));
+        // send email message to the user when the payment has been made
+        $user = auth()->user();
+        $subjectState = $this->subject->getState();
+        Mail::to($user->email)->send(new VerifyEmail($subjectState));
     }
 }

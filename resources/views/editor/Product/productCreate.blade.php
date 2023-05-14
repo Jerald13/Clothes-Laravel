@@ -157,6 +157,16 @@
                                                             @endforeach
                                                         </select>
                                                     </div>
+                                                    <div class="form-group mb-3">
+                                                        <label for="custom-select">Tag</label>
+                                                        <select class="custom-select" id="custom-select" name='category_id'>
+                                                            <option selected>--Select Tag--</option>
+                                                            @foreach ($tags as $tag)
+                                                                <option value="{{ $tag->id }}"> {{ $tag->name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
 
                                                     <label>Price</label>
                                                     <div class="input-group mb-3" style='width:150px;'>

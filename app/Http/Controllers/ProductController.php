@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Cart;
 use App\Models\Category;
+use App\Models\Tag;
 use App\Models\User;
 use App\Models\Stock;
 use App\Models\product_images;
@@ -87,13 +88,14 @@ class ProductController extends Controller
     {
         $categories = $this->cateRepository->getAll();
         $sizes = $this->sizeRepository->getAll();
-
+        $tags = Tag::all();
+    
         return view(
             "editor.product.productCreate",
-            compact("categories", "sizes")
+            compact("categories", "sizes", "tags")
         );
     }
-
+    
     /**
      * Get All the project
      *

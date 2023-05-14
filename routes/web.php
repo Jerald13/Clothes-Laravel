@@ -33,10 +33,11 @@ use App\Models\User;
 use App\Models\Category;
 use App\Models\Tag;
 
+use App\Mail\SendSuccessfulMessage;
+
 // Auth::routes();
 
 /*   User Login Page Module    */
-
 Route::post("/login", [LoginController::class, "login"])->name("login");
 Route::view("/register", "register")->name("register");
 Route::post("/register", [UserController::class, "register"]);

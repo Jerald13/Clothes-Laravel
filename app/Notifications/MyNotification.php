@@ -16,12 +16,16 @@ class MyNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
+    protected $subjectState;
+
     /**
      * Create a new notification instance.
+     *
+     * @param mixed $subjectState
      */
-    public function __construct()
+    public function __construct($subjectState)
     {
-        //
+        $this->subjectState = $subjectState;
     }
 
     /**
@@ -71,7 +75,7 @@ class MyNotification extends Notification implements ShouldQueue
     public function toVonage(object $notifiable): VonageMessage
     {
         return (new VonageMessage())
-            ->content("Payment Successfully")
+            ->content($this->subjectState)
             ->clientReference($notifiable->phone_number);
     }
 }

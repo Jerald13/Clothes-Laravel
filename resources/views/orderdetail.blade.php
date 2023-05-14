@@ -161,22 +161,29 @@
                                 <div class="card card-2">
                                     <div class="card-body">
                                         <div class="media">
-                                            <div class="sq align-self-center " style='width="135" height="135"'> 
-                                                {{-- <img
+                                            <div class="sq align-self-center " style='width="135" height="135"'>
+                                                <?php
+                                                $productImage = DB::table('product_images')
+                                                    ->where('product_id', $item->product_id)
+                                                    ->first();
+                                                $encodedData = $productImage ? base64_encode($productImage->data) : '';
+                                                ?>
+                                                <img src="data:image/jpeg;base64,{{ $encodedData }}" alt="IMG-PRODUCT"
                                                     class="img-fluid  my-auto align-self-center mr-2 mr-md-4 pl-0 p-0 m-0"
-                                                    width="135" height="135" />  --}}
-                                                </div>
+                                                    style="width:135px;height:150px">
+                                            </div>
                                             <div class="media-body my-auto text-right">
                                                 <div class="row  my-auto flex-column flex-md-row">
                                                     <div class="col my-auto">
                                                         <h6 class="mb-0">{{ $item->product->name }}</h6>
                                                     </div>
                                                     {{-- wait product done, then only can show the color and size --}}
-                                                    <div class="col my-auto"> <small>Size : {{ $item->order_size }}</small></div>
+                                                    <div class="col my-auto"> <small>Size : {{ $item->order_size }}</small>
+                                                    </div>
                                                     <div class="col my-auto"> <small>{{ $item->order_quantity }}</small>
                                                     </div>
                                                     <div class="col my-auto">
-                                                        <h6 class="mb-0">{{ $item->product->price }}</h6>
+                                                        <h6 class="mb-0">RM {{ $item->product->price }}</h6>
                                                     </div>
                                                 </div>
 

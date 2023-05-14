@@ -3,7 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Observers\Subject;
 use App\Observers\EmailObserver;
-use App\Observers\UpdateStatusObserver;
+use App\Observers\SMSObserver;
 
 use App\Models\Payment;
 use App\Models\User;
@@ -71,12 +71,26 @@ class PaymentController extends Controller
         // Get the selected state from the form input
         $state = $request->input('state');
 
-        //et the shipping fee based on the state
-        if ($state == 'Sabah' || $state == 'Sarawak') {
-            $shippingFee = 8;
+        $voucherCode = $request->input("voucher");
+        $response = Http::get("http://127.0.0.1:3232/api/vouchers/check", [
+            "voucher_code" => $voucherCode,
+        ]);
+        
+        // Get the voucher data from the response
+        $voucherData = $response->json();
+        
+        // Check if the voucher code is valid and the voucher type is free shipping
+        if ($response->ok() && isset($voucherData['id']) && $voucherData['id'] == 3) {
+            $shippingFee = 0; // Set shipping fee to zero
         } else {
-            $shippingFee = 5;
+            // Set the shipping fee based on the state
+            if ($state == 'Sabah' || $state == 'Sarawak') {
+                $shippingFee = 8;
+            } else {
+                $shippingFee = 5;
+            }
         }
+        
 
         $newTotal = 0;
         // Calculate the order total
@@ -125,7 +139,7 @@ class PaymentController extends Controller
         'id' => $id, 
         'bankName' => $bankName,
         'paymentAmount' => $paymentAmount, 
-        'paymentId' => $id
+        'paymentId' => $paymentId
         ]);
     }
 
@@ -138,23 +152,20 @@ class PaymentController extends Controller
         return view("payment", ['id' => $id, 'bankName' => $bankName, 'paymentAmount' => $paymentAmount, 'paymentId' => $paymentId]);
     }
 
-    public function updateStatus($id)
+    public function updateStatus($paymentId)
     {
         // $subject = new Subject();
         // $emailObserver = new EmailObserver($subject);
-        // $updateStatusObserver = new UpdateStatusObserver($subject);
-        // $subject->setState("Your payment has been processed successfully!!!");
+        // $smsObserver = new SMSObserver($subject);
+        // $subject->setState("Payment Successfully!!!");
 
         // Update the payment status in the database
-
-        $payment = Payment::find($id);
+        $payment = Payment::find($paymentId);
         $payment->payment_status = "completed";
         $payment->save();
 
         $payment->order->order_status = "successful";
         $payment->order->save();
-
-         // Mail::to(auth()->user()->email)->send($emailObserver);
     
         // Return a response
         return view('paymentsuccess');

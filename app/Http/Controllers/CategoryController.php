@@ -4,14 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
-use App\Repositories\Interfaces\CategoryRepositoryInterface;
+use App\Repositories\CategoryRepository;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Response;
 class CategoryController extends Controller
 {
     private $categoryRepository;
 
-    public function __construct(CategoryRepositoryInterface $categoryRepository)
+    public function __construct(CategoryRepository $categoryRepository)
     {
         $this->categoryRepository = $categoryRepository;
     }
@@ -65,43 +65,66 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        $categories = Category::latest()->paginate(10);
+        if($id=="categories-xml"){
+            $categories = Category::latest()->paginate(10);
 
-        $xml = new \SimpleXMLElement("<categories/>");
+            $xml = new \SimpleXMLElement("<categories/>");
+    
+            foreach ($categories as $category) {
+                $categoryXml = $xml->addChild("category");
+                $categoryXml->addChild("id", $category->id);
+                $categoryXml->addChild("name", $category->name);
+                $categoryXml->addChild("status", $category->status);
+                $categoryXml->addChild("created_at", $category->created_at);
+                $categoryXml->addChild("updated_at", $category->updated_at);
+            }
+    
+            $xmlString = $xml->asXML();
+    
+            $response = new Response($xmlString);
+            $response->header("Content-Type", "application/xml");
+    
+        }else{
+            $categories = Category::latest()->paginate(10);
 
-        foreach ($categories as $category) {
-            $categoryXml = $xml->addChild("category");
-            $categoryXml->addChild("id", $category->id);
-            $categoryXml->addChild("name", $category->name);
-            $categoryXml->addChild("status", $category->status);
-            $categoryXml->addChild("created_at", $category->created_at);
-            $categoryXml->addChild("updated_at", $category->updated_at);
+            $xml = new \SimpleXMLElement("<categories/>");
+    
+            foreach ($categories as $category) {
+                $categoryXml = $xml->addChild("category");
+                $categoryXml->addChild("id", $category->id);
+                $categoryXml->addChild("name", $category->name);
+                $categoryXml->addChild("status", $category->status);
+                $categoryXml->addChild("created_at", $category->created_at);
+                $categoryXml->addChild("updated_at", $category->updated_at);
+            }
+    
+            $xmlString = $xml->asXML();
+    
+            // Load the XSL stylesheet
+            $xsl = new \DOMDocument();
+            $xsl->load(base_path("resources/views/editor/categories/index.xsl"));
+    
+            // Load the XML data
+            $xmlData = new \DOMDocument();
+            $xmlData->loadXML($xmlString);
+    
+            // Apply the XSL transformation
+            $xsltProcessor = new \XSLTProcessor();
+            $xsltProcessor->importStylesheet($xsl);
+            $htmlString = $xsltProcessor->transformToXML($xmlData);
+    
+            // Create and return the response
+            $response = new Response($htmlString);
+            $response->header("Content-Type", "text/html");
+    
         }
-
-        $xmlString = $xml->asXML();
-
-        // Load the XSL stylesheet
-        $xsl = new \DOMDocument();
-        $xsl->load(base_path("resources/views/editor/categories/index.xsl"));
-
-        // Load the XML data
-        $xmlData = new \DOMDocument();
-        $xmlData->loadXML($xmlString);
-
-        // Apply the XSL transformation
-        $xsltProcessor = new \XSLTProcessor();
-        $xsltProcessor->importStylesheet($xsl);
-        $htmlString = $xsltProcessor->transformToXML($xmlData);
-
-        // Create and return the response
-        $response = new Response($htmlString);
-        $response->header("Content-Type", "text/html");
-
         return $response;
+       
     }
 
     public function displayInXSL()
     {
+
         $categories = Category::latest()->paginate(10);
 
         $xml = new \SimpleXMLElement("<categories/>");
@@ -168,7 +191,7 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        $category = $this->categoryRepository->findCategory($id);
+        $category = $this->categoryRepository->getById($id);
 
         return view("editor.categories.edit", compact("category"));
     }
@@ -188,7 +211,7 @@ class CategoryController extends Controller
             // "product_count" => "required|integer",
         ]);
 
-        $this->categoryRepository->updateCategory($request->all(), $id);
+        $this->categoryRepository->update($id,$request->all());
         return redirect()
             ->route("categories.index")
             ->with("message", "Category Updated Successfully");
@@ -202,7 +225,7 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        $category = $this->categoryRepository->findCategory($id);
+        $category = $this->categoryRepository->getById($id);
 
         if ($category->product_count > 0) {
             $errorMessage =
@@ -211,7 +234,7 @@ class CategoryController extends Controller
                 ->route("errors/page-404")
                 ->with("errorMessage", $errorMessage);
         } else {
-            $this->categoryRepository->destroyCategory($id);
+            $this->categoryRepository->delete($id);
 
             return redirect()
                 ->route("categories.index")
