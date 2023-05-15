@@ -21,8 +21,8 @@ class Order extends Model
         'shipping_fee',
         'tax_rate',
         'tax_amount',
-        'logistics'
-
+        'logistics',
+        'free_gift'
     ];
 
     public function user()

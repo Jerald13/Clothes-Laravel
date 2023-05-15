@@ -38,6 +38,7 @@ use App\Mail\SendSuccessfulMessage;
 // Auth::routes();
 
 /*   User Login Page Module    */
+
 Route::post("/login", [LoginController::class, "login"])->name("login");
 Route::view("/register", "register")->name("register");
 Route::post("/register", [UserController::class, "register"]);
@@ -163,6 +164,17 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
         "displayInXML",
     ])->name("product.display.xml");
 
+    Route::post("editor/Product/import/xml", [
+        ProductController::class,
+        "importProductToXml",
+    ])->name("product.import.xml");
+
+    Route::get("editor/Product/export/xml", [
+        ProductController::class,
+        "exportProductToXml",
+    ])->name("product.export.xml");
+    /*============================================*/
+
     /*   Category    */
     Route::resource("editor/categories", CategoryController::class);
     Route::post("/categories/{category}/status", [
@@ -249,6 +261,7 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
         OrderController::class,
         "exportOrdersToXml",
     ])->name("orders.export.xml");
+
     Route::post("editor/orders/import/xml", [
         OrderController::class,
         "importOrdersToXml",
@@ -265,7 +278,6 @@ Route::middleware(["auth", "user-role:editor"])->group(function () {
         PaymentController::class,
         "updatePaymentStatus",
     ])->name("payments.updatePaymentStatus");
-
 });
 
 /*   User Route    */
@@ -334,11 +346,10 @@ Route::middleware(["auth", "user-role:user", "web"])->group(function () {
     Route::get('/payment/updateStatus/{id}', [PaymentController::class, 'updateStatus'])->name(
         "payments.update"
     );
-        
+
     Route::get('/payment/updatePending/{id}', [PaymentController::class, 'updatePending'])->name(
         "payments.updatePending"
     );
-        
 });
 
 Route::prefix("metamask")->group(function () {
@@ -369,7 +380,7 @@ Route::get("/testing", function () {
     return view("testing");
 });
 
-Route::get("/index", [ProductController::class, "index"])->name("index");
+Route::get("/index", [ProductController::class, "getAllProdIndex"])->name("index");
 // Route::get("/index", [HomeController::class, "index"])->name("index");
 
 Route::get("/shop", [ProductController::class, "shop"])->name("shop");

@@ -97,7 +97,7 @@ class LoginController extends Controller
 
             $request->session()->put("user", $user);
             $request->session()->put("login_attempts", 0);
-            return redirect()->route("index");
+            return redirect()->route("getAllProductIndex");
         } else {
             // return redirect()
             //     ->route("errors/page-404")

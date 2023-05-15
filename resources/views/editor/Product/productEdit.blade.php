@@ -61,7 +61,7 @@
                         {{-- End display massegae --}}
                         <div class="row" style="justify-content: center;">
                             <div class="col-md-12" style="width:958px;max-width: 110%;">
-                                <form action="{{ route('editor.product.productEdit', $product->id) }}" method="POST"
+                                <form action="{{ route('editor.product.productUpdate', $product->id) }}" method="POST"
                                     enctype="multipart/form-data">
                                     @csrf
 

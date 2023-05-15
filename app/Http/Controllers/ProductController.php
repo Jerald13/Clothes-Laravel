@@ -89,13 +89,13 @@ class ProductController extends Controller
         $categories = $this->cateRepository->getAll();
         $sizes = $this->sizeRepository->getAll();
         $tags = Tag::all();
-    
+
         return view(
             "editor.product.productCreate",
             compact("categories", "sizes", "tags")
         );
     }
-    
+
     /**
      * Get All the project
      *
@@ -243,6 +243,10 @@ class ProductController extends Controller
 
 
         $images = $request->file("images");
+        if (!isset($images)) {
+            return redirect()->route('editor.product.productCreate')->with('msg-error', "No image uploaded");
+
+        }
         foreach ($images as $image) {
             $msg = ''; // Clear error messages from previous iteration
 
@@ -259,9 +263,6 @@ class ProductController extends Controller
                     // Invalid image file
                     $msg .= 'Invalid file type or file not found<br>';
                 }
-            } else {
-                // No image file uploaded
-                $msg .= 'No image file uploaded.<br>';
             }
 
             if (!empty($msg)) {
@@ -292,10 +293,6 @@ class ProductController extends Controller
         }
         unset($sizes); // free memory 
         unset($quantity);
-        unset($quantity);
-        unset($quantity);
-        unset($quantity);
-
 
 
 
@@ -336,21 +333,22 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request;
-
+        $productId = $id;
         $validatedData = $data->validate([
             'prodName' => 'required|string|max:100',
             'prodDesc' => 'required|string|max:1000',
             'prodPrice' => 'required|numeric|min:0',
             'category_id' => 'required|integer|min:1',
             'images.*' => 'required|image|mimes:jpeg,png,jpg,gif|max:2000',
-            'size.*' => 'required|integer|min:1',
-            'quantity.*' => 'required|integer|min:1',
+            'size.*' => 'required|integer|min:0',
+            'quantity.*' => 'required|integer|min:0',
         ]);
 
-        if (!$validatedData) {
-            return redirect()->route('editor.product.productCreate')->with('msg-error', 'Image cannot more than 20MB and the find must be a image file.');
-        }
 
+
+        // if (!$validatedData) {
+        //     return redirect()->route('editor.product.productEdit', ['product' => $productId])->with('msg-error', 'Image cannot more than 20MB and the find must be a image file.');
+        // }
 
         $sizes = array_slice($data->input("size"), 0, 5); // Get the first 5 values of the input array
         $sizes = array_map('intval', $sizes); // Cast each value in the array to an integer
@@ -360,9 +358,6 @@ class ProductController extends Controller
         $productName = substr($data["prodName"], 0, 100); // Truncate the input to 100 characters
         $prodDes = substr($data["prodDesc"], 0, 1000); // Truncate the input to 1000 characters
         $prodPrice = floatval($data["prodPrice"]); // Cast the input to a float
-
-        $productId = $id;
-
 
         //table product insert
         $product = $this->prodRepository->update($productId, [
@@ -394,37 +389,38 @@ class ProductController extends Controller
             $count++;
         }
 
-
-
         if ($validatedData) {
             $this->updateImage($request, $product);
         }
 
-        return redirect()->route('editor.product.productEdit', ['product' => $productId, 'products' => $products])->with('msg', 'Product has been successfully updated.');
+        return redirect()->route('editor.product.productEdit', ['product' => $productId])->with('msg', 'Product has been successfully updated.');
     }
 
     public function updateImage(Request $request, $product)
     {
         $images = $request->file("images");
-        $imageData = [];
-        $imagesExist = $product->images;
-        try {
-            foreach ($imagesExist as $image) {
-                $this->ProductImageRepository->delete($image->id);
-            }
-            for ($i = 0; $i < count($images); $i++) {
+        if (isset($images)) {
+            $imageData = [];
+            $imagesExist = $product->images;
 
-                $this->ProductImageRepository->create([
-                    "name" => $images[$i]->getClientOriginalName(),
-                    "data" => $images[$i]->get(),
-                    "mime" => $images[$i]->getClientMimeType(),
-                    "product_id" => $product->id
-                ]);
+            try {
+                foreach ($imagesExist as $image) {
+                    $this->ProductImageRepository->delete($image->id);
+                }
+                for ($i = 0; $i < count($images); $i++) {
+
+                    $this->ProductImageRepository->create([
+                        "name" => $images[$i]->getClientOriginalName(),
+                        "data" => $images[$i]->get(),
+                        "mime" => $images[$i]->getClientMimeType(),
+                        "product_id" => $product->id
+                    ]);
+                }
+                // your database query here
+            } catch (QueryException $e) {
+                $errorMessage = $e->getMessage();
+                var_dump("Database error: $errorMessage");
             }
-            // your database query here
-        } catch (QueryException $e) {
-            $errorMessage = $e->getMessage();
-            var_dump("Database error: $errorMessage");
         }
     }
 
@@ -519,6 +515,53 @@ class ProductController extends Controller
         return view("product", compact("products", "categories", "images"));
     }
 
+    public function importProductToXml(Request $request)
+    {
+        $xmlFile = $request->file("xmlFile");
+
+        $xmlString = file_get_contents($xmlFile);
+
+        $xml = new \SimpleXMLElement($xmlString);
+
+        foreach ($xml->product as $productData) {
+            $product = $this->prodRepository->create([
+                "category_id" => (int) $productData->category_id,
+                "name" => $productData->name,
+                "description" =>   $productData->description,
+                "price" =>  $productData->price,
+            ]);
+        }
+
+        return redirect()
+            ->back()
+            ->with("success", "Product imported successfully.");
+    }
+
+    public function exportProductToXml()
+    {
+        $products = $this->prodRepository->getAll();
+
+        $xml = new \SimpleXMLElement("<products/>");
+
+        foreach ($products as $product) {
+            $productXml = $xml->addChild("product");
+            $productXml->addChild("id", $product->id);
+            $productXml->addChild("category_id", $product->category_id);
+            $productXml->addChild("name", $product->name);
+            $productXml->addChild("price", $product->price);
+            $productXml->addChild("description", $product->description);
+        }
+
+        $response = response($xml->asXML(), 200);
+        $response->header("Content-Type", "text/xml");
+        $response->header(
+            "Content-Disposition",
+            'attachment; filename="products.xml"'
+        );
+
+        return $response;
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -542,7 +585,7 @@ class ProductController extends Controller
 
     public function displayInXML()
     {
-        $products = Product::latest()->paginate(10);
+        $products = $this->prodRepository->getAll();
 
         $xml = new \SimpleXMLElement("<products/>");
 
@@ -565,8 +608,7 @@ class ProductController extends Controller
 
     public function displayInXSL()
     {
-        $products = Product::latest()->paginate(10);
-
+        $products = $this->prodRepository->getAll();
         $xml = new \SimpleXMLElement("<products/>");
 
         foreach ($products as $product) {

@@ -230,7 +230,7 @@
                                     <label for="freegift">Select Free Gift:</label>
                                     <select name="freegift" id="freegift">
                                         @foreach (session('freegift') as $freegift)
-                                            <option>{{ $freegift['name'] }}</option>
+                                            <option value="{{ $freegift['id'] }}">{{ $freegift['name'] }}</option>
                                         @endforeach
                                     </select>
                                 </div>

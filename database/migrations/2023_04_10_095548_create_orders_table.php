@@ -26,6 +26,7 @@ return new class extends Migration
             $table->decimal('shipping_fee', 8, 2);
             $table->decimal('tax_rate', 8, 2);
             $table->decimal('tax_amount', 8, 2);
+            $table->integer('free_gift')->nullable();
             $table->string('logistics')->nullable();
             $table->timestamps();
         });

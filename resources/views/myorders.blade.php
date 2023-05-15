@@ -29,6 +29,7 @@
                                         <th>Username: </th>
                                         <th>Phone Number:</th>
                                         <th>Payment Method: </th>
+                                        <th>Free Gift: </th>
                                         <th>Ordered Date: </th>
                                         <th>Order Status: </th>
                                         <th>Action: </th>
@@ -43,11 +44,19 @@
                                             <td> {{ auth()->user()->username }}</td>
                                             <td> {{ auth()->user()->phone_number }}</td>
                                             {{-- wait payment done --}}
-                                            <td>@if ($item->payment)
-                                                Paid By  {{ $item->payment->payment_method }}
+                                            <td>
+                                                @if ($item->payment)
+                                                    Paid By {{ $item->payment->payment_method }}
                                                 @else
-                                                Haven't Paid
+                                                    Haven't Paid
                                                 @endif
+                                            </td>
+                                            <td>
+                                                @foreach (session('freegift') as $freegift)
+                                                    @if ($freegift['id'] == $item->free_gift)
+                                                        {{ $freegift['name'] }}
+                                                    @endif
+                                                @endforeach
                                             </td>
                                             <td> {{ $item->created_at->format('d-m-Y') }}</td>
                                             <td>

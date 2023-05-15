@@ -67,6 +67,7 @@ class PaymentController extends Controller
         $state = $request->input('state');
         $city= $request->input('city');
         $postcode = $request->input('zipcode');
+        $free_gift = $request->input('freegift');
 
         // Get the selected state from the form input
         $state = $request->input('state');
@@ -105,6 +106,8 @@ class PaymentController extends Controller
         $order->postcode = $postcode;
         $order->shipping_fee = $shippingFee;
         $order->order_total = $newTotal;
+        $order->free_gift = $free_gift;
+
         //update the order status to pending
         $order->order_status = 'pending';
         $order->save();
